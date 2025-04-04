@@ -11,11 +11,13 @@ import { ProductComponent } from './components/product/product.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { IndexComponent } from './components/index/index.component';
 import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
+import { ContractComponent } from './components/contract/contract.component';
+import { ItemComponent } from './components/item/item.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
-    
     HeaderComponent,
     FooterComponent,
     HomeComponent,
@@ -23,9 +25,12 @@ import { SidebarComponent } from './components/shared/sidebar/sidebar.component'
     ProductComponent,
     CheckoutComponent,
     IndexComponent,
-    SidebarComponent
+    SidebarComponent,
+    ContractComponent,
+    ItemComponent,
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule
   ],
