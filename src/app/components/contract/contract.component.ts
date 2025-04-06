@@ -53,7 +53,7 @@ export class ContractComponent implements AfterViewInit {
         console.log("Contrat chargé:", this.contract);
       },
       error: (err) => {
-        console.error('Erreur lors du chargement du contrat', err);
+        console.error('Erreur lors du chargement du cogntrat', err);
       }
     });
   }
@@ -89,6 +89,8 @@ export class ContractComponent implements AfterViewInit {
         next: (response) => {
           console.log('Contrat mis à jour avec succès :', response);
           alert("✅ Signatures enregistrées et contrat mis à jour !");
+          // Redirection vers la page de paiement
+          this.router.navigate(['/payment', this.contractId]);
         },
         error: (error) => {
           console.error('Erreur lors de la mise à jour du contrat', error);
@@ -99,6 +101,7 @@ export class ContractComponent implements AfterViewInit {
       alert("❌ Veuillez signer le contrat avant de le valider.");
     }
   }
+  
   clearOwnerSignature() {
     this.ownerPad.clear();
     this.contract.ownerSignature = '';

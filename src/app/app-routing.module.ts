@@ -8,6 +8,7 @@ import { IndexComponent } from './components/index/index.component';
 import { AppComponent } from './app.component';
 import { ContractComponent } from './components/contract/contract.component';
 import { ItemComponent } from './components/item/item.component';
+import { PaymentComponent } from './components/payment/payment.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -16,6 +17,8 @@ const routes: Routes = [
   { path: 'checkout', component: CheckoutComponent },
   { path: 'contract/:id', component: ContractComponent },
   { path: 'item', component: ItemComponent },
+  { path: 'payment/:contractId', component: PaymentComponent },
+
 
   
 

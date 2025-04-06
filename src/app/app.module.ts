@@ -14,6 +14,8 @@ import { SidebarComponent } from './components/shared/sidebar/sidebar.component'
 import { ContractComponent } from './components/contract/contract.component';
 import { ItemComponent } from './components/item/item.component';
 import { HttpClientModule } from '@angular/common/http';
+import { PaymentComponent } from './components/payment/payment.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,11 +30,15 @@ import { HttpClientModule } from '@angular/common/http';
     SidebarComponent,
     ContractComponent,
     ItemComponent,
+    PaymentComponent,
+   
   ],
   imports: [
     HttpClientModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
