@@ -1,45 +1,8 @@
-<div class="payment-form-container">
-    <h2>💳 Paiement du contrat</h2>
-    <form [formGroup]="paymentForm" (ngSubmit)="submitPayment()">
-      
-      <!-- Montant -->
-      <div class="form-group">
-        <label for="amount">💰 Montant</label>
-        <input id="amount" type="number" formControlName="amount" required />
-      </div>
-  
-      <!-- Date -->
-      <div class="form-group">
-        <label for="date">📅 Date</label>
-        <input id="date" type="date" formControlName="date" required />
-      </div>
-  
-      <!-- Numéro de carte -->
-      <div class="form-group">
-        <label for="cardNumber">💳 Numéro de carte</label>
-        <input id="cardNumber" type="text" formControlName="cardNumber" maxlength="19" required />
-      </div>
-  
-      <!-- Nom du titulaire -->
-      <div class="form-group">
-        <label for="cardHolder">👤 Nom du titulaire</label>
-        <input id="cardHolder" type="text" formControlName="cardHolder" required />
-      </div>
-  
-      <!-- Expiration -->
-      <div class="form-group">
-        <label for="expiry">📆 Expiration</label>
-        <input id="expiry" type="month" formControlName="expiry" required />
-      </div>
-  
-      <!-- CVV -->
-      <div class="form-group">
-        <label for="cvv">🔒 CVV</label>
-        <input id="cvv" type="password" maxlength="4" formControlName="cvv" required />
-      </div>
-  
-      <!-- Bouton submit -->
-      <button type="submit" [disabled]="paymentForm.invalid">✅ Payer</button>
-    </form>
-  </div>
-  
+<!-- src/app/payment/payment.component.html -->
+<div class="payment-form">
+  <h2>Formulaire de paiement</h2>
+  <form (submit)="handleSubmit($event)">
+    <div id="card-element"></div> <!-- Où Stripe Elements va se charger -->
+    <button type="submit" class="submit-btn">Payer</button>
+  </form>
+</div>

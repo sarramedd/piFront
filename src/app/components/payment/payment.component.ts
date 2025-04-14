@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { StripeService } from 'src/app/services/stripe.service';
 import { PaymentService } from 'src/app/services/payment.service';
 
 @Component({
@@ -8,45 +8,58 @@ import { PaymentService } from 'src/app/services/payment.service';
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css']
 })
-export class PaymentComponent {
-  paymentForm!: FormGroup;
-  contractId!: number;
+export class PaymentComponent implements OnInit {
+  stripe: any;
+  elements: any;
+  card: any;
+  contractId: number | null = null;
 
   constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private paymentService: PaymentService
+    private stripeService: StripeService,
+    private paymentService: PaymentService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.contractId = Number(this.route.snapshot.paramMap.get('contractId'));
+    this.route.paramMap.subscribe(params => {
+      this.contractId = +params.get('contractId')!;
+    });
 
-    this.paymentForm = this.fb.group({
-      amount: [0, Validators.required],
-      date: [new Date().toISOString().split('T')[0], Validators.required],
-      cardNumber: ['', [Validators.required, Validators.minLength(16)]],
-      cardHolder: ['', Validators.required],
-      expiry: ['', Validators.required],
-      cvv: ['', [Validators.required, Validators.minLength(3)]],
+    this.stripeService.getStripe().then((stripe) => {
+      this.stripe = stripe;
+      this.elements = this.stripe.elements();
+      this.card = this.elements.create('card');
+      this.card.mount('#card-element');
     });
   }
 
-  submitPayment(): void {
-    if (this.paymentForm.valid) {
-      const paymentData = {
-        ...this.paymentForm.value,
-        status: 'PENDING'
-      };
+  handleSubmit(event: Event) {
+    event.preventDefault();
+    const amount = 50; // Exemple de montant, vous pouvez le rendre dynamique
 
-      this.paymentService.addPayment(this.contractId, paymentData).subscribe({
-        next: (res) => {
-          alert('✅ Paiement enregistré avec succès !');
-        },
-        error: (err) => {
-          console.error(err);
-          alert('❌ Une erreur est survenue lors du paiement.');
-        }
-      });
+    if (this.contractId === null) {
+      console.error('Contract ID is missing');
+      return;
     }
+
+    this.paymentService.createPaymentIntent(this.contractId, amount).subscribe({
+      next: async (response) => {
+        const clientSecret = response.clientSecret;
+        const result = await this.stripe.confirmCardPayment(clientSecret, {
+          payment_method: { card: this.card }
+        });
+
+        if (result.error) {
+          console.error('Payment error:', result.error.message);
+        } else if (result.paymentIntent.status === 'succeeded') {
+          this.paymentService.confirmPayment(result.paymentIntent.id, 'succeeded').subscribe();
+        } else {
+          this.paymentService.confirmPayment(result.paymentIntent.id, 'failed').subscribe();
+        }
+      },
+      error: (err) => {
+        console.error('Error with API:', err);
+      }
+    });
   }
 }
