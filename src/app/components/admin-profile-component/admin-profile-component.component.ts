@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthServiceService } from '../services/auth-service.service';
-import { UserService } from '../services/user.service';
+import { AuthServiceService } from '../../services/auth-service.service';
+import { UserService } from '../../services/user.service';
 import { jwtDecode } from 'jwt-decode';
-import { User } from '../models/user.model'; // Importer le modèle User
+import { User } from '../../core/models/user.model'; // Importer le modèle User
 
 interface DecodedToken {
   email?: string;

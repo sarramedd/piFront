@@ -1,24 +1,20 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';  // Importez le module de routage
-import { LoginComponent } from './login/login.component';  // Assurez-vous d'importer votre composant Login
+import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';  // Importez FormsModule pour utiliser ngModel
-import { ReactiveFormsModule } from '@angular/forms';
-import { RegisterComponent } from './register/register.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { FooterComponent } from './footer/footer.component';  // Import ReactiveFormsModule
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { UserListComponent } from './user-list/user-list.component';
-import { AdminProfileComponent } from './admin-profile-component/admin-profile-component.component';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
-
-
-
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { UserListComponent } from './components/user-list/user-list.component';
+import { AdminProfileComponent } from './components/admin-profile-component/admin-profile-component.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -39,8 +35,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     AppRoutingModule,
     ReactiveFormsModule,
     RouterModule,
-    HttpClientModule,    // Assurez-vous d'importer RouterModule ici
-    FormsModule      // Importez FormsModule pour lier ngModel dans vos formulaires
+    HttpClientModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
