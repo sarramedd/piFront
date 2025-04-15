@@ -1,0 +1,12 @@
+<div class="container">
+    <h2>Liste des produits à louer</h2>
+    
+    <div class="item-list">
+      <div *ngFor="let item of items" class="card">
+        <h3>{{ item.name }}</h3>
+        <p>Propriétaire : {{ item.owner.name }} </p>
+        <p>Prix : {{ item.price }} €</p>
+        <button (click)="createNewContract(item)">Valider</button>
+    </div>
+    </div>
+</div>
