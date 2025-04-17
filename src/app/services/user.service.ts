@@ -17,6 +17,10 @@ export class UserService {
       map(users => users.map(user => this.normalizeUser(user)))
     );
   }
+  registerUser(user: any): Observable<any> {
+  return this.http.post(`${this.baseUrl}/register`, user);
+}
+
 
   getUserByEmail(email: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/email/${email}`).pipe(

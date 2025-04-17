@@ -19,9 +19,12 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 
 // E-commerce & Shared
 import { HeaderComponent } from './components/shared/header/header.component';
+import { FooterBackComponent } from './components/footer/footer.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
-import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
 
+
+import { SidebarComponent } from './components/shared/sidebar/sidebar.component'; 
+import { SidebarBackComponent } from './components/sidebar/sidebar.component';
 // Navbar
 import { NavbarComponent } from './components/navbar/navbar.component';  // Ajoute cette ligne
 
@@ -42,14 +45,17 @@ import { PaymentComponent } from './components/payment/payment.component';
     LoginComponent,
     RegisterComponent,
     DashboardComponent,
+    FooterComponent,
     AdminProfileComponent,
     UserListComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
+    FooterBackComponent,
+    SidebarBackComponent,
 
     // Shared & Layout
     HeaderComponent,
-    FooterComponent,
+   // FooterComponent,
     SidebarComponent,
     NavbarComponent,  // Ajoute NavbarComponent ici
 

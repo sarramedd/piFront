@@ -1,13 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { User } from '../../core/models/user.model'; // Importation du modèle User
-import { Observable } from 'rxjs'; // Ajoutez ceci en haut de votre fichier
-
+import { User } from '../../core/models/user.model'; // Assurez-vous que ce modèle existe et est correct
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css']
+  styleUrls: [
+    './user-list.component.css',
+    '../../../assets/bootstrap-template/css/style.css',
+    '../../../assets/bootstrap-template/vendors/mdi/css/materialdesignicons.min.css',
+    '../../../assets/bootstrap-template/vendors/font-awesome/css/font-awesome.min.css',
+    '../../../assets/bootstrap-template/vendors/css/vendor.bundle.base.css'
+  ],
+  encapsulation: ViewEncapsulation.None
 })
 export class UserListComponent implements OnInit {
   users: User[] = []; // Typage des utilisateurs avec le modèle User

@@ -22,13 +22,14 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 
 const routes: Routes = [
   // E-commerce
-  { path: '', component: IndexComponent },
-  { path: 'store', component: StoreComponent },
-  { path: 'product', component: ProductComponent },
-  { path: 'checkout', component: CheckoutComponent },
+ { path: '', component: IndexComponent },
+{ path: 'store', component: StoreComponent },
+{ path: 'product', component: ProductComponent },
+
+ { path: 'checkout', component: CheckoutComponent },
   { path: 'contract/:id', component: ContractComponent },
   { path: 'item', component: ItemComponent },
-  { path: 'payment/:contractId', component: PaymentComponent },
+ { path: 'payment/:contractId', component: PaymentComponent },
 
   // Auth & Admin
   { path: 'login', component: LoginComponent },

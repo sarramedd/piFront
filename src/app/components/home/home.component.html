@@ -1,0 +1,342 @@
+<!-- SECTION HERO -->
+<div class="section hero-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="hero-content">
+                    <h1>Louez ce dont vous avez besoin, quand vous en avez besoin</h1>
+                    <p>Des milliers d'objets à louer près de chez vous</p>
+                    <div class="search-bar">
+                        <form>
+                            <input type="text" placeholder="Que cherchez-vous à louer?">
+                            <input type="text" placeholder="Localisation">
+                            <button type="submit"><i class="fa fa-search"></i> Rechercher</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /SECTION HERO -->
+
+<!-- CATEGORIES -->
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="section-title">Catégories populaires</h2>
+                <div class="categories-grid">
+                    <div class="category-item">
+                        <a href="#">
+                            <img src="./../../../assets/img/category-outils.jpg" alt="Outils">
+                            <h3>Outils</h3>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a href="#">
+                            <img src="./../../../assets/img/category-electro.jpg" alt="Électronique">
+                            <h3>Électronique</h3>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a href="#">
+                            <img src="./../../../assets/img/category-vehicules.jpg" alt="Véhicules">
+                            <h3>Véhicules</h3>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a href="#">
+                            <img src="./../../../assets/img/category-evenement.jpg" alt="Événementiel">
+                            <h3>Événementiel</h3>
+                        </a>
+                    </div>
+                    <div class="category-item">
+                        <a href="#">
+                            <img src="./../../../assets/img/category-sport.jpg" alt="Sport">
+                            <h3>Sport & Loisirs</h3>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /CATEGORIES -->
+
+<!-- ITEMS EN LOCATION -->
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- ASIDE FILTER -->
+            <div id="aside" class="col-md-3">
+                <div class="aside">
+                    <h3 class="aside-title">Filtrer</h3>
+                    <div class="price-filter">
+                        <h4>Prix par jour</h4>
+                        <div id="price-slider"></div>
+                        <div class="input-number price-min">
+                            <input id="price-min" type="number" placeholder="Min">
+                        </div>
+                        <span>-</span>
+                        <div class="input-number price-max">
+                            <input id="price-max" type="number" placeholder="Max">
+                        </div>
+                    </div>
+                    
+                    <div class="location-filter">
+                        <h4>Localisation</h4>
+                        <input type="text" placeholder="Ville ou code postal">
+                        <div class="radius-select">
+                            <select>
+                                <option value="5">Rayon: 5 km</option>
+                                <option value="10">10 km</option>
+                                <option value="20">20 km</option>
+                                <option value="50">50 km</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="availability-filter">
+                        <h4>Disponibilité</h4>
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="available-now">
+                            <label for="available-now">Disponible maintenant</label>
+                        </div>
+                        <div class="date-picker">
+                            <input type="date" placeholder="Date de début">
+                            <input type="date" placeholder="Date de fin">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /ASIDE FILTER -->
+
+            <!-- ITEMS LIST -->
+            <div id="store" class="col-md-9">
+                <div class="store-filter clearfix">
+                    <div class="store-sort">
+                        <label>
+                            Trier par:
+                            <select class="input-select">
+                                <option value="0">Pertinence</option>
+                                <option value="1">Prix croissant</option>
+                                <option value="2">Prix décroissant</option>
+                                <option value="3">Évaluations</option>
+                                <option value="4">Proximité</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- ITEM 1 -->
+                    <div class="col-md-4 col-xs-6">
+                        <div class="rental-item">
+                            <div class="rental-img">
+                                <img src="./../../../assets/img/rental-perceuse.jpg" alt="Perceuse à percussion">
+                                <div class="rental-label">
+                                    <span class="popular">POPULAIRE</span>
+                                </div>
+                            </div>
+                            <div class="rental-body">
+                                <p class="rental-owner">Par Jean D.</p>
+                                <h3 class="rental-name"><a href="#">Perceuse à percussion professionnelle</a></h3>
+                                <div class="rental-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-half-o"></i>
+                                    <span>(12)</span>
+                                </div>
+                                <h4 class="rental-price">€15 <small>/jour</small></h4>
+                                <div class="rental-meta">
+                                    <span><i class="fa fa-map-marker"></i> 2.5 km</span>
+                                    <span><i class="fa fa-calendar"></i> Disponible aujourd'hui</span>
+                                </div>
+                            </div>
+                            <div class="add-to-cart">
+                                <button class="rent-now-btn" routerLink="/checkout"><i class="fa fa-shopping-cart"></i> Louer maintenant</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ITEM 2 -->
+                    <div class="col-md-4 col-xs-6">
+                        <div class="rental-item">
+                            <div class="rental-img">
+                                <img src="./../../../assets/img/rental-camera.jpg" alt="Appareil photo">
+                                <div class="rental-label">
+                                    <span class="new">NOUVEAU</span>
+                                </div>
+                            </div>
+                            <div class="rental-body">
+                                <p class="rental-owner">Par Sophie M.</p>
+                                <h3 class="rental-name"><a href="#">Appareil photo Canon EOS 5D Mark IV</a></h3>
+                                <div class="rental-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <span>(8)</span>
+                                </div>
+                                <h4 class="rental-price">€45 <small>/jour</small></h4>
+                                <div class="rental-meta">
+                                    <span><i class="fa fa-map-marker"></i> 1.2 km</span>
+                                    <span><i class="fa fa-calendar"></i> Disponible demain</span>
+                                </div>
+                            </div>
+                            <div class="add-to-cart">
+                                <button class="rent-now-btn" routerLink="/checkout"><i class="fa fa-shopping-cart"></i> Louer maintenant</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ITEM 3 -->
+                    <div class="col-md-4 col-xs-6">
+                        <div class="rental-item">
+                            <div class="rental-img">
+                                <img src="./../../../assets/img/rental-velo.jpg" alt="Vélo électrique">
+                            </div>
+                            <div class="rental-body">
+                                <p class="rental-owner">Par LocationVille</p>
+                                <h3 class="rental-name"><a href="#">Vélo électrique urbain</a></h3>
+                                <div class="rental-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <span>(23)</span>
+                                </div>
+                                <h4 class="rental-price">€20 <small>/jour</small></h4>
+                                <div class="rental-meta">
+                                    <span><i class="fa fa-map-marker"></i> 0.8 km</span>
+                                    <span><i class="fa fa-calendar"></i> Disponible maintenant</span>
+                                </div>
+                            </div>
+                            <div class="add-to-cart">
+                                <button class="rent-now-btn" routerLink="/checkout"><i class="fa fa-shopping-cart"></i> Louer maintenant</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="store-filter clearfix">
+                    <span class="store-qty">Affichage de 1-9 objets</span>
+                    <ul class="store-pagination">
+                        <li class="active">1</li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /ITEMS LIST -->
+        </div>
+    </div>
+</div>
+<!-- /ITEMS EN LOCATION -->
+
+<!-- COMMENT ÇA MARCHE -->
+<div class="section how-it-works">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="section-title">Comment ça marche</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-icon"><i class="fa fa-search"></i></div>
+                        <h3>1. Trouvez</h3>
+                        <p>Recherchez l'objet dont vous avez besoin</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon"><i class="fa fa-calendar-check-o"></i></div>
+                        <h3>2. Réservez</h3>
+                        <p>Choisissez vos dates et réservez en ligne</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon"><i class="fa fa-handshake-o"></i></div>
+                        <h3>3. Récupérez</h3>
+                        <p>Rencontrez le propriétaire et récupérez l'objet</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon"><i class="fa fa-euro"></i></div>
+                        <h3>4. Gagnez</h3>
+                        <p>Si vous avez des objets inutilisés, louez-les et gagnez de l'argent</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /COMMENT ÇA MARCHE -->
+
+<!-- AVANTAGES -->
+<div class="section benefits">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="benefit-card">
+                    <i class="fa fa-money"></i>
+                    <h3>Économisez de l'argent</h3>
+                    <p>Pourquoi acheter quand vous pouvez louer pour une fraction du prix?</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="benefit-card">
+                    <i class="fa fa-leaf"></i>
+                    <h3>Économie circulaire</h3>
+                    <p>Donnez une seconde vie aux objets et réduisez votre impact environnemental</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="benefit-card">
+                    <i class="fa fa-shield"></i>
+                    <h3>Assurance incluse</h3>
+                    <p>Toutes nos locations sont couvertes par notre assurance</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="benefit-card">
+                    <i class="fa fa-star"></i>
+                    <h3>Communauté de confiance</h3>
+                    <p>Notre système d'évaluation garantit des échanges en toute confiance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /AVANTAGES -->
+
+<!-- NEWSLETTER -->
+<div id="newsletter" class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="newsletter">
+                    <p>Inscrivez-vous à notre <strong>NEWSLETTER</strong></p>
+                    <p>Recevez des offres exclusives et des réductions</p>
+                    <form>
+                        <input class="input" type="email" placeholder="Entrez votre email">
+                        <button class="newsletter-btn"><i class="fa fa-envelope"></i> S'inscrire</button>
+                    </form>
+                    <ul class="newsletter-follow">
+                        <li>
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /NEWSLETTER -->

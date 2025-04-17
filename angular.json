@@ -5,6 +5,7 @@
   "projects": {
     "mon-projet": {
       "projectType": "application",
+      "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -15,7 +16,9 @@
             "outputPath": "dist/mon-projet",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -47,18 +50,11 @@
               }
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/assets/css/style.css",
-              "src/assets/bootstrap-template/css/style.css",
-              "src/assets/bootstrap-template/vendors/mdi/css/materialdesignicons.min.css",
-              "src/assets/bootstrap-template/vendors/font-awesome/css/font-awesome.min.css",
-              "src/assets/bootstrap-template/vendors/css/vendor.bundle.base.css",
-              "src/assets/bootstrap-template/vendors/ti-icons/css/themify-icons.css",
-              "src/styles.css"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+
+             
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "src/assets/bootstrap-template/vendors/js/vendor.bundle.base.js",
               "src/assets/bootstrap-template/js/off-canvas.js",
               "src/assets/bootstrap-template/js/misc.js",
@@ -91,16 +87,7 @@
               "vendorChunk": false,
               "extractLicenses": true,
               "sourceMap": false,
-              "namedChunks": false,
-              "allowedCommonJsDependencies": [
-                "jspdf",
-                "html2canvas",
-                "dompurify",
-                "canvg",
-                "core-js",
-                "raf",
-                "rgbcolor"
-              ]
+              "namedChunks": false
             },
             "development": {
               "buildOptimizer": false,
@@ -108,23 +95,15 @@
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true,
-              "allowedCommonJsDependencies": [
-                "jspdf",
-                "html2canvas",
-                "dompurify",
-                "canvg",
-                "core-js",
-                "raf",
-                "rgbcolor"
-              ]
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {},
+          "options": {
+          },
           "configurations": {
             "production": {
               "browserTarget": "mon-projet:build:production"
