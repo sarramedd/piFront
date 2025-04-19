@@ -1,0 +1,78 @@
+<div class="search-container mb-3">
+    <input 
+      type="text" 
+      [(ngModel)]="searchQuery" 
+      (input)="filterFeedbacks()" 
+      class="form-control" 
+      placeholder="Search feedback by word or date">
+    
+    <div *ngIf="filteredFeedbacks && filteredFeedbacks.length > 0; else noFeedbacks">
+      <div *ngFor="let fb of filteredFeedbacks" class="card mb-3 p-3 shadow">
+        <h5 class="text-primary">{{ fb.message }}</h5>
+        
+        <button *ngIf="isAdmin" (click)="deleteFeedback(fb.id)" class="delete-icon-btn">
+          <i class="fa fa-trash"></i>
+        </button>
+  
+        <!-- Clickable text to open reaction popup -->
+        <p 
+          *ngIf="fb.reacts && fb.reacts.length > 0"
+          class="reactions-text"
+          (click)="openReactionsPopup(fb.reacts)">
+          Réactions: {{ fb.reacts.length }}
+        </p>
+      </div>
+    </div>
+    
+    <ng-template #noFeedbacks>
+      <p class="text-center text-muted">Aucun feedback disponible.</p>
+    </ng-template>
+  
+    <!-- Success Alert -->
+    <div *ngIf="successMessage" class="alert alert-success mt-3">
+      {{ successMessage }}
+    </div>
+  
+    <!-- Error Alert -->
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Reaction Deletion Popup -->
+   <!-- Reaction Deletion Popup -->
+  <div *ngIf="selectedReactId !== null" class="popup-overlay">
+    <div class="popup">
+      <p>Are you sure you want to delete this reaction?</p>
+      <button (click)="deleteReact(selectedReactId)">Yes</button>
+      <button (click)="selectedReactId = null">No</button>
+    </div>
+  </div>
+  
+  
+  
+    <!-- Reaction List Popup -->
+   <!-- Reaction Popup -->
+  <div *ngIf="showReactionsPopup" class="popup-overlay">
+    <div class="popup">
+      <h5 class="popup-title">Réactions</h5>
+  
+      <ul class="popup-reaction-list">
+        <li *ngFor="let r of selectedReactions" class="popup-reaction-item">
+          {{ r.reaction || 'No Reaction' }}
+          
+          <button 
+            *ngIf="isAdmin" 
+            (click)="confirmDeleteReaction(r.id ?? -1)" 
+            class="popup-delete-btn">
+            <i class="fa fa-trash text-danger"></i>
+          </button>
+        </li>
+      </ul>
+  
+      <button class="close-btn" (click)="closeReactionsPopup()">Close</button>
+    </div>
+  </div>
+  
+  
+  </div>
+  

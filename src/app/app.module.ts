@@ -36,6 +36,13 @@ import { IndexComponent } from './components/index/index.component';
 import { ContractComponent } from './components/contract/contract.component';
 import { ItemComponent } from './components/item/item.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { FeedbackListComponent } from './components/Feedback/feedback-list/feedback-list.component';
+import { AddfeedbackComponent } from './components/Feedback/addfeedback/addfeedback.component';
+import { FeedbackListAdminComponent } from './components/FeedbackAdmin/feedback-list-admin/feedback-list-admin.component';
+import { AddFeedbackAdminComponent } from './components/FeedbackAdmin/add-feedback-admin/add-feedback-admin.component';
+
+
+
 
 @NgModule({
   declarations: [
@@ -68,6 +75,10 @@ import { PaymentComponent } from './components/payment/payment.component';
     ContractComponent,
     ItemComponent,
     PaymentComponent,
+    FeedbackListComponent,
+    AddfeedbackComponent,
+    FeedbackListAdminComponent,
+    AddFeedbackAdminComponent,
   ],
   imports: [
     BrowserModule,

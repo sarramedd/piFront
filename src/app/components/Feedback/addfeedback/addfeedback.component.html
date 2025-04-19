@@ -1,0 +1,12 @@
+<form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="message">Feedback Message:</label>
+      <textarea id="message" formControlName="message" rows="4" cols="50"></textarea>
+      <div *ngIf="feedbackForm.get('message')?.invalid && feedbackForm.get('message')?.touched">
+        <small class="text-danger">Message is required (max 500 characters).</small>
+      </div>
+    </div>
+  
+    <button type="submit" [disabled]="feedbackForm.invalid">Submit Feedback</button>
+  </form>
+  

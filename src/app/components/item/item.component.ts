@@ -53,9 +53,9 @@ export class ItemComponent implements OnInit {
       ownerSignature: "",
       borrowerSignature: "",
       borrower: { id: this.borrowerId, name: "borrower" } as User,
-      owner: { id: this.ownerId, name: item.owner.name } as User,
+      owner: { id: this.ownerId, name: item.owner?.name } as User,
       details: `Nom: ${item.name}, 
-                Propriétaire: ${item.owner.name}, 
+                Propriétaire: ${item.owner?.name}, 
                 Prix: ${item.price}€, 
                 Description: ${item.description}`
     };

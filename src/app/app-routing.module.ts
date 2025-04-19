@@ -19,6 +19,10 @@ import { AdminProfileComponent } from './components/admin-profile-component/admi
 import { UserListComponent } from './components/user-list/user-list.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { FeedbackListComponent } from './components/Feedback/feedback-list/feedback-list.component';
+import { AddfeedbackComponent } from './components/Feedback/addfeedback/addfeedback.component';
+import { AddFeedbackAdminComponent } from './components/FeedbackAdmin/add-feedback-admin/add-feedback-admin.component';
+import { FeedbackListAdminComponent } from './components/FeedbackAdmin/feedback-list-admin/feedback-list-admin.component';
 
 const routes: Routes = [
   // E-commerce
@@ -39,6 +43,11 @@ const routes: Routes = [
   { path: 'ListUser', component: UserListComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'listFeedback', component: FeedbackListComponent },
+  { path: 'addFeedback', component: AddfeedbackComponent},
+  { path: 'list-Feedback', component: FeedbackListAdminComponent},
+  { path: 'add-Feedback', component: AddFeedbackAdminComponent},
+
 ];
 
 @NgModule({

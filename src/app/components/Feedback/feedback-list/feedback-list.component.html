@@ -1,0 +1,93 @@
+<!-- Message d'erreur -->
+<div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+  
+  <!-- Liste des feedbacks -->
+  <div *ngIf="feedbacks.length > 0; else noFeedback">
+    <ul>
+      <li *ngFor="let feedback of feedbacks; trackBy: trackByFeedbackId" 
+          [ngClass]="{'popular': getFeedbackPopularityScore(feedback) >= 5}" 
+          class="feedback-card">
+  
+        <!-- Menu trois points à droite -->
+        <div style="float: right; cursor: pointer;" (click)="startEditing(feedback)">⋮</div>
+  
+        <!-- Message du feedback -->
+        <h3>{{ feedback.message }}</h3>
+  
+        <!-- Formulaire d'édition si activé -->
+        <div *ngIf="editingFeedbackId === feedback.id" class="edit-form">
+          <textarea [(ngModel)]="editedMessage" rows="3"></textarea>
+          <br>
+          <button (click)="submitEdit(feedback)">Enregistrer</button>
+          <button (click)="cancelEditing()">Annuler</button>
+        </div>
+  
+        <!-- 🔥 Badge Populaire -->
+        <small *ngIf="getFeedbackPopularityScore(feedback) >= 5" class="badge">🔥 Populaire</small>
+  
+        <p><strong>Date:</strong> {{ feedback.date | date:'medium' }}</p>
+  
+        <!-- Nombre de réactions (ouvre la modal) -->
+        <p class="reactions-count" (click)="openReactionModal(feedback)" style="cursor: pointer;">
+          <strong>Reactions:</strong> {{ feedback.reacts?.length || 0 }} &#128065;
+        </p>
+  
+        <!-- Boutons pour ajouter une réaction -->
+        <div class="reaction-buttons">
+          <button *ngFor="let reaction of reactions"
+                  class="reaction-button"
+                  (mouseover)="scaleUp($event)"
+                  (mouseout)="scaleDown($event)"
+                  (click)="addReaction(feedback, reaction)">
+            {{ getButtonEmoji(reaction) }} {{ getButtonLabel(reaction) }}
+          </button>
+        </div>
+  
+        <hr>
+      </li>
+    </ul>
+  </div>
+  
+  <!-- Message si aucun feedback -->
+  <ng-template #noFeedback>
+    <p>No feedbacks available</p>
+  </ng-template>
+  
+  <!-- Fenêtre popup des réactions -->
+  <div class="modal-backdrop" *ngIf="activeFeedback" (click)="closeModal()"></div>
+  <div class="modal" *ngIf="activeFeedback">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h2>Reactions for: {{ activeFeedback.message }}</h2>
+  
+      <!-- Onglets de filtrage -->
+      <div class="tabs">
+        <button (click)="selectTab('ALL')" [class.active]="selectedTab === 'ALL'">All</button>
+        <button *ngFor="let reaction of reactions"
+                (click)="selectTab(reaction)"
+                [class.active]="selectedTab === reaction">
+          {{ getButtonEmoji(reaction) }} {{ getButtonLabel(reaction) }}
+          ({{ getReactionCount(activeFeedback.reacts || [], reaction) }})
+        </button>
+      </div>
+  
+      <!-- Liste des réactions filtrées -->
+      <div class="reactions-scroll-container" *ngIf="filteredReacts.length > 0; else noReacts">
+        <ul>
+          <li *ngFor="let react of filteredReacts" class="react-user">
+            <div class="avatar">{{ getInitials(react.user?.name || 'U') }}</div>
+            <span class="username">{{ react.user?.name || 'Anonymous' }}</span>
+            <span class="emoji">{{ getReactionEmoji(react.reaction) }}</span>
+          </li>
+        </ul>
+      </div>
+  
+      <!-- Aucun résultat -->
+      <ng-template #noReacts>
+        <p>No reactions found for this filter.</p>
+      </ng-template>
+    </div>
+  </div>
+  
