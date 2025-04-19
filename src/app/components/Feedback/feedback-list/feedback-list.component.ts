@@ -17,6 +17,11 @@ export class FeedbackListComponent implements OnInit {
   editedMessage: string = '';
   openedMenuFeedbackId: number | null = null;
   successMessage: string = '';
+  reasonForReport: string = ''; // Add this to store the reason
+  reportModalOpen: boolean = false; // Toggle for report modal
+  reportingFeedback: Feedback | null = null;
+
+
   
   
 
@@ -202,25 +207,49 @@ export class FeedbackListComponent implements OnInit {
   }
   
   
-  reportFeedback(feedback: Feedback): void {
-    console.log('Signalement de ce feedback à l\'admin:', feedback);
-  
-    if (feedback.id !== undefined) {
-      this.feedbackService.reportFeedback(feedback.id).subscribe(
-        (response: string) => {
-          alert(response); // Afficher le message retourné par le serveur
-          feedback.reported = true; // Mettre à jour l'état local du feedback
-        },
-        (error) => {
-          console.error('Erreur lors du signalement:', error);
-          this.errorMessage = 'Échec du signalement du feedback';
-        }
-      );
-    } else {
-      console.error('Feedback ID is undefined');
-      this.errorMessage = 'ID de feedback non valide';
-    }
+ // Report Feedback method, updated to include the reason
+ reportFeedback(): void {
+  const feedback = this.reportingFeedback;
+  if (!feedback || !feedback.id) {
+    alert("⚠️ Feedback non valide.");
+    return;
   }
+
+  if (this.reasonForReport.trim()) {
+    this.feedbackService.reportFeedback(feedback.id, this.reasonForReport).subscribe(
+      (response: string) => {
+        console.log(response); // This will log "Feedback reported successfully"
+        alert("✅ Feedback signalé avec succès !");
+        feedback.reported = true;
+        feedback.reason = this.reasonForReport;
+        this.closeReportModal();
+      },
+      (error) => {
+        console.error("Erreur complète :", error);
+        alert("❌ Échec du signalement du feedback.");
+        this.errorMessage = 'Échec du signalement du feedback';
+      }
+    );    
+  } else {
+    alert("⚠️ Vous devez fournir une raison pour signaler ce feedback.");
+    this.errorMessage = 'Vous devez fournir une raison pour signaler';
+  }
+}
+
+
+
+
+// Open the report modal with the reason input
+openReportModal(feedback: Feedback): void {
+  this.reportingFeedback = feedback;
+  this.reasonForReport = ''; // Clear previous reason
+  this.reportModalOpen = true;
+}
+
+// Close the report modal
+closeReportModal(): void {
+  this.reportModalOpen = false;
+}
   
   
   

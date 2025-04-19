@@ -1,13 +1,36 @@
-<div *ngIf="reportedFeedbacks.length > 0; else noReportedFeedbacks">
-    <div *ngFor="let fb of reportedFeedbacks" class="card mb-3 p-3 shadow">
-      <h5 class="text-danger">{{ fb.message }}</h5>
-      <button *ngIf="fb.id" (click)="deleteReportedFeedback(fb.id)" class="btn btn-danger">
-        <i class="fa fa-trash"></i> Delete
-      </button>      
+<div *ngIf="reportedFeedbacks.length > 0; else noReportedFeedbacks" class="feedback-container">
+  <div *ngFor="let fb of reportedFeedbacks" class="card mb-3 p-3 shadow feedback-card">
+    
+    <div class="feedback-header">
+      <h5 class="message">📝 {{ fb.message }}</h5>
+    
+      <!-- Regroupe les icônes pour les aligner à droite -->
+      <div class="icon-group">
+        <button *ngIf="fb.id" (click)="deleteReportedFeedback(fb.id)" class="icon-button btn-delete">
+          <i class="fa fa-trash"></i>
+        </button>
+        <button *ngIf="fb.id" (click)="rejectFeedback(fb.id)" class="icon-button btn-reject">
+          <i class="fa fa-ban"></i>
+        </button>
+      </div>
+    </div>
+    
+
+    <p class="date"><strong>📅 Date:</strong> {{ fb.date | date: 'medium' }}</p>
+    <p *ngIf="fb.item?.id" class="user">
+      <strong>👤 User ID:</strong> {{ fb.item?.id }}
+    </p>
+
+    <button class="btn btn-info btn-sm mt-2" (click)="toggleReason(fb)">
+      {{ fb.showReason ? 'Hide Reason' : 'Show Reason' }}
+    </button>
+
+    <div *ngIf="fb.showReason" class="reason-box mt-2">
+      <strong>🚨 Reason:</strong> {{ fb.reason || 'No reason provided.' }}
     </div>
   </div>
-  
-  <ng-template #noReportedFeedbacks>
-    <p class="text-center text-muted">No reported feedbacks available.</p>
-  </ng-template>
-  
+</div>
+
+<ng-template #noReportedFeedbacks>
+  <p class="text-center text-muted">No reported feedbacks available.</p>
+</ng-template>

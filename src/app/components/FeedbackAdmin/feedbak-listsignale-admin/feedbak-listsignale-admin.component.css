@@ -1,14 +1,130 @@
-.card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .card h5 {
-    font-size: 18px;
-    color: #d9534f;
-  }
-  
-  .card button {
-    float: right;
-  }
-  
+/* Conteneur principal */
+.feedback-container {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 0 15px;
+}
+
+/* Carte de feedback */
+.feedback-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* En-tête avec message à gauche et boutons à droite */
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Message à gauche */
+.message {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  flex: 1;
+}
+
+/* Conteneur pour les boutons icônes */
+.icon-group {
+  display: flex;
+  gap: 10px;
+}
+
+/* Boutons icône */
+.icon-button {
+  font-size: 18px;
+  padding: 8px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+  color: #6c757d;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-button:hover {
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+}
+
+.icon-button i {
+  transition: transform 0.3s ease;
+}
+
+.icon-button:hover i {
+  transform: rotate(90deg);
+}
+
+/* Couleurs spécifiques */
+.btn-delete {
+  color: #e74c3c;
+}
+.btn-delete:hover {
+  color: #c0392b;
+}
+
+.btn-reject {
+  color: #f39c12;
+}
+.btn-reject:hover {
+  color: #e67e22;
+}
+
+/* Date et user */
+.date, .user, .reason {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.user {
+  font-size: 13px;
+  color: #495057;
+}
+
+/* Bouton info */
+.btn-info {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 6px;
+}
+
+.btn-info:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
+
+/* Box des raisons */
+.reason-box {
+  background-color: #f1f3f5;
+  border-left: 4px solid #0d6efd;
+  padding: 12px 18px;
+  margin-top: 12px;
+  border-radius: 6px;
+  color: #343a40;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Texte alternatif */
+.text-muted {
+  font-size: 16px;
+  color: #999;
+  text-align: center;
+  padding: 20px;
+}

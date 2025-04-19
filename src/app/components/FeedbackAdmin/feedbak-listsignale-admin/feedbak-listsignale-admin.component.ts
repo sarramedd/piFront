@@ -20,13 +20,15 @@ export class FeedbakListsignaleAdminComponent implements OnInit {
   getReportedFeedbacks(): void {
     this.feedbackService.getReportedFeedbacks().subscribe({
       next: (data) => {
-        this.reportedFeedbacks = data;
+        // Injecter showReason = false dans chaque feedback
+        this.reportedFeedbacks = data.map(fb => ({ ...fb, showReason: false }));
       },
       error: (err) => {
         console.error('Error fetching reported feedbacks:', err);
       }
     });
   }
+  
 
   // Fonction pour supprimer un feedback signalé
   deleteReportedFeedback(id: number): void {
@@ -43,4 +45,25 @@ export class FeedbakListsignaleAdminComponent implements OnInit {
       });
     }
   }
+
+  toggleReason(selectedFb: Feedback): void {
+    this.reportedFeedbacks.forEach(fb => {
+      fb.showReason = fb === selectedFb ? !fb.showReason : false;
+    });
+  }
+
+   // Reject a reported feedback
+   rejectFeedback(id: number): void {
+    this.feedbackService.rejectFeedback(id).subscribe({
+      next: () => {
+        this.reportedFeedbacks = this.reportedFeedbacks.filter(fb => fb.id !== id);
+        alert('Feedback rejected successfully!');
+      },
+      error: (err) => {
+        console.error('Error rejecting feedback:', err);
+        alert('Failed to reject feedback');
+      }
+    });
+  }
+  
 }

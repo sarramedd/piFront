@@ -28,13 +28,17 @@ export class FeedbackService {
   }
 
   
-  reportFeedback(feedbackId: number): Observable<any> {
-    const url = `${this.apiUrl}/report-feedback/${feedbackId}`;
-    return this.http.put(url, {}, { responseType: 'text' }); // Indiquer que la réponse est un texte
+  reportFeedback(feedbackId: number, reason: string): Observable<string> {
+    return this.http.put<string>(`${this.apiUrl}/report-feedback/${feedbackId}?reason=${reason}`, { responseType: 'text' });
   }
   
+  
+  
+  
 
-  getReportedFeedbacks(): Observable<Feedback[]> {
+  
+
+   getReportedFeedbacks(): Observable<Feedback[]> {
     return this.http.get<Feedback[]>(`${this.apiUrl}/retrieve-reported-feedbacks`);
   }
 
@@ -42,6 +46,15 @@ export class FeedbackService {
   deleteReportedFeedback(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete-reported-feedback/${id}`);
   }
+
+  rejectFeedback(feedbackId: number): Observable<string> {
+    return this.http.put<string>(`${this.apiUrl}/reject-feedback/${feedbackId}`, {}, {
+      responseType: 'text' as 'json'
+    });
+  }
+  
+  
+  
   
 
   

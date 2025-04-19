@@ -18,7 +18,7 @@
           <!-- Menu déroulant -->
           <div *ngIf="openedMenuFeedbackId === feedback.id" class="dropdown-menu">
             <button (click)="startEditing(feedback)">✏️ Modifier</button>
-            <button (click)="reportFeedback(feedback)" [disabled]="feedback.reported">🚩 Signaler</button>
+            <button (click)="openReportModal(feedback)" [disabled]="feedback.reported">🚩 Signaler</button>
             <button (click)="deleteFeedback(feedback.id)">🗑️ Supprimer</button>
           </div>
         </div>
@@ -65,6 +65,33 @@
 <ng-template #noFeedback>
   <p>No feedbacks available</p>
 </ng-template>
+
+<!-- Report Modal -->
+<div *ngIf="reportModalOpen" class="report-modal">
+  <div class="modal-content">
+    <h3>Raison pour signaler</h3>
+    <textarea [(ngModel)]="reasonForReport" placeholder="Entrez votre raison..." rows="4"></textarea>
+    
+    <!-- Error message if reason is not provided -->
+    <p *ngIf="reasonForReport.trim().length === 0" class="error-message">
+      Vous devez entrer une raison avant de signaler.
+    </p>
+    <div class="modal-actions">
+     <!-- Exemple dans le modal -->
+    <!-- Exemple dans le modal -->
+<button (click)="reportFeedback()">Confirmer le signalement</button>
+
+
+
+
+      <button (click)="closeReportModal()">Annuler</button>
+    </div>
+    
+    
+</div>
+
+
+
 
 <!-- Fenêtre popup des réactions -->
 <div class="modal-backdrop" *ngIf="activeFeedback" (click)="closeModal()"></div>

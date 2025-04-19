@@ -11,4 +11,7 @@ export interface Feedback {
   reacts?: Reacts[];
   showReacts?: boolean; // Ajouté pour usage UI
   reported?: boolean;
+  reason?:string;
+  showReason?: boolean;
+  
 }
