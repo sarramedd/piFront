@@ -266,7 +266,7 @@ h3 {
 .reaction-button {
   margin: 5px;
   padding: 10px 20px;       /* Increased padding */
-  font-size: 2.1rem;         /* Larger text */
+  font-size: 1.1rem;         /* Larger text */
   border-radius: 8px;       
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -408,6 +408,85 @@ textarea {
   width: 100%;
   padding: 5px;
   resize: vertical;
+}
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  padding: 5px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-menu button {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 5px 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.dropdown-menu button:hover {
+  background-color: #f0f0f0;
+}
+/* Active reaction styling */
+.active-reaction {
+  border: 2px solid #007bff;
+  background-color: #d0e7ff !important;
+  transform: scale(1.2);
+  font-weight: bold;
+}
+
+/* Feedback container with reduced width */
+.feedback-container {
+  max-width: 850px;  /* Adjust the max width as needed */
+  margin: 0 auto;    /* Center the container */
+  padding: 0 16px;   /* Add horizontal padding if necessary */
+}
+
+/* Style for each feedback item */
+li {
+  background: #f9f9f9;
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  max-width: 100%;  /* Ensure items don't exceed the container's width */
+}
+
+/* Optional: Adjust the width of the message text */
+h3 {
+  max-width: 95%;  /* Prevents the title from expanding too much */
+  overflow-wrap: break-word; /* Wraps long words */
+}
+
+/* Adjust reaction buttons layout if necessary */
+.reaction-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* Add some space between buttons */
+}
+
+/* Modal adjustment for smaller width */
+.modal {
+  width: 60%;  /* Adjust the modal width */
+  max-width: 500px; /* Cap the modal width */
+}
+
+/* Add media query for smaller screens */
+@media (max-width: 768px) {
+  .feedback-container {
+    width: 90%; /* Make the feedback container take 90% of the screen */
+  }
+
+  .reaction-button {
+    font-size: 1.4rem;
+    padding: 20px 40px;  /* Adjust size for mobile screens */
+  }
 }
 
 

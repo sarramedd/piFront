@@ -23,6 +23,7 @@ import { FeedbackListComponent } from './components/Feedback/feedback-list/feedb
 import { AddfeedbackComponent } from './components/Feedback/addfeedback/addfeedback.component';
 import { AddFeedbackAdminComponent } from './components/FeedbackAdmin/add-feedback-admin/add-feedback-admin.component';
 import { FeedbackListAdminComponent } from './components/FeedbackAdmin/feedback-list-admin/feedback-list-admin.component';
+import { FeedbakListsignaleAdminComponent } from './components/FeedbackAdmin/feedbak-listsignale-admin/feedbak-listsignale-admin.component';
 
 const routes: Routes = [
   // E-commerce
@@ -47,7 +48,7 @@ const routes: Routes = [
   { path: 'addFeedback', component: AddfeedbackComponent},
   { path: 'list-Feedback', component: FeedbackListAdminComponent},
   { path: 'add-Feedback', component: AddFeedbackAdminComponent},
-
+  { path: 'reported-Feedbacks', component: FeedbakListsignaleAdminComponent},
 ];
 
 @NgModule({

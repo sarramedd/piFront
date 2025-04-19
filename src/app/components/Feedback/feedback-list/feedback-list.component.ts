@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { Feedback } from 'src/app/core/models/feedback';
 import { Reaction, Reacts } from 'src/app/core/models/reacts';
 import { FeedbackService } from 'src/app/services/feedbacks.service';
@@ -15,6 +15,9 @@ export class FeedbackListComponent implements OnInit {
   reactions: Reaction[] = ['LIKE', 'DISLIKE', 'LOVE', 'LAUGH', 'SAD', 'ANGRY'];
   editingFeedbackId: number | null = null;
   editedMessage: string = '';
+  openedMenuFeedbackId: number | null = null;
+  successMessage: string = '';
+  
   
 
   // Mapping des types de réactions aux émojis
@@ -42,7 +45,9 @@ export class FeedbackListComponent implements OnInit {
 
   constructor(
     private feedbackService: FeedbackService,
-    private reactsService: ReactsService
+    private reactsService: ReactsService,
+      private cdRef: ChangeDetectorRef,
+      private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -188,6 +193,60 @@ export class FeedbackListComponent implements OnInit {
         this.errorMessage = 'Failed to update feedback';
       }
     );
+  }
+
+  toggleMenu(id: number | undefined): void {
+    if (id !== undefined) {
+      this.openedMenuFeedbackId = this.openedMenuFeedbackId === id ? null : id;
+    }
+  }
+  
+  
+  reportFeedback(feedback: Feedback): void {
+    console.log('Signalement de ce feedback à l\'admin:', feedback);
+  
+    if (feedback.id !== undefined) {
+      this.feedbackService.reportFeedback(feedback.id).subscribe(
+        (response: string) => {
+          alert(response); // Afficher le message retourné par le serveur
+          feedback.reported = true; // Mettre à jour l'état local du feedback
+        },
+        (error) => {
+          console.error('Erreur lors du signalement:', error);
+          this.errorMessage = 'Échec du signalement du feedback';
+        }
+      );
+    } else {
+      console.error('Feedback ID is undefined');
+      this.errorMessage = 'ID de feedback non valide';
+    }
+  }
+  
+  
+  
+  deleteFeedback(id: number | undefined): void {
+    if (id !== undefined) {
+      this.feedbackService.deleteFeedback(id.toString()).subscribe({
+        next: () => {
+          this.feedbacks = this.feedbacks.filter(fb => fb.id !== id);
+          this.successMessage = 'Feedback supprimé avec succès !';
+          this.errorMessage = '';
+  
+          alert('Feedback supprimé avec succès !');
+  
+          this.ngZone.run(() => {
+            this.cdRef.detectChanges();
+          });
+        },
+        error: (err) => {
+          console.error('Erreur lors de la suppression :', err);
+          this.errorMessage = 'Échec de la suppression du feedback';
+          this.successMessage = '';
+  
+          alert('Échec de la suppression du feedback');
+        }
+      });
+    }
   }
   
   

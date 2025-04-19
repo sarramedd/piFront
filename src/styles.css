@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+/* CSS pour le header et la navigation */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#navigation {
+    position: fixed;
+    top: 100px;  /* Ajuste en fonction de la hauteur de ton header */
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Décalage du contenu principal pour ne pas qu'il soit caché sous le header */
+body {
+    margin-top: 250px; /* Ajuste cette valeur selon la hauteur de ton header + navigation */
+}

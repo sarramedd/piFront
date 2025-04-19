@@ -10,4 +10,5 @@ export interface Feedback {
   item?: { id: number }; // au lieu de Item complet
   reacts?: Reacts[];
   showReacts?: boolean; // Ajouté pour usage UI
+  reported?: boolean;
 }

@@ -1,0 +1,14 @@
+.card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .card h5 {
+    font-size: 18px;
+    color: #d9534f;
+  }
+  
+  .card button {
+    float: right;
+  }
+  

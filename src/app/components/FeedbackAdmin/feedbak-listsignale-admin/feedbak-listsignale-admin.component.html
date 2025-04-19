@@ -1,0 +1,13 @@
+<div *ngIf="reportedFeedbacks.length > 0; else noReportedFeedbacks">
+    <div *ngFor="let fb of reportedFeedbacks" class="card mb-3 p-3 shadow">
+      <h5 class="text-danger">{{ fb.message }}</h5>
+      <button *ngIf="fb.id" (click)="deleteReportedFeedback(fb.id)" class="btn btn-danger">
+        <i class="fa fa-trash"></i> Delete
+      </button>      
+    </div>
+  </div>
+  
+  <ng-template #noReportedFeedbacks>
+    <p class="text-center text-muted">No reported feedbacks available.</p>
+  </ng-template>
+  

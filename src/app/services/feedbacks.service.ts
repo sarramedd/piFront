@@ -26,5 +26,23 @@ export class FeedbackService {
   deleteFeedback(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete-feedback/${id}`);
   }
+
+  
+  reportFeedback(feedbackId: number): Observable<any> {
+    const url = `${this.apiUrl}/report-feedback/${feedbackId}`;
+    return this.http.put(url, {}, { responseType: 'text' }); // Indiquer que la réponse est un texte
+  }
+  
+
+  getReportedFeedbacks(): Observable<Feedback[]> {
+    return this.http.get<Feedback[]>(`${this.apiUrl}/retrieve-reported-feedbacks`);
+  }
+
+  // Supprimer un feedback signalé
+  deleteReportedFeedback(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/delete-reported-feedback/${id}`);
+  }
+  
+
   
 }
