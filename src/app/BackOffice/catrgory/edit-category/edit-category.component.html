@@ -1,0 +1,36 @@
+<div class="container mt-4">
+    <h2>Modifier une catégorie</h2>
+    <form [formGroup]="categoryForm" (ngSubmit)="updateCategory()">
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Nom de la catégorie</mat-label>
+        <input matInput formControlName="name" required />
+        <mat-error *ngIf="categoryForm.controls['name'].hasError('required')">Nom requis</mat-error>
+      </mat-form-field>
+  
+      <!-- <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Type de catégorie</mat-label>
+        <mat-select formControlName="categoryType" required>
+          <mat-option *ngFor="let type of categoryTypes" [value]="type">
+            {{ type }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="categoryForm.controls['categoryType'].hasError('required')">Sélectionner un type</mat-error>
+      </mat-form-field> -->
+  
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" required />
+        <mat-error *ngIf="categoryForm.controls['description'].hasError('required')">Description requise</mat-error>
+      </mat-form-field>
+  
+      <!-- <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Image (URL)</mat-label>
+        <input matInput formControlName="image" />
+      </mat-form-field> -->
+  
+      <div class="d-flex justify-content-end mt-3">
+        <button mat-raised-button color="primary" type="submit" [disabled]="categoryForm.invalid">Mettre à jour</button>
+      </div>
+    </form>
+  </div>
+  

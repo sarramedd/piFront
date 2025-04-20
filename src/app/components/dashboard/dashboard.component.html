@@ -1,5 +1,5 @@
 <div class="container-scroller">
-  <app-sidebar></app-sidebar>
+  <!-- <app-sidebar></app-sidebar> -->
   
   <div class="container-fluid page-body-wrapper">
     <app-navbar></app-navbar>
@@ -16,7 +16,9 @@
           </nav>
         </div>
         <div class="row">
-          <div class="col-lg-12 grid-margin stretch-card">
+          <router-outlet></router-outlet>
+
+          <!-- <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
                 <h4 class="card-title">Basic Table</h4>
@@ -190,9 +192,16 @@
             </div>
   
           </div>
-        </div>
+        </div> -->
       </div>
-      
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
       <app-footer></app-footer>
     </div>
   </div>

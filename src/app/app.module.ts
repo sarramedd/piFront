@@ -33,6 +33,21 @@ import { IndexComponent } from './components/index/index.component';
 import { ContractComponent } from './components/contract/contract.component';
 import { ItemComponent } from './components/item/item.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { DisplayItemsFrontComponent } from './components/items/display-items-front/display-items-front.component';
+import { AddItemFrontComponent } from './components/items/add-item-front/add-item-front.component';
+import { UpdateItemComponent } from './components/items/update-item/update-item.component';
+import { ToastrModule } from 'ngx-toastr';
+import { MaterialModule } from 'material.module';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { AddCategoryComponent } from './BackOffice/catrgory/add-category/add-category.component';
+import { CategoryListComponent } from './BackOffice/catrgory/category-list/category-list.component';
+import { EditCategoryComponent } from './BackOffice/catrgory/edit-category/edit-category.component';
+import { ItemChartComponent } from './BackOffice/item-chart/item-chart.component';
+import { AddItemComponent } from './BackOffice/items/add-item/add-item.component';
+import { EditItemComponent } from './BackOffice/items/edit-item/edit-item.component';
+import { ItemListComponent } from './BackOffice/items/item-list/item-list.component';
+import { ChartModule } from 'primeng/chart'; // <--- Ajoute ceci
+
 
 @NgModule({
   declarations: [
@@ -62,14 +77,37 @@ import { PaymentComponent } from './components/payment/payment.component';
     ContractComponent,
     ItemComponent,
     PaymentComponent,
+
+    //Items
+    // npm install primeng@16.3.1 chart.js --save
+    //npm i angular-animations   
+    //ng add @angular/material  
+    //npm install primeicons --save
+    //kdfiljkihdfsk@erkHUG5
+    DisplayItemsFrontComponent,
+    AddItemFrontComponent,
+    UpdateItemComponent,
+    // BackOffice
+    AddCategoryComponent,
+    CategoryListComponent,  
+    EditCategoryComponent,
+    ItemListComponent,
+    EditItemComponent,
+    AddItemComponent,
+    ItemChartComponent,
+
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    RouterModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
-    RouterModule
+    MaterialModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+    ChartModule
   ],
   providers: [],
   bootstrap: [AppComponent]

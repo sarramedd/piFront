@@ -19,21 +19,51 @@ import { AdminProfileComponent } from './components/admin-profile-component/admi
 import { UserListComponent } from './components/user-list/user-list.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { AddItemFrontComponent } from './components/items/add-item-front/add-item-front.component';
+import { DisplayItemsFrontComponent } from './components/items/display-items-front/display-items-front.component';
+import { UpdateItemComponent } from './components/items/update-item/update-item.component';
+import { CategoryListComponent } from './BackOffice/catrgory/category-list/category-list.component';
+import { AddCategoryComponent } from './BackOffice/catrgory/add-category/add-category.component';
+import { EditCategoryComponent } from './BackOffice/catrgory/edit-category/edit-category.component';
+import { ItemChartComponent } from './BackOffice/item-chart/item-chart.component';
+import { AddItemComponent } from './BackOffice/items/add-item/add-item.component';
+import { EditItemComponent } from './BackOffice/items/edit-item/edit-item.component';
+import { ItemListComponent } from './BackOffice/items/item-list/item-list.component';
 
 const routes: Routes = [
   // E-commerce
-  { path: '', component: IndexComponent },
-  { path: 'store', component: StoreComponent },
-  { path: 'product', component: ProductComponent },
-  { path: 'checkout', component: CheckoutComponent },
-  { path: 'contract/:id', component: ContractComponent },
-  { path: 'item', component: ItemComponent },
-  { path: 'payment/:contractId', component: PaymentComponent },
+  {
+    path: '', component: IndexComponent,
+    children: [
+      { path: 'displayItems', component: DisplayItemsFrontComponent },
+      { path: 'addItemFront', component: AddItemFrontComponent },
+      { path: 'updateItemFront/:id', component: UpdateItemComponent },
+      { path: 'store', component: StoreComponent },
+      { path: 'product', component: ProductComponent },
+      { path: 'checkout', component: CheckoutComponent },
+      { path: 'contract/:id', component: ContractComponent },
+      { path: 'item', component: ItemComponent },
+      { path: 'payment/:contractId', component: PaymentComponent },]
+  },
+
 
   // Auth & Admin
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  {
+    path: 'dashboard', component: DashboardComponent,
+    children: [
+      // *****    Category Routes   ***** //
+      { path: "listCategorie", component: CategoryListComponent },
+      { path: "addCategorie", component: AddCategoryComponent },
+      { path: "editCategorie/:id", component: EditCategoryComponent },
+      { path: "pieChart", component: ItemChartComponent },
+      // *****    Item Routes   ***** //
+      { path: "listItems", component: ItemListComponent },
+      { path: "addItem", component: AddItemComponent },
+      { path: "editItem/:id", component: EditItemComponent },
+    ]
+  },
   { path: 'profile', component: AdminProfileComponent },
   { path: 'ListUser', component: UserListComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },

@@ -1,0 +1,56 @@
+<!-- Filters -->
+<div class="row" style="padding: 10px 5%; display: flex; gap: 20px; align-items: center;">
+  <div style="flex: 1;">
+    <select [(ngModel)]="selectedCategory" class="form-control">
+      <option value="">Toutes les catégories</option>
+      <option *ngFor="let category of categories" [value]="category">
+        {{ category }}
+      </option>
+    </select>
+  </div>
+
+  <div style="flex: 1;">
+    <select [(ngModel)]="sortOrder" class="form-control">
+      <option value="">Trier par prix</option>
+      <option value="asc">Prix croissant</option>
+      <option value="desc">Prix décroissant</option>
+    </select>
+  </div>
+</div>
+
+<!-- Add Item button -->
+<div style="padding-left: 5%;">
+  <button style="width: 12%;" class="btn btn-sm btn-success" (click)="addItem()">Add Item</button>
+</div>
+
+<br>
+
+<!-- Products grid -->
+<div class="container">
+  <div class="row" *ngFor="let group of groupItems(itemsFiltered(), 3)">
+    <div class="col-md-4" *ngFor="let item of group">
+      <div class="product-grid">
+        <div class="product-image">
+          <a href="#" class="image">
+            <img [src]="item.image" style="height: 180px; width: 100%; object-fit: cover;" />
+          </a>
+          <ul class="product-links"></ul>
+          <span class="product-discount-label">{{ item.itemCondition }}/10</span>
+          <a href="" class="add-to-cart">{{ item.categoryType }}</a>
+        </div>
+        <div class="product-content">
+          <h3 class="title"><a href="#">{{ item.name }}</a></h3>
+          <div class="price">{{ item.price }} DT</div>
+          <div style="word-wrap: break-word; overflow-wrap: break-word;">
+            {{ item.description }}
+          </div>
+          <div class="mt-2 d-flex gap-1">
+            <button [routerLink]="['/updateItemFront', item.id]" class="btn btn-sm btn-secondary w-50">update</button>
+            <button class="btn btn-sm btn-dark w-50" (click)="deleteItem(item.id)">delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
