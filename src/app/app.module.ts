@@ -36,6 +36,7 @@ import { IndexComponent } from './components/index/index.component';
 import { ContractComponent } from './components/contract/contract.component';
 import { ItemComponent } from './components/item/item.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { PaymentComponent } from './components/payment/payment.component';
     ContractComponent,
     ItemComponent,
     PaymentComponent,
+    VerificationSmsComponent,
   ],
   imports: [
     BrowserModule,

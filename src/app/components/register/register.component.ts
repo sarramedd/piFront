@@ -1,32 +1,41 @@
 import { Component } from '@angular/core';
-import { UserService } from '../../services/user.service';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html'
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  // Définition des champs utilisateur sans id
-  user = {
-    cin: 0,
-    name: '',
-    email: '',
-    password: '',
-    phone: '',
-    address: '',
-    genre: null,
-    status: 'Active',
-    dateDeNaissance: '',
-    role: 'BORROWER'
+  user: any = {
+    genre: "",
+    role: "",
+    phone: "",
   };
   confirmPassword: string = '';
   message: string = '';
   isLoading: boolean = false;
+  emailExistsError: boolean = false;
+  phoneRegex = /^\+216[0-9]{8}$/;
 
   constructor(private userService: UserService, private router: Router) {}
 
-  register() {
+  register(registerForm: NgForm) {
+    this.message = '';
+    this.emailExistsError = false;
+
+    if (registerForm.invalid) {
+      this.message = 'Veuillez remplir tous les champs requis correctement.';
+      return;
+    }
+
+    if (!this.phoneRegex.test(this.user.phone)) {
+      this.message = 'Numéro de téléphone invalide. Format attendu: +216XXXXXXXX.';
+      return;
+    }
+
     if (this.user.password !== this.confirmPassword) {
       this.message = 'Les mots de passe ne correspondent pas.';
       return;
@@ -34,21 +43,23 @@ export class RegisterComponent {
 
     this.isLoading = true;
 
-    // Envoi des données d'inscription
     this.userService.registerUser(this.user).subscribe({
-      next: response => {
+      next: (response: any) => {
         this.isLoading = false;
-        this.message = 'Inscription réussie !';
+        this.message = 'Inscription réussie! Un code de vérification a été envoyé à votre téléphone.';
+        const userId = response.id;
         setTimeout(() => {
-          this.router.navigate(['/login']);
+          this.router.navigate(['/verification-sms', userId]);
         }, 2000);
       },
-      error: err => {
+      error: (err) => {
         this.isLoading = false;
-        if (err.error === 'Cette adresse e-mail est déjà utilisée.') {
-          this.message = err.error;
+        if (err.error === 'Cet email est déjà utilisé.') {
+          this.emailExistsError = true;
+          this.message = 'Cet email est déjà utilisé.';
         } else {
-          this.message = 'Une erreur est survenue, veuillez réessayer plus tard.';
+          this.message = 'Erreur lors de l\'inscription. Veuillez réessayer.';
+          console.error('Registration error:', err);
         }
       }
     });

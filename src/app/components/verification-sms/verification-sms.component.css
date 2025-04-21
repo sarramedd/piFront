@@ -1,0 +1,16 @@
+.verification-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .success-message {
+    color: green;
+    margin-bottom: 10px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-bottom: 10px;
+  }
+  

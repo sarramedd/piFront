@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthServiceService } from './auth-service.service'; // Assurez-vous d'importer votre AuthService pour récupérer le token JWT
 
 @Injectable({
   providedIn: 'root'
@@ -10,59 +9,38 @@ import { AuthServiceService } from './auth-service.service'; // Assurez-vous d'i
 export class UserService {
   private readonly baseUrl = 'http://localhost:8088/borrowit/api/users';
 
-  constructor(private http: HttpClient, private authService: AuthServiceService) { }
+  constructor(private http: HttpClient) { }
 
-  getUsers(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl).pipe(
-      map(users => users.map(user => this.normalizeUser(user)))
-    );
-  }
   registerUser(user: any): Observable<any> {
-  return this.http.post(`${this.baseUrl}/register`, user);
-}
+    return this.http.post(`${this.baseUrl}/register`, user);
+  }
 
+  verifyUserCode(userId: number, verificationCode: string): Observable<any> {
+    const url = `${this.baseUrl}/verify/${userId}?verificationCode=${verificationCode}`;
+    return this.http.post(url, {}, { responseType: 'text' });
+  }
 
   getUserByEmail(email: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/email/${email}`).pipe(
-      map(user => this.normalizeUser(user))
-    );
+    return this.http.get<any>(`${this.baseUrl}/email/${email}`);
+  }
+
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl);
   }
 
   updateUser(id: number, userData: any): Observable<any> {
-    const token = this.authService.getToken(); // Récupérer le token JWT
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
-    // Envoyer la requête PUT pour mettre à jour les informations de l'utilisateur
-    return this.http.put<any>(`${this.baseUrl}/${id}`, userData, { headers });
+    return this.http.put<any>(`${this.baseUrl}/${id}`, userData);
   }
-  
 
   banUser(userId: number): Observable<any> {
-    const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.put<any>(`${this.baseUrl}/ban/${userId}`, {}, { headers }).pipe(
-      map(user => ({ ...user, status: 'Banned' }))
-    );
+    return this.http.put<any>(`${this.baseUrl}/ban/${userId}`, {});
   }
 
   unbanUser(userId: number): Observable<any> {
-    const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.put<any>(`${this.baseUrl}/unban/${userId}`, {}, { headers }).pipe(
-      map(user => ({ ...user, status: 'Active' }))
-    );
+    return this.http.put<any>(`${this.baseUrl}/unban/${userId}`, {});
   }
 
   deleteUser(userId: number): Observable<void> {
-    const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.delete<void>(`${this.baseUrl}/${userId}`, { headers });
-  }
-
-  private normalizeUser(user: any): any {
-    return {
-      ...user,
-      status: user.status || 'Active'
-    };
+    return this.http.delete<void>(`${this.baseUrl}/${userId}`);
   }
 }
