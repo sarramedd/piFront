@@ -48,6 +48,10 @@
             <button [routerLink]="['/updateItemFront', item.id]" class="btn btn-sm btn-secondary w-50">update</button>
             <button class="btn btn-sm btn-dark w-50" (click)="deleteItem(item.id)">delete</button>
           </div>
+           <!-- New Feedback Button -->
+          <div class="mt-2">
+          <button class="btn btn-sm btn-info w-100" [routerLink]="['/add-feedback', item.id]">Give Feedback</button>
+          </div>
         </div>
       </div>
     </div>

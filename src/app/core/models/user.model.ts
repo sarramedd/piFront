@@ -1,3 +1,5 @@
+import { Feedback } from "./feedback";
+
 export class User {
     id: number;
     cin: number;
@@ -10,6 +12,8 @@ export class User {
     status: string;
     dateDeNaissance: string; // Format de date ou chaîne, selon votre besoin
     role: 'ADMIN' | 'BORROWER' | 'OWNER';  // Le type de rôle correspondant à l'énumération dans Spring Boot
+     // Optionnel : feedbacks de l'utilisateur
+    feedbacks?: Feedback[];
   
     // Optionnel: Constructeur pour initialiser les propriétés
     constructor(

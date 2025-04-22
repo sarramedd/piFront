@@ -46,7 +46,14 @@ import { ItemChartComponent } from './BackOffice/item-chart/item-chart.component
 import { AddItemComponent } from './BackOffice/items/add-item/add-item.component';
 import { EditItemComponent } from './BackOffice/items/edit-item/edit-item.component';
 import { ItemListComponent } from './BackOffice/items/item-list/item-list.component';
-import { ChartModule } from 'primeng/chart'; // <--- Ajoute ceci
+import { ChartModule } from 'primeng/chart';
+import { FeedbackListComponent } from './components/Feedback/feedback-list/feedback-list.component';
+import { AddfeedbackComponent } from './components/Feedback/addfeedback/addfeedback.component';
+import { AddFeedbackAdminComponent } from './FeedbackAdmin/add-feedback-admin/add-feedback-admin.component';
+import { FeedbackListsignaleAdminComponent } from './FeedbackAdmin/feedback-listsignale-admin/feedback-listsignale-admin.component';
+import { FeedbackListAdminComponent } from './FeedbackAdmin/feedback-list-admin/feedback-list-admin.component';
+import { FeedbacksChartComponent } from './FeedbackAdmin/feedbacks-chart/feedbacks-chart.component';
+
 
 
 @NgModule({
@@ -95,6 +102,12 @@ import { ChartModule } from 'primeng/chart'; // <--- Ajoute ceci
     EditItemComponent,
     AddItemComponent,
     ItemChartComponent,
+    FeedbackListComponent,
+    AddfeedbackComponent,
+    AddFeedbackAdminComponent,
+    FeedbackListAdminComponent,
+    FeedbackListsignaleAdminComponent,
+    FeedbacksChartComponent,
 
   ],
   imports: [

@@ -1,0 +1,46 @@
+<div class="container mt-5">
+    <div class="card shadow p-4">
+      <h2 class="mb-4 text-primary text-center">Ajouter un Feedback</h2>
+  
+      <form (ngSubmit)="submitFeedback()">
+        <!-- Message -->
+        <div class="form-group mb-3">
+          <label for="message" class="form-label">Message :</label>
+          <textarea
+            id="message"
+            class="form-control"
+            [(ngModel)]="feedback.message"
+            name="message"
+            rows="4"
+            required
+          ></textarea>
+        </div>
+  
+        <!-- Réaction -->
+        <div class="form-group mb-4">
+          <label for="react" class="form-label">Réaction :</label>
+          <select
+  *ngIf="feedback.reacts && feedback.reacts[0]"
+  id="react"
+  class="form-select"
+  [(ngModel)]="feedback.reacts[0].reaction"
+  name="reaction"
+>
+
+            <option value="LIKE">👍 Like</option>
+            <option value="LOVE">❤️ Love</option>
+            <option value="LAUGH">😂 Haha</option>
+            <option value="SAD">😢 Sad</option>
+            <option value="ANGRY">😠 Angry</option>
+            <option value="DISLIKE">👎 Dislike</option>
+          </select>
+        </div>
+  
+        <!-- Submit button -->
+        <div class="text-center">
+          <button type="submit" class="btn btn-success px-4">Envoyer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

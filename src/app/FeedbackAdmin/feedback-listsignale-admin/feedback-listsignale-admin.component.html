@@ -1,0 +1,37 @@
+<button class="btn btn-outline-danger" (click)="goToAllFeedbacks()">View all Feedbacks</button>
+<div *ngIf="reportedFeedbacks.length > 0; else noReportedFeedbacks" class="feedback-container">
+    <div *ngFor="let fb of reportedFeedbacks" class="card mb-3 p-3 shadow feedback-card">
+      
+      <div class="feedback-header">
+        <h5 class="message">📝 {{ fb.message }}</h5>
+        <p class="user-name"><strong>👤 User:</strong> {{ fb.user?.name || 'Unknown user' }}</p>
+      
+        <!-- Regroupe les icônes pour les aligner à droite -->
+        <div class="icon-group">
+          <button *ngIf="fb.id" (click)="deleteReportedFeedback(fb.id)" class="icon-button btn-delete">
+            <i class="fa fa-trash"></i>
+          </button>
+          <button *ngIf="fb.id" (click)="rejectFeedback(fb.id)" class="icon-button btn-reject">
+            <i class="fa fa-ban"></i>
+          </button>
+        </div>
+      </div>
+      
+  
+      <p class="date"><strong>📅 Date:</strong> {{ fb.date | date: 'medium' }}</p>
+      
+  
+      <button class="btn btn-info btn-sm mt-2" (click)="toggleReason(fb)">
+        {{ fb.showReason ? 'Hide Reason' : 'Show Reason' }}
+      </button>
+  
+      <div *ngIf="fb.showReason" class="reason-box mt-2">
+        <strong>🚨 Reason:</strong> {{ fb.reason || 'No reason provided.' }}
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #noReportedFeedbacks>
+    <p class="text-center text-muted">No reported feedbacks available.</p>
+  </ng-template>
+  

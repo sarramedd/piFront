@@ -29,6 +29,12 @@ import { ItemChartComponent } from './BackOffice/item-chart/item-chart.component
 import { AddItemComponent } from './BackOffice/items/add-item/add-item.component';
 import { EditItemComponent } from './BackOffice/items/edit-item/edit-item.component';
 import { ItemListComponent } from './BackOffice/items/item-list/item-list.component';
+import { FeedbackListComponent } from './components/Feedback/feedback-list/feedback-list.component';
+import { AddfeedbackComponent } from './components/Feedback/addfeedback/addfeedback.component';
+import { FeedbackListAdminComponent } from './FeedbackAdmin/feedback-list-admin/feedback-list-admin.component';
+import { AddFeedbackAdminComponent } from './FeedbackAdmin/add-feedback-admin/add-feedback-admin.component';
+import { FeedbackListsignaleAdminComponent } from './FeedbackAdmin/feedback-listsignale-admin/feedback-listsignale-admin.component';
+import { FeedbacksChartComponent } from './FeedbackAdmin/feedbacks-chart/feedbacks-chart.component';
 
 const routes: Routes = [
   // E-commerce
@@ -43,7 +49,9 @@ const routes: Routes = [
       { path: 'checkout', component: CheckoutComponent },
       { path: 'contract/:id', component: ContractComponent },
       { path: 'item', component: ItemComponent },
-      { path: 'payment/:contractId', component: PaymentComponent },]
+      { path: 'payment/:contractId', component: PaymentComponent },
+      { path: 'listFeedback', component: FeedbackListComponent },
+      { path: 'addFeedback', component: AddfeedbackComponent},]
   },
 
 
@@ -62,12 +70,21 @@ const routes: Routes = [
       { path: "listItems", component: ItemListComponent },
       { path: "addItem", component: AddItemComponent },
       { path: "editItem/:id", component: EditItemComponent },
+      // *****    Feedbacks Routes   ***** //
+      { path: 'list-Feedback', component: FeedbackListAdminComponent},
+      { path: 'feedbackschart', component: FeedbacksChartComponent},
+      { path: 'reported-Feedbacks', component: FeedbackListsignaleAdminComponent},
+ 
     ]
   },
   { path: 'profile', component: AdminProfileComponent },
   { path: 'ListUser', component: UserListComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  
+  
+  { path: 'add-Feedback', component: AddFeedbackAdminComponent},
+ 
 ];
 
 @NgModule({

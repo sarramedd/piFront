@@ -1,4 +1,6 @@
 import { User } from '../../core/models/user.model'; 
+import { Category } from './category';
+import { Feedback } from './feedback';
 
 
 export interface Item {
@@ -9,5 +11,6 @@ export interface Item {
   availability: boolean;
   price: number;
   owner: User;
+  //feedbacks?: Feedback[];
 
 }
