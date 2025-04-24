@@ -1,20 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { User } from '../../core/models/user.model'; // Importation du modèle User
-import { Observable } from 'rxjs'; // Ajoutez ceci en haut de votre fichier
-
+import { User } from '../../core/models/user.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css']
+  styleUrls: [
+    './user-list.component.css',
+    '../../../assets/bootstrap-template/css/style.css',
+    '../../../assets/bootstrap-template/vendors/mdi/css/materialdesignicons.min.css',
+    '../../../assets/bootstrap-template/vendors/font-awesome/css/font-awesome.min.css',
+    '../../../assets/bootstrap-template/vendors/css/vendor.bundle.base.css'
+  ],
+  encapsulation: ViewEncapsulation.None
 })
 export class UserListComponent implements OnInit {
-  users: User[] = []; // Typage des utilisateurs avec le modèle User
+  users: User[] = [];
+  filteredUsers: User[] = [];
+  displayedUsers: User[] = [];
   isLoading: boolean = false;
   errorMessage: string = '';
   currentAction: string = '';
   actionUserId: number | null = null;
+  searchTerm: string = '';
+  
+  // Pagination
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalItems: number = 0;
+  totalPages: number = 1;
+
+  // Expose Math to template
+  Math = Math;
 
   constructor(private userService: UserService) { }
 
@@ -25,21 +43,86 @@ export class UserListComponent implements OnInit {
   loadUsers(): void {
     this.isLoading = true;
     this.errorMessage = '';
+    
     this.userService.getUsers().subscribe({
-      next: (data: User[]) => { // Typage des données reçues
-        // Mise à jour de la liste des utilisateurs
+      next: (data: User[]) => {
         this.users = data.map(user => ({
           ...user,
-          status: user.status || 'Active' // Valeur par défaut pour le statut
+          status: user.status || 'Active'
         }));
+        this.filteredUsers = [...this.users];
+        this.totalItems = this.filteredUsers.length;
+        this.calculateTotalPages();
+        this.updateDisplayedUsers();
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.errorMessage = 'Erreur lors du chargement des utilisateurs';
         this.isLoading = false;
         console.error(error);
       }
     });
+  }
+
+  applyFilter(): void {
+    if (!this.searchTerm) {
+      this.filteredUsers = [...this.users];
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredUsers = this.users.filter(user => 
+        user.name.toLowerCase().includes(term) || 
+        user.email.toLowerCase().includes(term)
+      );
+    }
+    this.currentPage = 1;
+    this.totalItems = this.filteredUsers.length;
+    this.calculateTotalPages();
+    this.updateDisplayedUsers();
+  }
+
+  // Méthodes de pagination
+  calculateTotalPages(): void {
+    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages > 0 ? this.totalPages : 1;
+    }
+  }
+
+  updateDisplayedUsers(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.displayedUsers = this.filteredUsers.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+      this.currentPage = page;
+      this.updateDisplayedUsers();
+    }
+  }
+
+  getPages(): number[] {
+    const pages: number[] = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = startPage + maxVisiblePages - 1;
+
+    if (endPage > this.totalPages) {
+      endPage = this.totalPages;
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  onItemsPerPageChange(): void {
+    this.currentPage = 1;
+    this.calculateTotalPages();
+    this.updateDisplayedUsers();
   }
 
   confirmAction(action: string, userId: number): void {
@@ -69,12 +152,11 @@ export class UserListComponent implements OnInit {
     };
 
     actions[action].subscribe({
-      next: (response) => {
-        // Mise à jour locale de l'état des utilisateurs
+      next: () => {
         this.updateUserStatus(userId, action);
         this.resetAction();
       },
-      error: (error) => {
+      error: (error: any) => {
         this.errorMessage = `Erreur lors ${this.getActionName(action)}`;
         this.isLoading = false;
         console.error(error);
@@ -86,16 +168,15 @@ export class UserListComponent implements OnInit {
   updateUserStatus(userId: number, action: string): void {
     const userIndex = this.users.findIndex(u => u.id === userId);
     if (userIndex !== -1) {
-      const updatedUser = this.users[userIndex];
-      if (action === 'ban') {
-        updatedUser.status = 'Banned';
-      } else if (action === 'unban') {
-        updatedUser.status = 'Active';
-      } else if (action === 'delete') {
-        this.users.splice(userIndex, 1); // Suppression de l'utilisateur
+      if (action === 'delete') {
+        this.users.splice(userIndex, 1);
+        this.totalItems--;
+      } else {
+        this.users[userIndex].status = action === 'ban' ? 'Banned' : 'Active';
       }
-      // Mise à jour immuable
+      
       this.users = [...this.users];
+      this.applyFilter(); // Re-appliquer le filtre après modification
     }
   }
 

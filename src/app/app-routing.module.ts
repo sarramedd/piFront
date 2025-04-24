@@ -10,8 +10,8 @@ import { IndexComponent } from './components/index/index.component';
 import { ContractComponent } from './components/contract/contract.component';
 import { ItemComponent } from './components/item/item.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
 
-// Pages utilisateur/admin
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -54,9 +54,19 @@ const routes: Routes = [
       { path: 'addFeedback', component: AddfeedbackComponent},]
   },
 
+ { path: '', component: IndexComponent },
+{ path: 'store', component: StoreComponent },
+{ path: 'product', component: ProductComponent },
+
+ { path: 'checkout', component: CheckoutComponent },
+  { path: 'contract/:id', component: ContractComponent },
+  { path: 'item', component: ItemComponent },
+ { path: 'payment/:contractId', component: PaymentComponent },
+
 
   // Auth & Admin
   { path: 'login', component: LoginComponent },
+  { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   {
     path: 'dashboard', component: DashboardComponent,
@@ -79,6 +89,7 @@ const routes: Routes = [
   },
   { path: 'profile', component: AdminProfileComponent },
   { path: 'ListUser', component: UserListComponent },
+  { path: 'verification-sms/:id', component: VerificationSmsComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   

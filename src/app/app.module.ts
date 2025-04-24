@@ -19,9 +19,12 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 
 // E-commerce & Shared
 import { HeaderComponent } from './components/shared/header/header.component';
+import { FooterBackComponent } from './components/footer/footer.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
-import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
 
+
+import { SidebarComponent } from './components/shared/sidebar/sidebar.component'; 
+import { SidebarBackComponent } from './components/sidebar/sidebar.component';
 // Navbar
 import { NavbarComponent } from './components/navbar/navbar.component';  // Ajoute cette ligne
 
@@ -55,6 +58,8 @@ import { FeedbackListAdminComponent } from './FeedbackAdmin/feedback-list-admin/
 import { FeedbacksChartComponent } from './FeedbackAdmin/feedbacks-chart/feedbacks-chart.component';
 
 
+import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
+
 
 @NgModule({
   declarations: [
@@ -64,14 +69,17 @@ import { FeedbacksChartComponent } from './FeedbackAdmin/feedbacks-chart/feedbac
     LoginComponent,
     RegisterComponent,
     DashboardComponent,
+    FooterComponent,
     AdminProfileComponent,
     UserListComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
+    FooterBackComponent,
+    SidebarBackComponent,
 
     // Shared & Layout
     HeaderComponent,
-    FooterComponent,
+   // FooterComponent,
     SidebarComponent,
     NavbarComponent,  // Ajoute NavbarComponent ici
 
@@ -109,6 +117,8 @@ import { FeedbacksChartComponent } from './FeedbackAdmin/feedbacks-chart/feedbac
     FeedbackListsignaleAdminComponent,
     FeedbacksChartComponent,
 
+
+    VerificationSmsComponent,
   ],
   imports: [
     BrowserModule,

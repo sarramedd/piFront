@@ -23585,21 +23585,25 @@ dl li {
 /* === Landing screens === */
 /* Auth */
 .auth.login-bg {
-  background: url("../images/auth/Login_bg.jpg");
+  background: url("../../images/auth/Login_bg.jpg");
   background-size: cover;
 }
+
 .auth .login-half-bg {
-  background: url("../images/auth/login-bg.jpg");
+  background: url("../../images/auth/login-bg.jpg");
   background-size: cover;
 }
+
 .auth.register-half-bg {
-  background: url("../images/auth/Login_bg2.jpg");
+  background: url("../../images/auth/Login_bg2.jpg");
   background-size: cover;
 }
+
 .auth.lock-full-bg {
-  background: url("../images/auth/lockscreen-bg.jpg");
+  background: url("../../images/auth/lockscreen-bg.jpg");
   background-size: cover;
 }
+
 .auth .lock-profile-img {
   width: 90px;
   height: 90px;
@@ -24988,10 +24992,16 @@ dl li {
 }
 
 @font-face {
-  font-family: "Glyphicons Halflings";
-  src: url("../../fonts/fonts/glyphicons-halflings-regular.eot");
-  src: url("../../fonts/fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("../../fonts/fonts/glyphicons-halflings-regular.woff2") format("woff2"), url("../../fonts/fonts/glyphicons-halflings-regular.woff") format("woff"), url("../../fonts/fonts/glyphicons-halflings-regular.ttf") format("truetype"), url("../../fonts/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg");
+  font-family: 'Glyphicons Halflings';
+  src: url('/assets/bootstrap-template/fonts/glyphicons-halflings-regular.eot');
+  src: url('/assets/bootstrap-template/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+       url('/assets/bootstrap-template/fonts/glyphicons-halflings-regular.woff2') format('woff2'),
+       url('/assets/bootstrap-template/fonts/glyphicons-halflings-regular.woff') format('woff'),
+       url('/assets/bootstrap-template/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+       url('/assets/bootstrap-template/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
+
+
 .glyphicon {
   position: relative;
   top: 1px;
