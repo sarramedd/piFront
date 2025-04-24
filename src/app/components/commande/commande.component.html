@@ -1,0 +1,93 @@
+<div class="container mt-4">
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="section-title">
+            <h3 class="title">Confirmer votre commande</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8 offset-md-2">
+          <div class="order-confirmation">
+            <div *ngIf="error" class="alert alert-danger">
+              {{ error }}
+            </div>
+
+            <div *ngIf="item" class="order-details">
+              <div class="product-info">
+                <div class="product-header">
+                  <h4>Détails du produit</h4>
+                </div>
+                <div class="product-content">
+                  <div class="info-row">
+                    <span class="label">Nom de l'item :</span>
+                    <span class="value">{{ item.name }}</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="label">Description :</span>
+                    <span class="value">{{ item.description }}</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="label">Prix original :</span>
+                    <span class="value price">{{ item.price | currency:'EUR' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="activeDiscount" class="discount-info">
+                <div class="discount-header">
+                  <h4>Réduction active</h4>
+                </div>
+                <div class="discount-content">
+                  <div class="info-row">
+                    <span class="label">Pourcentage :</span>
+                    <span class="value highlight">{{ activeDiscount.percentage }}%</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="label">Description :</span>
+                    <span class="value">{{ activeDiscount.name }}</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="label">Valable jusqu'au :</span>
+                    <span class="value">{{ activeDiscount.endDate | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="final-price">
+                <div class="info-row total">
+                  <span class="label">Prix final :</span>
+                  <span class="value price">{{ discountedPrice | currency:'EUR' }}</span>
+                </div>
+              </div>
+
+              <div class="order-description">
+                <label for="description">Description de la commande :</label>
+                <textarea 
+                  id="description" 
+                  [(ngModel)]="orderDescription"
+                  placeholder="Ajoutez une description à votre commande..."
+                  rows="4">
+                </textarea>
+              </div>
+
+              <div class="order-actions">
+                <button 
+                  class="confirm-btn" 
+                  (click)="createOrder()" 
+                  [disabled]="loading">
+                  <i class="fa fa-check"></i>
+                  {{ loading ? 'Traitement en cours...' : 'Confirmer la commande' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  

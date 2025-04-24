@@ -1,0 +1,25 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let item of items">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.name }}</h5>
+          <p class="card-text">Propriétaire: {{ item.owner?.username }}</p>
+          <p class="card-text">
+            <span [class.text-danger]="activeDiscounts[item.id]">
+              Prix: {{ getDiscountedPrice(item) | currency:'DT' }}
+            </span>
+            <span *ngIf="activeDiscounts[item.id]" class="text-muted">
+              <del>{{ item.price | currency:'EUR' }}</del>
+              <span class="badge bg-success ms-2">
+                -{{ activeDiscounts[item.id].percentage }}%
+              </span>
+            </span>
+          </p>
+          <p class="card-text">{{ item.description }}</p>
+          <button class="btn btn-primary" (click)="createOrder(item)">Louer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

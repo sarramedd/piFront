@@ -1,0 +1,67 @@
+<div class="container mt-4">
+  <h2>Liste des commandes</h2>
+
+  <!-- Barre de recherche -->
+  <div class="mb-3">
+    <input type="text" class="form-control" placeholder="Rechercher une commande..." [(ngModel)]="searchTerm" (input)="onSearch()">
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Liste des commandes -->
+  <div *ngIf="!loading && !error">
+    <div *ngIf="filteredCommandes.length === 0" class="alert alert-info">
+      Aucune commande trouvée.
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Date de création</th>
+            <th>Description</th>
+            <th>Statut</th>
+            <th>Prix total</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let commande of filteredCommandes">
+            <td>{{ commande.id }}</td>
+            <td>{{ commande.createdDate | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ commande.description || '-' }}</td>
+            <td>
+              <span class="badge" [ngClass]="getStatusClass(commande.status)">
+                {{ getStatusLabel(commande.status) }}
+              </span>
+            </td>
+            <td>{{ commande.totalPrice | currency:'EUR' }}</td>
+            <td>
+              <button *ngIf="commande.status === 'EN ATTENTE'" 
+                      class="btn btn-sm btn-success me-2" 
+                      (click)="confirmCommande(commande.id!)">
+                Confirmer
+              </button>
+              <button *ngIf="commande.status === 'EN ATTENTE'" 
+                      class="btn btn-sm btn-danger" 
+                      (click)="cancelCommande(commande.id!)">
+                Annuler
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 
