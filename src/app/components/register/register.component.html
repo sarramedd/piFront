@@ -41,8 +41,41 @@
                      class="text-danger">
                   Format de l'e-mail invalide.
                 </div>
-                <div *ngIf="message === 'Cette adresse e-mail est déjà utilisée.'" class="text-danger">
+                <div *ngIf="emailExistsError" class="text-danger">
                   Cet email est déjà utilisé.
+                </div>
+              </div>
+
+              <!-- Photo de profil -->
+              <div class="form-group">
+                <label for="photo">Photo de profil</label>
+                <input type="file" id="photo" (change)="onFileSelected($event)" class="form-control p_input" accept="image/*">
+                
+                <!-- Aperçu et statut de vérification -->
+                <div *ngIf="imagePreview" class="mt-3">
+                  <div class="d-flex align-items-center">
+                    <img [src]="imagePreview" alt="Image Preview" class="img-thumbnail me-3" width="100" height="100">
+                    
+                    <div>
+                      <div *ngIf="isVerifyingFace" class="text-info">
+                        <i class="fas fa-spinner fa-spin"></i> Vérification du visage en cours...
+                      </div>
+                      
+                      <div *ngIf="faceVerificationResult" 
+                           [class.text-success]="faceVerificationResult.isValid"
+                           [class.text-danger]="!faceVerificationResult.isValid">
+                        <i class="fas" 
+                           [class.fa-check-circle]="faceVerificationResult.isValid"
+                           [class.fa-times-circle]="!faceVerificationResult.isValid"></i>
+                        {{ faceVerificationResult.message || 
+                           (faceVerificationResult.isValid ? 'Visage validé' : 'Visage non valide') }}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <small class="text-muted d-block mt-2">
+                    La photo doit clairement montrer votre visage (pas de lunettes sombres, pas de masque)
+                  </small>
                 </div>
               </div>
 
@@ -75,7 +108,6 @@
                   <small>Veuillez entrer un numéro valide avec le format +216XXXXXXXX.</small>
                 </div>
               </div>
-            
 
               <!-- Adresse -->
               <div class="form-group">

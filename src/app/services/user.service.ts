@@ -11,9 +11,23 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  registerUser(user: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register`, user);
+  registerUser(user: any, imageFile: File | null): Observable<any> {
+    const formData = new FormData();
+    formData.append('user', new Blob([JSON.stringify(user)], {
+      type: 'application/json'
+    }));
+    
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+
+    return this.http.post(`${this.baseUrl}/register`, formData);
   }
+ // user.service.ts
+getUserImageByEmail(email: string): Observable<string> {
+  return this.http.get(`${this.baseUrl}/image/${email}`, { responseType: 'text' });
+}
+
 
   verifyUserCode(userId: number, verificationCode: string): Observable<any> {
     const url = `${this.baseUrl}/verify/${userId}?verificationCode=${verificationCode}`;
@@ -28,9 +42,18 @@ export class UserService {
     return this.http.get<any[]>(this.baseUrl);
   }
 
-  updateUser(id: number, userData: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/${id}`, userData);
+  updateUser(id: number, user: any, imageFile: File | null): Observable<any> {
+    const formData = new FormData();
+    formData.append('user', new Blob([JSON.stringify(user)], {
+      type: 'application/json'
+    }));
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+  
+    return this.http.put<any>(`${this.baseUrl}/${id}`, formData);
   }
+  
 
   banUser(userId: number): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/ban/${userId}`, {});
