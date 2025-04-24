@@ -1,0 +1,8 @@
+<!-- src/app/payment/payment.component.html -->
+<div class="payment-form">
+  <h2>Formulaire de paiement</h2>
+  <form (submit)="handleSubmit($event)">
+    <div id="card-element"></div> <!-- Où Stripe Elements va se charger -->
+    <button type="submit" class="submit-btn">Payer</button>
+  </form>
+</div>

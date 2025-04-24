@@ -1,0 +1,34 @@
+<div class="container mt-4">
+  <h2 class="mb-3">Mes contrats</h2>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Date début</th>
+        <th>Date fin</th>
+        <th>Signé ?</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let contract of contracts">
+        <td>{{ contract.id }}</td>
+        <td>{{ contract.startDate | date:'shortDate' }}</td>
+        <td>{{ contract.endDate | date:'shortDate' }}</td>
+        <td>
+          <span *ngIf="contract.ownerSignature && contract.borrowerSignature">✔️</span>
+          <span *ngIf="!contract.ownerSignature || !contract.borrowerSignature">❌</span>
+        </td>
+        <td>
+          <button class="btn btn-primary btn-sm" (click)="goToContractDetails(contract.id)">Voir</button>
+          <!-- Afficher le bouton Signer uniquement si l'utilisateur est le borrower et si la signature du borrower est manquante -->
+          <button *ngIf="isBorrower(contract) && !contract.borrowerSignature" 
+                  class="btn btn-success btn-sm" (click)="signContract(contract.id)">
+            Signer
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

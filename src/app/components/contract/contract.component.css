@@ -1,0 +1,95 @@
+/* Style global du contrat */
+.contract {
+  max-width: 900px;
+  margin: auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Titre principal */
+h1 {
+  font-size: 28px;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+/* Corps du contrat */
+.contract-body {
+  padding: 20px;
+}
+
+/* Sections de détails et conditions */
+.details, .terms {
+  text-align: left;
+  background: #f4f4f4;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
+
+.details h2, .terms h2 {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Signatures */
+.signature-box {
+  text-align: center;
+  background: #e8f0fe;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+canvas {
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  background: white;
+  width: 100%; /* Prend toute la largeur disponible */
+  max-width: 350px; /* Limite la largeur */
+  height: 100px; /* Hauteur uniforme */
+  margin-bottom: 10px;
+}
+
+/* Boutons */
+button {
+  display: inline-block;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.save-btn {
+  background: #28a745;
+  color: white;
+}
+
+.clear-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.validate-btn {
+  background: #007bff;
+  color: white;
+  width: 100%;
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+/* Effet hover */
+button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}

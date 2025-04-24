@@ -1,0 +1,46 @@
+<div class="contract">
+  <h1>📜 Contrat de Location</h1>
+
+  <div class="contract-body">
+    <!-- Détails du Contrat -->
+    <div class="details">
+      <h2>Détails du Contrat</h2>
+      <p><strong>📅 Date de début :</strong> {{ contract.startDate | date:'dd/MM/yyyy' }}</p>
+      <p><strong>📅 Date de fin :</strong> {{ contract.endDate | date:'dd/MM/yyyy' }}</p>
+      <p><strong>📦 Détails du produit :</strong> {{ contract.details }}</p>
+    </div>
+
+    <!-- Conditions générales -->
+    <div class="terms">
+      <h2>📜 Conditions Générales</h2>
+      <p>{{ contract.terms }}</p>
+    </div>
+
+    <!-- Signatures côte à côte -->
+<div class="signature-section">
+  <!-- Signature du Propriétaire -->
+  <div class="signature-box">
+    <h2>✍ Propriétaire</h2>
+    <img *ngIf="contract.ownerSignature" [src]="contract.ownerSignature" alt="Signature du propriétaire" width="300" height="100">
+    <p *ngIf="!contract.ownerSignature">❌ Signature non disponible</p>
+  </div>
+
+  <!-- Signature du Locataire -->
+  <div class="signature-box" *ngIf="user?.role === 'BORROWER'">
+    <h2>✍ Locataire</h2>
+    <canvas #borrowerPad width="300" height="100"></canvas>
+    <div class="buttons">
+      <button class="save-btn" (click)="saveBorrowerSignature()">✅ Enregistrer</button>
+      <button class="clear-btn" (click)="clearBorrowerSignature()">❌ Effacer</button>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Validation du contrat -->
+    <button class="validate-btn" (click)="saveContract()">📄 Valider le Contrat</button>
+
+    <!-- Téléchargement du contrat -->
+    <button class="download-btn" (click)="downloadContractPdf()">📥 Télécharger le Contrat</button>
+  </div>
+</div>

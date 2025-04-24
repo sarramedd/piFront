@@ -1,0 +1,55 @@
+<div class="contract-details-container">
+    <!-- Zone à convertir en PDF -->
+    <div class="contract-details" id="contract-pdf">
+      <h2 class="contract-title">📄 Détails du Contrat</h2>
+  
+      <div class="contract-info">
+        <!-- Dates -->
+        <div class="contract-card">
+          <h3>📅 Dates du Contrat</h3>
+          <p><strong>Date de début :</strong> {{ contract.startDate | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Date de fin :</strong> {{ contract.endDate | date:'dd/MM/yyyy' }}</p>
+        </div>
+  
+        <!-- Détails produit -->
+        <div class="contract-card">
+          <h3>📦 Détails du Produit</h3>
+          <p><strong>Nom :</strong> {{ contract.details }}</p>
+          <p><strong>Propriétaire :</strong> {{ contract.owner }}</p>
+        </div>
+  
+        <!-- Conditions générales -->
+        <div class="contract-card">
+          <h3>📜 Conditions Générales</h3>
+          <p>{{ contract.terms }}</p>
+        </div>
+  
+        <!-- Signatures -->
+        <div class="contract-card">
+          <h3>✍ Signatures Électroniques</h3>
+          <div class="signatures">
+            <div class="signature-box">
+              <strong>Propriétaire :</strong>
+              <div *ngIf="contract.ownerSignature">
+                <img [src]="contract.ownerSignature" alt="Signature du Propriétaire" class="signature-img" />
+              </div>
+              <div *ngIf="!contract.ownerSignature">Non signée</div>
+            </div>
+            <div class="signature-box">
+              <strong>Locataire :</strong>
+              <div *ngIf="contract.borrowerSignature">
+                <img [src]="contract.borrowerSignature" alt="Signature du Locataire" class="signature-img" />
+              </div>
+              <div *ngIf="!contract.borrowerSignature">Non signée</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Bouton Télécharger (hors du bloc à exporter) -->
+    <div class="download-btn-container">
+      <button class="download-btn" (click)="downloadPDF()">📥 Télécharger le Contrat</button>
+    </div>
+  </div>
+  

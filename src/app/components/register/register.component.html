@@ -1,0 +1,128 @@
+<div class="container-scroller">
+  <div class="container-fluid page-body-wrapper full-page-wrapper">
+    <div class="row w-100">
+      <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+        <div class="card col-lg-6 mx-auto">
+          <div class="card-body px-5 py-5">
+            <h3 class="card-title text-start mb-3">Créer un compte</h3>
+
+            <form (ngSubmit)="register()" #registerForm="ngForm">
+
+              <div class="form-group">
+                <label>CIN</label>
+                <input type="text" name="cin" [(ngModel)]="user.cin" class="form-control p_input" placeholder="Entrez votre CIN" required pattern="[0-9]{8}">
+                <div *ngIf="registerForm.submitted && registerForm.controls['cin']?.invalid" class="text-danger">
+                  Le CIN doit contenir 8 chiffres.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Nom complet</label>
+                <input type="text" name="name" [(ngModel)]="user.name" class="form-control p_input" placeholder="Entrez votre nom" required>
+                <div *ngIf="registerForm.submitted && registerForm.controls['name']?.invalid" class="text-danger">
+                  Le nom est requis.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" [(ngModel)]="user.email" class="form-control p_input" placeholder="Entrez votre email" required email>
+                <div *ngIf="registerForm.submitted && registerForm.controls['email']?.invalid" class="text-danger">
+                  Une adresse e-mail valide est requise.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" name="password" [(ngModel)]="user.password" class="form-control p_input" placeholder="Entrez un mot de passe" required minlength="6">
+                <div *ngIf="registerForm.submitted && registerForm.controls['password']?.invalid" class="text-danger">
+                  Le mot de passe doit contenir au moins 6 caractères.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Confirmer mot de passe</label>
+                <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" class="form-control p_input" placeholder="Confirmez le mot de passe" required>
+                <div *ngIf="registerForm.submitted && user.password !== confirmPassword" class="text-danger">
+                  Les mots de passe ne correspondent pas.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Téléphone</label>
+                <input type="text" name="phone" [(ngModel)]="user.phone" class="form-control p_input" placeholder="Entrez votre numéro de téléphone" required pattern="[0-9]{8,}">
+                <div *ngIf="registerForm.submitted && registerForm.controls['phone']?.invalid" class="text-danger">
+                  Numéro de téléphone invalide.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Adresse</label>
+                <input type="text" name="address" [(ngModel)]="user.address" class="form-control p_input" placeholder="Entrez votre adresse" required>
+                <div *ngIf="registerForm.submitted && registerForm.controls['address']?.invalid" class="text-danger">
+                  L'adresse est requise.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Date de naissance</label>
+                <input type="date" name="dateDeNaissance" [(ngModel)]="user.dateDeNaissance" class="form-control p_input" required>
+                <div *ngIf="registerForm.submitted && registerForm.controls['dateDeNaissance']?.invalid" class="text-danger">
+                  La date de naissance est requise.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Genre</label>
+                <select name="genre" [(ngModel)]="user.genre" class="form-control p_input" required>
+                  <option value="">Sélectionnez</option>
+                  <option value="Homme">Homme</option>
+                  <option value="Femme">Femme</option>
+                  <option value="Autre">Autre</option>
+                </select>
+                <div *ngIf="registerForm.submitted && registerForm.controls['genre']?.invalid" class="text-danger">
+                  Veuillez sélectionner un genre.
+                </div>
+              </div>
+
+              <!-- Nouveau champ pour le rôle -->
+              <div class="form-group">
+                <label>Rôle</label>
+                <select name="role" [(ngModel)]="user.role" class="form-control p_input" required>
+                  <option value="BORROWER">Emprunteur</option>
+                  <option value="OWNER">Propriétaire</option>
+                </select>
+                <div *ngIf="registerForm.submitted && registerForm.controls['role']?.invalid" class="text-danger">
+                  Le rôle est requis.
+                </div>
+              </div>
+
+              <div class="form-check mb-3">
+                <input type="checkbox" name="terms" ngModel required class="form-check-input" id="terms">
+                <label class="form-check-label" for="terms">
+                  J'accepte les termes et conditions
+                </label>
+                <div *ngIf="registerForm.submitted && registerForm.controls['terms']?.invalid" class="text-danger">
+                  Vous devez accepter les termes.
+                </div>
+              </div>
+
+              <div *ngIf="message" class="text-danger text-center mb-2">{{ message }}</div>
+
+              <div class="text-center d-grid gap-2">
+                <button type="submit" class="btn btn-success btn-block enter-btn">S'inscrire</button>
+              </div>
+
+              <p class="sign-up text-center">
+                Vous avez déjà un compte ?
+                <a routerLink="/login">Se connecter</a>
+              </p>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
