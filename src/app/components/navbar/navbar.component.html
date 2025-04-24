@@ -107,14 +107,37 @@
       <li class="nav-item dropdown">
         <a class="nav-link" id="profileDropdown" href="#" data-bs-toggle="dropdown">
           <div class="navbar-profile">
-            <img class="img-xs rounded-circle" src="../../../assets/images/faces/face15.jpg" alt="">
-            <p class="mb-0 d-none d-sm-block navbar-profile-name">Henry Klein</p>
+
+            <!-- Utilisation de la photo de profil dynamique -->
+            <img *ngIf="userImage" class="img-xs rounded-circle" [src]="userImage" alt="User Image">
+            
+            <!-- Nom d'utilisateur dynamique, récupéré du token -->
+            <p *ngIf="userName" class="mb-0 d-none d-sm-block navbar-profile-name">{{ userName }}</p>
+            
+            <!-- Icône de menu, toujours visible -->
             <i class="mdi mdi-menu-down d-none d-sm-block"></i>
           </div>
+          
         </a>
         <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list" aria-labelledby="profileDropdown">
           <h6 class="p-3 mb-0">Profile</h6>
+        
           <div class="dropdown-divider"></div>
+        
+          <!-- 🔗 Lien vers /profile -->
+          <a class="dropdown-item preview-item" [routerLink]="['/profile']">
+            <div class="preview-thumbnail">
+              <div class="preview-icon bg-dark rounded-circle">
+                <i class="mdi mdi-account-circle text-primary"></i>
+              </div>
+            </div>
+            <div class="preview-item-content">
+              <p class="preview-subject mb-1">Mon profil</p>
+            </div>
+          </a>
+        
+          <div class="dropdown-divider"></div>
+        
           <a class="dropdown-item preview-item">
             <div class="preview-thumbnail">
               <div class="preview-icon bg-dark rounded-circle">
@@ -125,7 +148,9 @@
               <p class="preview-subject mb-1">Settings</p>
             </div>
           </a>
+        
           <div class="dropdown-divider"></div>
+        
           <a class="dropdown-item preview-item" (click)="logout()">
             <div class="preview-thumbnail">
               <div class="preview-icon bg-dark rounded-circle">
@@ -136,9 +161,13 @@
               <p class="preview-subject mb-1">Log out</p>
             </div>
           </a>
+
+        
           <div class="dropdown-divider"></div>
+        
           <p class="p-3 mb-0 text-center">Advanced settings</p>
         </div>
+        
       </li>
       
     </ul>

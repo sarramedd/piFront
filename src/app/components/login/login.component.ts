@@ -47,7 +47,16 @@ export class LoginComponent implements OnInit {
     this.authService.login(loginData).subscribe({
       next: (response) => {
         this.authService.saveToken(response.token);
-        this.router.navigate(['/dashboard']); // Redirige après login
+
+
+        const userRole = this.authService.getRoleFromToken();
+        console.log('Rôle extrait depuis le token :', userRole);
+
+        if (userRole === 'BORROWER' || userRole === 'OWNER') {
+          this.router.navigate(['/home']);
+        } else {
+          this.router.navigate(['/ListUser']);
+        }
       },
       error: (err) => {
         if (err.status === 401) {

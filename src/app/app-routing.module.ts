@@ -37,6 +37,18 @@ const routes: Routes = [
   { path: 'dashboard/get-commandes', component: CommandeListComponent },
   // Auth & Admin
   { path: 'login', component: LoginComponent },
+ { path: '', component: IndexComponent },
+{ path: 'store', component: StoreComponent },
+{ path: 'product', component: ProductComponent },
+
+ { path: 'checkout', component: CheckoutComponent },
+  { path: 'contract/:id', component: ContractComponent },
+  { path: 'item', component: ItemComponent },
+ { path: 'payment/:contractId', component: PaymentComponent },
+
+  // Auth & Admin
+  { path: 'login', component: LoginComponent },
+  { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'profile', component: AdminProfileComponent },

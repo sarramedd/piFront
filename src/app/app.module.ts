@@ -42,6 +42,7 @@ import { CommandeComponent } from './components/commande/commande.component';
 import { DiscountComponent } from './components/discount/discount.component';
 import { CommandeListComponent } from './components/commande-list/commande-list.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,7 +58,7 @@ import { CommandeListComponent } from './components/commande-list/commande-list.
     ResetPasswordComponent,
     FooterBackComponent,
     SidebarBackComponent,
-  
+
 
     // Shared & Layout
     HeaderComponent,
@@ -82,6 +83,8 @@ import { CommandeListComponent } from './components/commande-list/commande-list.
     
     
     ],
+  
+
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -90,6 +93,7 @@ import { CommandeListComponent } from './components/commande-list/commande-list.
     AppRoutingModule,
     RouterModule,
     CommonModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]
