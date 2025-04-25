@@ -13,25 +13,59 @@ export class FeedbacksService {
   constructor(private http: HttpClient) {}
 
   getAllFeedbacks(): Observable<Feedback[]> {
-    return this.http.get<Feedback[]>(`${this.apiUrl}/retrieve-all-feedbacks`);
+    const token = localStorage.getItem('token'); // Make sure token is stored after login
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    };
+  
+    return this.http.get<Feedback[]>(`${this.apiUrl}/retrieve-all-feedbacks`, { headers });
   }
-
+  
   addFeedback(feedbackData: Feedback): Observable<Feedback> {
-    return this.http.post<Feedback>(`${this.apiUrl}/add-feedback`, feedbackData);
+    const token = localStorage.getItem('token'); // Make sure token is stored after login
+  
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    };
+  
+    return this.http.post<Feedback>(`${this.apiUrl}/add-feedback`, feedbackData, { headers });
   }
+  
 
   updateFeedback(feedbackData: Feedback): Observable<Feedback> {
-    return this.http.put<Feedback>(`${this.apiUrl}/update-feedback`, feedbackData);
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    };
+  
+    return this.http.put<Feedback>(`${this.apiUrl}/update-feedback`, feedbackData, { headers });
   }
-
+  
   deleteFeedback(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete-feedback/${id}`);
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+  
+    return this.http.delete<void>(`${this.apiUrl}/delete-feedback/${id}`, { headers });
   }
-
   
   reportFeedback(feedbackId: number, reason: string): Observable<string> {
-    return this.http.put<string>(`${this.apiUrl}/report-feedback/${feedbackId}?reason=${reason}`, { responseType: 'text' });
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+  
+    return this.http.put<string>(
+      `${this.apiUrl}/report-feedback/${feedbackId}?reason=${encodeURIComponent(reason)}`,
+      {},
+      { headers, responseType: 'text' as 'json' }
+    );
   }
+  
   
   
   

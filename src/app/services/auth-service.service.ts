@@ -1,23 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthServiceService {
-  private baseUrl = 'http://localhost:8088/borrowit/api/auth';
+  private baseUrl = 'http://localhost:8089/borrowit/api/auth';
 
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string, password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, credentials);
+    return this.http.post(`${this.baseUrl}/login`, credentials).pipe(
+      tap((response: any) => {
+        console.log('API Login Response:', response);  // Log the response
+      })
+    );
   }
+  
 
   saveToken(token: string): void {
     localStorage.setItem('token', token);
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.id) {
+        localStorage.setItem('userId', payload.id.toString());
+      }
+    } catch (e) {
+      console.error('Failed to decode token:', e);
+    }
   }
-
+  
   getToken(): string | null {
     return localStorage.getItem('token');
   }
@@ -72,4 +85,6 @@ export class AuthServiceService {
       return null;
     }
   }
+
+  
 }

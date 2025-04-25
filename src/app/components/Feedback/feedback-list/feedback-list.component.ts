@@ -21,6 +21,7 @@ export class FeedbackListComponent implements OnInit {
   reasonForReport: string = ''; // Add this to store the reason
   reportModalOpen: boolean = false; // Toggle for report modal
   reportingFeedback: Feedback | null = null;
+  userId: string | null = ''; // Declare userId as a class property
 
 
   
@@ -57,12 +58,27 @@ export class FeedbackListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Retrieve the user ID from localStorage
+    this.userId = localStorage.getItem('userId');
+    if (!this.userId) {
+      alert("User not logged in");
+      return;
+    }
+
+    // Retrieve the user details (cin, name, email, etc.)
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  if (!userData || !userData.id) {
+    alert("User data not found");
+    return;
+  }
+
     this.feedbackService.getAllFeedbacks().subscribe(
       (data: Feedback[]) => {
+        
         // Étape 1 : Ajouter showReacts à chaque feedback
         this.feedbacks = data.map(fb => ({
           ...fb,
-          showReacts: false
+          showReacts: false,
         }));
   
         // 🔧 Étape 2 : Trier les feedbacks par popularité
@@ -81,21 +97,30 @@ export class FeedbackListComponent implements OnInit {
   
 
   addReaction(feedback: Feedback, reactionType: Reaction): void {
+    if (!this.userId) {
+      alert("User not logged in");
+      return;
+    }
     const react = {
       reaction: reactionType,
       date: new Date().toISOString(),
       user: { id: 1 },
       feedback: { id: feedback.id }
     };
-
+  
     this.reactsService.addReaction(react).subscribe(
-      () => this.ngOnInit(),
+      () => {
+        this.ngOnInit();
+        this.successMessage = '✅ Réaction ajoutée avec succès !';
+        alert(this.successMessage); // Optional: only if you want a popup
+      },
       (error: any) => {
         console.error('Error adding reaction', error);
-        this.errorMessage = 'Failed to add reaction';
+        this.errorMessage = '❌ Échec de l\'ajout de la réaction';
       }
     );
   }
+  
 
   getReactionEmoji(reaction: Reaction): string {
     return this.reactionEmojis[reaction] || '❓';
@@ -193,15 +218,42 @@ export class FeedbackListComponent implements OnInit {
   }
   
   submitEdit(feedback: Feedback): void {
+    const userId = localStorage.getItem('userId');
+    console.log('Retrieved userId:', userId);
+    if (!userId) {
+      alert("User not logged in");
+      return;
+    }
+  
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (!userData || !userData.id) {
+      alert("User data not found");
+      return;
+    }
+  
     const updatedFeedback: Feedback = {
       ...feedback,
       message: this.editedMessage,
+      user: {
+        id: userData.id,
+        cin: userData.cin,         // Use actual CIN from userData
+        name: userData.name,       // Use actual name
+        email: userData.email,     // Use actual email
+        password: '',              // Not typically needed
+        phone: userData.phone,     // Use actual phone number
+        address: userData.address, // Use actual address
+        genre: userData.genre,     // Use actual gender
+        status: userData.status,   // Use actual status
+        dateDeNaissance: userData.dateDeNaissance, // Use actual DOB
+        role: userData.role as 'BORROWER',  // Ensure correct role
+      }
     };
   
     this.feedbackService.updateFeedback(updatedFeedback).subscribe(
       () => {
         this.editingFeedbackId = null;
         this.ngOnInit(); // Refresh the feedback list
+        alert('✅ Feedback updated successfully!');
       },
       (error) => {
         console.error('Update failed', error);
@@ -209,6 +261,8 @@ export class FeedbackListComponent implements OnInit {
       }
     );
   }
+  
+  
 
   toggleMenu(id: number | undefined): void {
     if (id !== undefined) {

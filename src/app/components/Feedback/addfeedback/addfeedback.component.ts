@@ -10,12 +10,13 @@ import { FeedbacksService } from 'src/app/services/FeedbackService/feedbacks.ser
 })
 export class AddfeedbackComponent implements OnInit {
   feedbackForm: FormGroup = new FormGroup({});
+
   constructor(
-     private fb: FormBuilder,
-     private feedbackService: FeedbacksService,
-     private router: Router 
-    ) {}
-  
+    private fb: FormBuilder,
+    private feedbackService: FeedbacksService,
+    private router: Router
+  ) {}
+
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
       message: ['', [Validators.required, Validators.maxLength(500)]]
@@ -24,29 +25,41 @@ export class AddfeedbackComponent implements OnInit {
 
   onSubmit(): void {
     if (this.feedbackForm.valid) {
+      const userId = localStorage.getItem('userId'); // Retrieve the user ID from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}'); // Retrieve user data from localStorage
+
+      if (!userId || !userData.id) {
+        alert("User not logged in");
+        return;
+      }
+
       const feedbackData = {
         message: this.feedbackForm.value.message,
         date: new Date().toISOString(),
-        item: {
-          id: 1,
-          name: 'Static Item',
-          description: 'A static item used for feedback.',
-          itemCondition: 'NEW',
-          availability: true,
-          price: 100,
-          
+        user: {
+          id: userData.id,
+          cin: userData.cin,         // Use actual CIN from userData
+          name: userData.name,       // Use actual name
+          email: userData.email,     // Use actual email
+          password: '',              // Not typically needed
+          phone: userData.phone,     // Use actual phone number
+          address: userData.address, // Use actual address
+          genre: userData.genre,     // Use actual gender
+          status: userData.status,   // Use actual status
+          dateDeNaissance: userData.dateDeNaissance, // Use actual DOB
+          role: userData.role as 'BORROWER',  // Ensure correct role
         }
       };
 
       this.feedbackService.addFeedback(feedbackData).subscribe(
         (response: any) => {
           console.log('Feedback submitted successfully!', response);
-          alert('Feedback submitted successfully!'); // Success popup
+          alert('Feedback submitted successfully!');
           this.router.navigate(['/listFeedback']);
         },
         (error: any) => {
           console.error('Error submitting feedback', error);
-          alert('Error submitting feedback! Please try again.'); // Error popup
+          alert('Error submitting feedback! Please try again.');
         }
       );
     }

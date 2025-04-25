@@ -7,7 +7,7 @@ import { Item } from '../core/models/item';
   providedIn: 'root'
 })
 export class ItemService {
-  private apiUrl = 'http://localhost:8088/borrowit/items'; 
+  private apiUrl = 'http://localhost:8089/borrowit/items'; 
 
   constructor(private http: HttpClient) {}
 

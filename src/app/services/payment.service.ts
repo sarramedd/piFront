@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class PaymentService {
-  private backendUrl = 'http://localhost:8088/borrowit/stripe';
+  private backendUrl = 'http://localhost:8089/borrowit/stripe';
 
   constructor(private http: HttpClient) {}
 

@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class UserService {
-  private readonly baseUrl = 'http://localhost:8088/borrowit/api/users';
+  private readonly baseUrl = 'http://localhost:8089/borrowit/api/users';
 
   constructor(private http: HttpClient) { }
 

@@ -37,32 +37,61 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.invalid) return;
-
+  
     const loginData = {
       email: this.loginForm.value.usernameOrEmail,
       password: this.loginForm.value.password
     };
-
+  
     this.authService.login(loginData).subscribe({
       next: (response) => {
-        this.authService.saveToken(response.token);
-
-        const userRole = this.authService.getRoleFromToken();
-        console.log('Rôle extrait depuis le token :', userRole);
-
-        if (userRole === 'BORROWER' || userRole === 'OWNER') {
-          this.router.navigate(['/home']);
+        console.log('Login response:', response); // Should contain { token: "..." }
+  
+        if (response && response.token) {
+          // Save token
+          this.authService.saveToken(response.token);
+          localStorage.setItem('token', response.token);
+  
+          // Get role from token
+          const userRole = this.authService.getRoleFromToken();
+          console.log('Rôle extrait depuis le token :', userRole);
+  
+          // 👉 Extract user ID and save it to localStorage
+          const decodedToken = this.authService.decodeToken();
+          if (decodedToken && decodedToken.id) {
+            localStorage.setItem('userId', decodedToken.id.toString());
+            
+            // Fetch user data (this should be done in a service)
+            const userData = { id: decodedToken.id, role: userRole }; // Example, fetch actual user data as needed
+            localStorage.setItem('userData', JSON.stringify(userData)); // Store user data in localStorage
+          } else {
+            console.warn('User ID not found in token.');
+          }
+  
+          // Redirect based on the user's role
+          if (userRole === 'BORROWER' || userRole === 'OWNER') {
+            this.router.navigate(['/home']);
+          } else {
+            this.router.navigate(['/ListUser']);
+          }
         } else {
-          this.router.navigate(['/ListUser']);
+          console.error('Token not received in the response.');
+          this.errorMessage = 'Login failed: Token not received.';
         }
       },
       error: (err) => {
         if (err.status === 401) {
-          this.errorMessage = 'Email ou mot de passe incorrect.';
+          this.errorMessage = 'Email or password is incorrect.';
         } else {
-          this.errorMessage = 'Erreur lors de la connexion. Veuillez réessayer.';
+          this.errorMessage = 'Error during login. Please try again.';
         }
       }
     });
   }
-}
+  
+  
+    
+  }
+  
+  
+

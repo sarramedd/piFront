@@ -7,7 +7,7 @@ import { Contract } from '../core/models/contract';
 })
 export class ContractService {
 
-  private apiUrl = 'http://localhost:8088/borrowit/contracts'; 
+  private apiUrl = 'http://localhost:8089/borrowit/contracts'; 
 
   constructor(private http: HttpClient) {}
 
