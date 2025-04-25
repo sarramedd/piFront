@@ -4,46 +4,81 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table {
-  margin-bottom: 0;
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: transparent;
 }
 
-.table thead th {
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
-  color: #495057;
-  font-weight: 600;
-  padding: 12px;
-}
-
-.table tbody td {
-  padding: 12px;
+.table th {
+  padding: 0.75rem;
   vertical-align: middle;
-  color: #212529;
+  border-top: 1px solid #e9ecef;
 }
 
-/* Style des badges de statut */
-.badge {
-  padding: 6px 12px;
-  font-weight: 500;
+.table td {
+  padding: 0.75rem;
+  vertical-align: middle;
+  border-top: 1px solid #e9ecef;
+}
+
+.item-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
   border-radius: 4px;
+  margin-right: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.badge-success {
-  background-color: #28a745;
-  color: white;
+.item-info {
+  display: flex;
+  align-items: center;
 }
 
-.badge-warning {
-  background-color: #ffc107;
-  color: #212529;
+.item-details {
+  display: flex;
+  flex-direction: column;
 }
 
-.badge-danger {
-  background-color: #dc3545;
-  color: white;
+.item-name {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.item-category {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.badge {
+  padding: 0.5em 0.75em;
+  font-size: 0.875em;
+  font-weight: 500;
+}
+
+.badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000;
+}
+
+.badge.bg-success {
+  background-color: #28a745 !important;
+  color: #fff;
+}
+
+.badge.bg-danger {
+  background-color: #dc3545 !important;
+  color: #fff;
 }
 
 /* Style des boutons d'action */
@@ -117,4 +152,14 @@ h2 {
 
 .search-container {
   margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .btn-group .btn {
+    margin-bottom: 0.5rem;
+  }
 } 

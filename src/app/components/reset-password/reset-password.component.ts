@@ -22,64 +22,45 @@ export class ResetPasswordComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Récupération du token de l'URL
-    this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
+    this.token = this.route.snapshot.queryParams['token'] || '';
 
-    // Création du formulaire avec le validateur personnalisé
     this.resetPasswordForm = this.formBuilder.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]]
-    }, { validators: this.passwordMatchValidator });
-  }
-
-  // Validator personnalisé pour vérifier que les mots de passe correspondent
-  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
-    const newPassword = control.get('newPassword')?.value;
-    const confirmPassword = control.get('confirmPassword')?.value;
-
-    return newPassword && confirmPassword && newPassword === confirmPassword 
-      ? null 
-      : { passwordMismatch: true };
+    }, { validator: this.passwordMatchValidator });
   }
 
   get f() { return this.resetPasswordForm.controls; }
 
-  // Soumission du formulaire de réinitialisation
- onSubmit(): void {
-  if (this.resetPasswordForm.invalid || this.isLoading) {
-    return;
+  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('newPassword');
+    const confirmPassword = control.get('confirmPassword');
+    
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+      return { passwordMismatch: true };
+    }
+    return null;
   }
 
+ onSubmit(): void {
+    if (this.resetPasswordForm.invalid || !this.token) return;
+
   this.isLoading = true;
+    this.errorMessage = '';
   this.successMessage = '';
-  this.errorMessage = '';
 
-  const { newPassword } = this.resetPasswordForm.value;
-
-  // Call the service to reset the password
-  this.authService.resetPassword(this.token, newPassword).subscribe({
-    next: (response) => {
-      this.successMessage = 'Password successfully reset. You can now log in with your new password.';
+    this.authService.resetPassword(this.token, this.f['newPassword'].value).subscribe({
+      next: (response: any) => {
       this.isLoading = false;
-
-      // Disable form after successful reset
-      this.resetPasswordForm.disable(); // Disable the form
-    },
-    error: (error) => {
-      console.error('Reset password error:', error);
-      
-      if (error.error?.errorCode === 'LIEN_EXPIRE') {
-        this.errorMessage = 'The reset link has expired. Please request a new one.';
-      } else if (error.error?.errorCode === 'TOKEN_INVALIDE') {
-        this.errorMessage = 'Invalid reset token. Please check the link or request a new one.';
-      } else {
-        this.errorMessage = 'There was an error resetting your password. Please try again.';
-      }
-      
-      this.successMessage = '';
-      this.isLoading = false;
+        this.successMessage = 'Votre mot de passe a été réinitialisé avec succès.';
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 3000);
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        this.errorMessage = error.error?.message || 'Une erreur est survenue lors de la réinitialisation du mot de passe.';
     }
   });
 }
-
 }

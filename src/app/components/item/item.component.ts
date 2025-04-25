@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ItemService } from 'src/app/services/item.service';
-import { CommandeService } from 'src/app/services/commande.service';
-import { DiscountService } from 'src/app/services/discount.service';
-import { AuthServiceService } from 'src/app/services/auth-service.service';
-import { Item } from 'src/app/core/models/item';
-import { Commande } from 'src/app/core/models/commande';
-import { Discount } from 'src/app/core/models/discount';
+import { ItemService } from '../../services/item.service';
+import { CommandeService } from '../../services/commande.service';
+import { DiscountService } from '../../services/discount.service';
+import { AuthService } from '../../services/auth.service';
+import { Item } from '../../core/models/item';
+import { Commande } from '../../core/models/commande';
+import { Discount } from '../../core/models/discount';
 import { Router } from '@angular/router';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-item',
@@ -15,54 +16,79 @@ import { Router } from '@angular/router';
 })
 export class ItemComponent implements OnInit {
   items: Item[] = [];
-  activeDiscounts: { [key: number]: Discount } = {}; // Map des discounts actifs par item
-  borrowerId: number = 2; // À remplacer par l'ID de l'utilisateur connecté
+  activeDiscounts: { [key: number]: Discount | null } = {};
+  borrowerId: number = 2;
+  errorMessage: string = '';
+  loading: boolean = false;
 
   constructor(
     private itemService: ItemService,
     private commandeService: CommandeService,
     private discountService: DiscountService,
-    private authService: AuthServiceService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    const token = this.authService.getToken();
+    if (!token || !this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.loadItems();
   }
 
-  loadItems() {
+  loadItems(): void {
+    this.loading = true;
+    this.errorMessage = '';
+
     this.itemService.getAllItems().subscribe({
-      next: (items: Item[]) => {
-        this.items = items;
-        // Charger les discounts actifs pour chaque item
-        items.forEach(item => {
-          this.loadActiveDiscount(item.id);
+      next: (data) => {
+        this.items = data;
+        this.errorMessage = '';
+        // Initialize discounts as null for all items
+        data.forEach(item => {
+          this.activeDiscounts[item.id] = null;
+          this.tryLoadDiscount(item.id);
         });
+        this.loading = false;
       },
-      error: (err) => {
-        console.error('Error loading items:', err);
+      error: (error) => {
+        console.error('Error loading items:', error);
+        if (error.status === 401) {
+          this.errorMessage = 'Session expired. Please log in again.';
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        } else {
+          this.errorMessage = 'Error loading items. Please try again later.';
+        }
+        this.loading = false;
       }
     });
   }
 
-  loadActiveDiscount(itemId: number) {
+  tryLoadDiscount(itemId: number): void {
     const token = this.authService.getToken();
-    if (!token) {
-      console.error('No authentication token found');
-      return;
-    }
+    if (!token) return;
 
-    this.discountService.getActiveDiscountsForItem(itemId, token).subscribe({
-      next: (discounts: Discount[]) => {
+    this.discountService.getActiveDiscountsForItem(itemId, token)
+      .pipe(
+        catchError(error => {
+          console.log(`No active discount for item ${itemId}`);
+          return of([]); // Return empty array in case of error
+        })
+      )
+      .subscribe(discounts => {
         if (discounts && discounts.length > 0) {
-          this.activeDiscounts[itemId] = discounts[0]; // On prend le premier discount actif
-        }
-      },
-      error: (err) => {
-        // On ignore simplement l'erreur 403 et on continue avec le prix normal
-        console.log('Note: Discount non disponible pour item:', itemId);
+          this.activeDiscounts[itemId] = discounts[0];
+        } else {
+          this.activeDiscounts[itemId] = null;
       }
     });
+  }
+
+  hasDiscount(itemId: number): boolean {
+    return this.activeDiscounts[itemId] !== null && this.activeDiscounts[itemId] !== undefined;
   }
 
   getDiscountedPrice(item: Item): number {
@@ -73,8 +99,11 @@ export class ItemComponent implements OnInit {
     return item.price;
   }
 
-  createOrder(item: Item) {
-    // Naviguer vers le formulaire de commande avec l'ID de l'item
+  createOrder(item: Item): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.router.navigate(['/commande', item.id]);
   }
 }

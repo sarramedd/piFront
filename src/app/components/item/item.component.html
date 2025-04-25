@@ -1,23 +1,41 @@
 <div class="container mt-4">
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  
   <div class="row">
-    <div class="col-md-4 mb-4" *ngFor="let item of items">
+    <div *ngFor="let item of items" class="col-md-4 mb-4">
       <div class="card h-100">
-        <div class="card-body">
+        <img [src]="item.image" class="card-img-top" alt="Item image" style="height: 200px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
           <h5 class="card-title">{{ item.name }}</h5>
-          <p class="card-text">Propriétaire: {{ item.owner?.username }}</p>
-          <p class="card-text">
-            <span [class.text-danger]="activeDiscounts[item.id]">
-              Prix: {{ getDiscountedPrice(item) | currency:'DT' }}
+          <p class="card-text">{{ item.description }}</p>
+          <div class="item-details">
+            <p><strong>Category:</strong> {{ item.category }}</p>
+            <p><strong>Owner:</strong> {{ item.owner.name }} ({{ item.owner.email }})</p>
+            <p>
+              <strong>Price:</strong>
+              <span [class.text-decoration-line-through]="activeDiscounts[item.id]">
+                {{ item.price | currency:'EUR' }}
             </span>
-            <span *ngIf="activeDiscounts[item.id]" class="text-muted">
-              <del>{{ item.price | currency:'EUR' }}</del>
-              <span class="badge bg-success ms-2">
-                -{{ activeDiscounts[item.id].percentage }}%
+              <span *ngIf="activeDiscounts[item.id]" class="ms-2 text-success">
+                {{ getDiscountedPrice(item) | currency:'EUR' }}
               </span>
+            </p>
+            <p>
+              <span class="badge" [ngClass]="{
+                'bg-warning': item.status === 'EN_ATTENTE',
+                'bg-success': item.status === 'CONFIRMER',
+                'bg-danger': item.status === 'REJETER'
+              }">
+                {{ item.status }}
             </span>
           </p>
-          <p class="card-text">{{ item.description }}</p>
-          <button class="btn btn-primary" (click)="createOrder(item)">Louer</button>
+          </div>
+          <button 
+            class="btn btn-primary mt-auto rent-btn" 
+            (click)="createOrder(item)"
+            [disabled]="item.status === 'REJETER'">
+            Rent Now
+          </button>
         </div>
       </div>
     </div>

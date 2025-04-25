@@ -30,6 +30,7 @@
           <tr>
             <th>ID</th>
             <th>Date de création</th>
+            <th>Item</th>
             <th>Description</th>
             <th>Statut</th>
             <th>Prix total</th>
@@ -40,6 +41,18 @@
           <tr *ngFor="let commande of filteredCommandes">
             <td>{{ commande.id }}</td>
             <td>{{ commande.createdDate | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <div *ngIf="commande.item" class="item-info">
+                <img [src]="commande.item.photo || 'assets/images/default-item.png'" 
+                     [alt]="commande.item.name" 
+                     class="item-thumbnail">
+                <div class="item-details">
+                  <div class="item-name">{{ commande.item.name }}</div>
+                  <div class="item-category">{{ commande.item.category || 'Non catégorisé' }}</div>
+                </div>
+              </div>
+              <span *ngIf="!commande.item">-</span>
+            </td>
             <td>{{ commande.description || '-' }}</td>
             <td>
               <span class="badge" [ngClass]="getStatusClass(commande.status)">
@@ -48,16 +61,22 @@
             </td>
             <td>{{ commande.totalPrice | currency:'EUR' }}</td>
             <td>
-              <button *ngIf="commande.status === 'EN ATTENTE'" 
+              <div class="btn-group">
+                <button *ngIf="commande.status.toLowerCase() === 'en_attente'" 
                       class="btn btn-sm btn-success me-2" 
                       (click)="confirmCommande(commande.id!)">
-                Confirmer
+                  <i class="mdi mdi-check"></i> Confirmer
               </button>
-              <button *ngIf="commande.status === 'EN ATTENTE'" 
+                <button *ngIf="commande.status.toLowerCase() === 'en_attente'" 
                       class="btn btn-sm btn-danger" 
                       (click)="cancelCommande(commande.id!)">
-                Annuler
+                  <i class="mdi mdi-close"></i> Annuler
+                </button>
+                <button class="btn btn-sm btn-info" 
+                        [routerLink]="['/item', commande.itemId]">
+                  <i class="mdi mdi-eye"></i> Voir l'item
               </button>
+              </div>
             </td>
           </tr>
         </tbody>

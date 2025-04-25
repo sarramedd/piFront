@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
-
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService, User } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthServiceService {
-
   private baseUrl = 'http://localhost:8088/borrowit/api/auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   login(credentials: { email: string, password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, credentials);
+    return this.authService.login(credentials);
   }
 
   saveToken(token: string): void {
@@ -21,15 +23,15 @@ export class AuthServiceService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return this.authService.getToken();
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    this.authService.logout();
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return this.authService.isAuthenticated();
   }
 
   decodeToken(): any {
@@ -45,7 +47,6 @@ export class AuthServiceService {
       return null;
     }
   }
-  
 
   requestPasswordReset(email: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/request-reset?email=${email}`, {});
@@ -59,7 +60,6 @@ export class AuthServiceService {
     return this.http.post(`${this.baseUrl}/reset-password`, body);
   }
 
-
   getRoleFromToken(): string | null {
     const token = this.getToken();
     if (!token) return null;
@@ -68,8 +68,6 @@ export class AuthServiceService {
       const payload = token.split('.')[1];
       const decodedPayload = atob(payload);
       const parsedPayload = JSON.parse(decodedPayload);
-
-      // Adapte ici si ton backend utilise un autre nom que "role"
       return parsedPayload.role || null;
     } catch (e) {
       console.error('Erreur lors du décodage du token :', e);
@@ -77,4 +75,7 @@ export class AuthServiceService {
     }
   }
 
-}
+  getCurrentUser(): Observable<User | null> {
+    return this.authService.currentUser$;
+  }
+} 

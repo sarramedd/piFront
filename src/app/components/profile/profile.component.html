@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h3>Profil Utilisateur</h3>
+        </div>
+        <div class="card-body" *ngIf="user">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <strong>Email:</strong>
+            </div>
+            <div class="col-md-8">
+              {{user.email}}
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <strong>Prénom:</strong>
+            </div>
+            <div class="col-md-8">
+              {{user.firstName}}
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <strong>Nom:</strong>
+            </div>
+            <div class="col-md-8">
+              {{user.lastName}}
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <strong>Rôle:</strong>
+            </div>
+            <div class="col-md-8">
+              {{user.role === 'ADMIN' ? 'Administrateur' : 
+                user.role === 'BORROWER' ? 'Emprunteur' : 'Propriétaire'}}
+            </div>
+          </div>
+        </div>
+        <div class="card-body" *ngIf="!user">
+          <div class="alert alert-warning">
+            Aucune information de profil disponible. Veuillez vous connecter.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

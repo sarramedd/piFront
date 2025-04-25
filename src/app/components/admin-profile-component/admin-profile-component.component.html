@@ -11,7 +11,7 @@
           <h3 class="page-title">Profil Administrateur</h3>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="#">Tableau de bord</a></li>
+              <li class="breadcrumb-item"><a routerLink="/dashboard">Tableau de bord</a></li>
               <li class="breadcrumb-item active" aria-current="page">Profil</li>
             </ol>
           </nav>
@@ -41,7 +41,17 @@
           <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title">Informations du profil</h4>
+                <div class="page-header">
+                  <h3 class="page-title">Profil Administrateur</h3>
+                  <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a routerLink="/dashboard">Tableau de bord</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">Profil</li>
+                    </ol>
+                  </nav>
+                </div>
+                
+                <h4 class="card-title mt-4">Informations du profil</h4>
                 <form class="forms-sample" (ngSubmit)="updateProfile()">
                   <div class="form-group">
                     <label for="name">Nom complet</label>
@@ -71,7 +81,6 @@
                   <button type="submit" class="btn btn-primary me-2">Mettre à jour</button>
                   <button type="button" class="btn btn-light" (click)="cancelUpdate()">Annuler</button>
                 </form>
->>>>>>> origin/templateComplet
               </div>
             </div>
           </div>

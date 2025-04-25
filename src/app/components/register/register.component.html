@@ -6,14 +6,14 @@
           <div class="card-body px-5 py-5">
             <h3 class="card-title text-start mb-3">Créer un compte</h3>
 
-            <form (ngSubmit)="register(registerForm)" #registerForm="ngForm">
+            <form [formGroup]="registerForm" (ngSubmit)="register()">
 
               <!-- CIN -->
               <div class="form-group">
                 <label for="cin">CIN</label>
-                <input type="text" id="cin" name="cin" [(ngModel)]="user.cin" class="form-control p_input"
-                  placeholder="Entrez votre CIN (8 chiffres)" required pattern="[0-9]{8}">
-                <div *ngIf="registerForm.submitted && registerForm.controls['cin']?.invalid" class="text-danger">
+                <input type="text" id="cin" formControlName="cin" class="form-control p_input"
+                  placeholder="Entrez votre CIN (8 chiffres)">
+                <div *ngIf="registerForm.get('cin')?.invalid && registerForm.get('cin')?.touched" class="text-danger">
                   Le CIN doit contenir 8 chiffres.
                 </div>
               </div>
@@ -21,9 +21,9 @@
               <!-- Nom complet -->
               <div class="form-group">
                 <label for="name">Nom complet</label>
-                <input type="text" id="name" name="name" [(ngModel)]="user.name" class="form-control p_input"
-                  placeholder="Entrez votre nom complet" required>
-                <div *ngIf="registerForm.submitted && registerForm.controls['name']?.invalid" class="text-danger">
+                <input type="text" id="name" formControlName="name" class="form-control p_input"
+                  placeholder="Entrez votre nom complet">
+                <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="text-danger">
                   Le nom est requis.
                 </div>
               </div>
@@ -31,18 +31,15 @@
               <!-- Email -->
               <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" [(ngModel)]="user.email" class="form-control p_input"
-                       required email placeholder="exemple@domaine.com">
-                <div *ngIf="registerForm.submitted && registerForm.controls['email']?.errors?.['required']"
+                <input type="email" id="email" formControlName="email" class="form-control p_input"
+                       placeholder="exemple@domaine.com">
+                <div *ngIf="registerForm.get('email')?.errors?.['required'] && registerForm.get('email')?.touched"
                      class="text-danger">
                   L'e-mail est requis.
                 </div>
-                <div *ngIf="registerForm.submitted && registerForm.controls['email']?.errors?.['email']"
+                <div *ngIf="registerForm.get('email')?.errors?.['email'] && registerForm.get('email')?.touched"
                      class="text-danger">
                   Format de l'e-mail invalide.
-                </div>
-                <div *ngIf="emailExistsError" class="text-danger">
-                  Cet email est déjà utilisé.
                 </div>
               </div>
 
@@ -82,9 +79,9 @@
               <!-- Mot de passe -->
               <div class="form-group">
                 <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" [(ngModel)]="user.password" class="form-control p_input"
-                  placeholder="Entrez un mot de passe (min. 6 caractères)" required minlength="6">
-                <div *ngIf="registerForm.submitted && registerForm.controls['password']?.invalid" class="text-danger">
+                <input type="password" id="password" formControlName="password" class="form-control p_input"
+                  placeholder="Entrez un mot de passe (min. 6 caractères)">
+                <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-danger">
                   Le mot de passe doit contenir au moins 6 caractères.
                 </div>
               </div>
@@ -92,9 +89,9 @@
               <!-- Confirmation mot de passe -->
               <div class="form-group">
                 <label for="confirmPassword">Confirmer mot de passe</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword"
-                  class="form-control p_input" placeholder="Confirmez le mot de passe" required>
-                <div *ngIf="registerForm.submitted && user.password !== confirmPassword" class="text-danger">
+                <input type="password" id="confirmPassword" formControlName="confirmPassword"
+                  class="form-control p_input" placeholder="Confirmez le mot de passe">
+                <div *ngIf="registerForm.get('confirmPassword')?.value !== registerForm.get('password')?.value && registerForm.get('confirmPassword')?.touched" class="text-danger">
                   Les mots de passe ne correspondent pas.
                 </div>
               </div>
@@ -102,9 +99,9 @@
               <!-- Téléphone -->
               <div class="form-group">
                 <label for="phone">Téléphone</label>
-                <input type="text" id="phone" name="phone" [(ngModel)]="user.phone" class="form-control p_input"
-                       placeholder="Entrez votre numéro de téléphone (min. 8 chiffres)" required pattern="^\+216[0-9]{8}$">
-                <div *ngIf="registerForm.submitted && registerForm.controls['phone']?.invalid" class="text-danger">
+                <input type="text" id="phone" formControlName="phone" class="form-control p_input"
+                       placeholder="Entrez votre numéro de téléphone (min. 8 chiffres)">
+                <div *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" class="text-danger">
                   <small>Veuillez entrer un numéro valide avec le format +216XXXXXXXX.</small>
                 </div>
               </div>
@@ -112,9 +109,9 @@
               <!-- Adresse -->
               <div class="form-group">
                 <label for="address">Adresse</label>
-                <input type="text" id="address" name="address" [(ngModel)]="user.address" class="form-control p_input"
-                  placeholder="Entrez votre adresse" required>
-                <div *ngIf="registerForm.submitted && registerForm.controls['address']?.invalid" class="text-danger">
+                <input type="text" id="address" formControlName="address" class="form-control p_input"
+                  placeholder="Entrez votre adresse">
+                <div *ngIf="registerForm.get('address')?.invalid && registerForm.get('address')?.touched" class="text-danger">
                   L'adresse est requise.
                 </div>
               </div>
@@ -122,9 +119,9 @@
               <!-- Date de naissance -->
               <div class="form-group">
                 <label for="dateDeNaissance">Date de naissance</label>
-                <input type="date" id="dateDeNaissance" name="dateDeNaissance" [(ngModel)]="user.dateDeNaissance"
-                  class="form-control p_input" required>
-                <div *ngIf="registerForm.submitted && registerForm.controls['dateDeNaissance']?.invalid"
+                <input type="date" id="dateDeNaissance" formControlName="dateDeNaissance"
+                  class="form-control p_input">
+                <div *ngIf="registerForm.get('dateDeNaissance')?.invalid && registerForm.get('dateDeNaissance')?.touched"
                   class="text-danger">
                   La date de naissance est requise.
                 </div>
@@ -133,13 +130,13 @@
               <!-- Genre -->
               <div class="form-group">
                 <label>Genre</label>
-                <select name="genre" [(ngModel)]="user.genre" class="form-control p_input placeholder-select" required>
+                <select formControlName="genre" class="form-control p_input placeholder-select">
                   <option value="" disabled selected>Sélectionnez votre genre</option>
                   <option value="Homme">Homme</option>
                   <option value="Femme">Femme</option>
                   <option value="Autre">Autre</option>
                 </select>
-                <div *ngIf="registerForm.submitted && registerForm.controls['genre']?.invalid" class="text-danger">
+                <div *ngIf="registerForm.get('genre')?.invalid && registerForm.get('genre')?.touched" class="text-danger">
                   Veuillez sélectionner un genre.
                 </div>
               </div>
@@ -147,34 +144,34 @@
               <!-- Rôle -->
               <div class="form-group">
                 <label>Rôle</label>
-                <select name="role" [(ngModel)]="user.role" class="form-control p_input placeholder-select" required>
+                <select formControlName="role" class="form-control p_input placeholder-select">
                   <option value="" disabled selected hidden>Sélectionnez votre rôle</option>
                   <option value="BORROWER">Emprunteur</option>
                   <option value="OWNER">Propriétaire</option>
                 </select>
-                <div *ngIf="registerForm.submitted && registerForm.controls['role']?.invalid" class="text-danger">
+                <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="text-danger">
                   Le rôle est requis.
                 </div>
               </div>
 
               <!-- Conditions générales -->
               <div class="form-check mb-3">
-                <input type="checkbox" id="terms" name="terms" ngModel required class="form-check-input">
+                <input type="checkbox" id="terms" formControlName="terms" class="form-check-input">
                 <label class="form-check-label" for="terms">
                   J'accepte les termes et conditions
                 </label>
-                <div *ngIf="registerForm.submitted && registerForm.controls['terms']?.invalid" class="text-danger">
+                <div *ngIf="registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched" class="text-danger">
                   Vous devez accepter les termes.
                 </div>
               </div>
 
               <!-- Message d'erreur global -->
-              <div *ngIf="message && message !== 'Cette adresse e-mail est déjà utilisée.'" class="text-danger text-center mb-2">{{ message }}</div>
+              <div *ngIf="errorMessage" class="text-danger text-center mb-2">{{ errorMessage }}</div>
 
               <!-- Bouton de soumission -->
               <div class="text-center d-grid gap-2">
-                <button type="submit" class="btn btn-success btn-block enter-btn" [disabled]="isLoading">
-                  <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <button type="submit" class="btn btn-success btn-block enter-btn" [disabled]="loading">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                   S'inscrire
                 </button>
               </div>

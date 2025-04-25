@@ -70,4 +70,13 @@ export class CommandeService {
         error: (error) => console.error('Erreur annulation commande:', error)
       }));
   }
+
+  rejectCommande(id: number): Observable<Commande> {
+    console.log('Rejet commande:', id);
+    return this.http.post<Commande>(`${this.apiUrl}/reject/${id}`, {}, { headers: this.getHeaders() })
+      .pipe(tap({
+        next: (response) => console.log('Commande rejetée:', response),
+        error: (error) => console.error('Erreur rejet commande:', error)
+      }));
+  }
 }

@@ -168,7 +168,55 @@
 			</div>
 			<!-- /container -->
 		</nav>
-		<!-- /NAVIGATION --><div class="container mt-4">
+		<!-- /NAVIGATION -->
+
+		<!-- Ajout de la navbar -->
+		<app-navbar></app-navbar>
+
+		<div class="container mt-4">
+			<div class="row">
+				<!-- Section Profil -->
+				<div class="col-md-4 mb-4">
+					<div class="card">
+						<div class="card-header">
+							<h5>Mon Profil</h5>
+						</div>
+						<div class="card-body">
+							<p>Gérez votre profil et vos informations personnelles</p>
+							<a [routerLink]="['/profile']" class="btn btn-primary">Voir mon profil</a>
+						</div>
+					</div>
+				</div>
+
+				<!-- Section Items -->
+				<div class="col-md-4 mb-4">
+					<div class="card">
+						<div class="card-header">
+							<h5>Items Disponibles</h5>
+						</div>
+						<div class="card-body">
+							<p>Parcourez les items disponibles à la location</p>
+							<a [routerLink]="['/item']" class="btn btn-primary">Voir les items</a>
+						</div>
+					</div>
+				</div>
+
+				<!-- Section Commandes -->
+				<div class="col-md-4 mb-4">
+					<div class="card">
+						<div class="card-header">
+							<h5>Mes Commandes</h5>
+						</div>
+						<div class="card-body">
+							<p>Consultez vos commandes en cours et passées</p>
+							<a [routerLink]="['/commande-list']" class="btn btn-primary">Voir mes commandes</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container mt-4">
 
 		<div class="section">
 			<!-- container -->

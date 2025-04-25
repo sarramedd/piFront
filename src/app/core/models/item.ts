@@ -9,7 +9,14 @@ export interface Item {
   price: number;
   discount?: Discount; // Référence à l'entité Discount
   availability: boolean;
-  owner: any; // Tu peux détailler cette partie si nécessaire
+  owner: User;
+  photo: string;
+  image: string;
+  category: string;
+  itemCondition: string;
+  status: string;
+  createdDate?: string;
+  updatedDate?: string;
   //itemCondition: string;
   //owner: User;
 

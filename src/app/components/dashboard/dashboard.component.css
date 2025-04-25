@@ -1,0 +1,102 @@
+.sidebar .nav .nav-item.active > .nav-link {
+  background: #0f1015;
+}
+
+.sidebar .nav.sub-menu .nav-item .nav-link.active {
+  color: #ffffff;
+  background: #0f1015;
+}
+
+.navbar .navbar-menu-wrapper {
+  transition: width 0.25s ease;
+  -webkit-transition: width 0.25s ease;
+  -moz-transition: width 0.25s ease;
+  -ms-transition: width 0.25s ease;
+  box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.1);
+}
+
+.navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .dropdown-menu {
+  position: absolute;
+}
+
+.sidebar-brand-wrapper {
+  height: 70px;
+}
+
+.sidebar-brand-wrapper h3 {
+  margin: 0;
+  line-height: 70px;
+}
+
+.profile-pic {
+  display: flex;
+  align-items: center;
+  padding: 0.9375rem 0;
+}
+
+.profile-name {
+  margin-left: 1rem;
+}
+
+.img-xs {
+  width: 37px;
+  height: 37px;
+}
+
+.rounded-circle {
+  border-radius: 50% !important;
+}
+
+.count-indicator {
+  position: relative;
+}
+
+.count-indicator .count {
+  position: absolute;
+  right: 0px;
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  background: #00d25b;
+}
+
+.navbar-profile {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+}
+
+.navbar-profile img {
+  margin-right: 0.8rem;
+}
+
+.preview-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+}
+
+.preview-item:hover {
+  background: #0f1015;
+}
+
+.preview-thumbnail {
+  margin-right: 0.75rem;
+}
+
+.preview-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-dark {
+  background-color: #000000 !important;
+}
+
+.menu-icon {
+  margin-right: 0.5rem;
+}

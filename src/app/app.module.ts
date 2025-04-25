@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
@@ -17,6 +17,7 @@ import { AdminProfileComponent } from './components/admin-profile-component/admi
 import { UserListComponent } from './components/user-list/user-list.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 // E-commerce & Shared
 import { HeaderComponent } from './components/shared/header/header.component';
@@ -41,6 +42,8 @@ import { VerificationSmsComponent } from './components/verification-sms/verifica
 import { CommandeComponent } from './components/commande/commande.component';
 import { DiscountComponent } from './components/discount/discount.component';
 import { CommandeListComponent } from './components/commande-list/commande-list.component';
+import { AuthGuard } from './guards/auth.guard';
+import { AuthService } from './services/auth.service';
 
 
 @NgModule({
@@ -58,7 +61,7 @@ import { CommandeListComponent } from './components/commande-list/commande-list.
     ResetPasswordComponent,
     FooterBackComponent,
     SidebarBackComponent,
-
+    ProfileComponent,
 
     // Shared & Layout
     HeaderComponent,
@@ -95,7 +98,10 @@ import { CommandeListComponent } from './components/commande-list/commande-list.
     CommonModule
 
   ],
-  providers: [],
+  providers: [
+    AuthService,
+    AuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

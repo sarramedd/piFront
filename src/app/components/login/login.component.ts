@@ -1,6 +1,6 @@
-import { Component, OnInit , ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthServiceService } from '../../services/auth-service.service';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,16 +15,14 @@ import { Router } from '@angular/router';
     '../../../assets/bootstrap-template/vendors/ti-icons/css/themify-icons.css'
   ],
   encapsulation: ViewEncapsulation.None
-
 })
 export class LoginComponent implements OnInit {
-
   loginForm!: FormGroup;
   errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthServiceService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -46,19 +44,11 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(loginData).subscribe({
       next: (response) => {
-        this.authService.saveToken(response.token);
-
-
-        const userRole = this.authService.getRoleFromToken();
-        console.log('Rôle extrait depuis le token :', userRole);
-
-        if (userRole === 'BORROWER' || userRole === 'OWNER') {
-          this.router.navigate(['/home']);
-        } else {
-          this.router.navigate(['/ListUser']);
-        }
+        // La redirection est gérée dans le service d'authentification
+        console.log('Connexion réussie');
       },
       error: (err) => {
+        console.error('Erreur de connexion:', err);
         if (err.status === 401) {
           this.errorMessage = 'Email ou mot de passe incorrect.';
         } else {

@@ -4,186 +4,177 @@ import { ItemService } from 'src/app/services/item.service';
 import { CommandeService } from 'src/app/services/commande.service';
 import { DiscountService } from 'src/app/services/discount.service';
 import { AuthServiceService } from 'src/app/services/auth-service.service';
+import { UserService } from 'src/app/services/user.service';
 import { Item } from 'src/app/core/models/item';
-import { Commande as CommandeModel } from 'src/app/core/models/commande';
+import { Commande } from 'src/app/core/models/commande';
 import { Discount } from 'src/app/core/models/discount';
-
-interface CommandeDisplay {
-  id: number;
-  date: Date;
-  client: string;
-  montant: number;
-  status: 'en-cours' | 'terminee' | 'annulee';
-}
+import { User } from 'src/app/core/models/user.model';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-commande',
   templateUrl: './commande.component.html',
-  styleUrls: ['./commande.component.scss']
+  styleUrls: ['./commande.component.css']
 })
 export class CommandeComponent implements OnInit {
-  itemId!: number;
-  item!: Item;
-  borrowerId: number = 2;
+  commandes: Commande[] = [];
+  currentUser: User | null = null;
+  error: string | null = null;
+  item: Item | null = null;
+  activeDiscount: Discount | null = null;
+  discountedPrice: number = 0;
   orderDescription: string = '';
   loading: boolean = false;
-  error: string | null = null;
-  discountedPrice: number = 0;
-  activeDiscount: Discount | null = null;
-  commandes: CommandeDisplay[] = [];
-  searchTerm: string = '';
-  statusFilter: string = '';
-  sortBy: string = '';
+  currentDateTime: string = '';
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private itemService: ItemService,
     private commandeService: CommandeService,
-    private discountService: DiscountService,
-    private authService: AuthServiceService
-  ) {}
+    private userService: UserService,
+    private authService: AuthServiceService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private itemService: ItemService,
+    private discountService: DiscountService
+  ) { }
 
   ngOnInit(): void {
-    this.itemId = +this.route.snapshot.paramMap.get('id')!;
-    this.loadItem();
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.updateDateTime();
+    setInterval(() => this.updateDateTime(), 1000); // Mise à jour chaque seconde
     this.loadCommandes();
+    this.loadCurrentUser();
+    this.loadItemDetails();
   }
 
-  loadCommandes(): void {
-    // Simuler des données de commandes
-    this.commandes = [
-      {
-        id: 1,
-        date: new Date('2024-03-15'),
-        client: 'Jean Dupont',
-        montant: 150.00,
-        status: 'en-cours'
-      },
-      {
-        id: 2,
-        date: new Date('2024-03-14'),
-        client: 'Marie Martin',
-        montant: 75.50,
-        status: 'terminee'
-      },
-      {
-        id: 3,
-        date: new Date('2024-03-13'),
-        client: 'Pierre Durand',
-        montant: 200.00,
-        status: 'annulee'
-      }
-    ];
+  updateDateTime(): void {
+    const now = new Date();
+    this.currentDateTime = now.toISOString().slice(0, 19).replace('T', ' ');
   }
 
-  loadItem(): void {
-    this.loading = true;
-    this.error = null;
-    this.itemService.getItemById(this.itemId).subscribe({
-      next: (item) => {
-        this.item = item;
-        this.discountedPrice = item.price;
-        this.loadActiveDiscount();
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement de l\'item:', err);
-        this.error = 'Erreur lors du chargement de l\'item';
-        this.loading = false;
-      }
-    });
+  loadItemDetails(): void {
+    const itemId = this.route.snapshot.params['id'];
+    if (itemId) {
+      this.itemService.getItemById(itemId).subscribe({
+        next: (item) => {
+          this.item = item;
+          this.loadActiveDiscount();
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement de l\'item:', error);
+          this.error = 'Erreur lors du chargement des détails de l\'item';
+        }
+      });
+    }
   }
 
   loadActiveDiscount(): void {
-    const token = this.authService.getToken();
-    if (!token) {
-      console.log('User not authenticated - using original price');
-      this.discountedPrice = this.item.price;
-      this.loading = false;
-      return;
-    }
-
-    this.discountService.getActiveDiscountsForItem(this.itemId, token).subscribe({
-      next: (discounts) => {
-        if (discounts && discounts.length > 0) {
-          this.activeDiscount = discounts[0];
-          this.discountedPrice = this.calculateDiscountedPrice(this.item.price, this.activeDiscount.percentage);
-        } else {
-          this.discountedPrice = this.item.price;
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des discounts:', err);
-        this.discountedPrice = this.item.price;
-        this.loading = false;
+    if (this.item) {
+      const token = this.authService.getToken();
+      if (!token) {
+        console.error('Pas de token disponible');
+        return;
       }
-    });
+      
+      this.discountService.getActiveDiscountsForItem(this.item.id, token).subscribe({
+        next: (discounts: Discount[]) => {
+          this.activeDiscount = discounts.length > 0 ? discounts[0] : null;
+          this.calculateDiscountedPrice();
+        },
+        error: (error: Error) => {
+          console.error('Erreur lors du chargement de la réduction:', error);
+        }
+      });
+    }
   }
 
-  calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
-    const discountedPrice = originalPrice * (1 - discountPercentage / 100);
-    return Number(discountedPrice.toFixed(2));
+  calculateDiscountedPrice(): void {
+    if (this.item && this.activeDiscount) {
+      const reduction = (this.item.price * this.activeDiscount.percentage) / 100;
+      this.discountedPrice = this.item.price - reduction;
+    } else if (this.item) {
+      this.discountedPrice = this.item.price;
+    }
   }
 
   createOrder(): void {
-    this.loading = true;
-    this.error = null;
+    if (!this.item) {
+      this.error = 'Aucun item sélectionné';
+      return;
+    }
 
-    const newCommande: CommandeModel = {
-      item: this.item,
+    this.loading = true;
+    const commande: Partial<Commande> = {
       itemId: this.item.id,
-      borrowerId: this.borrowerId,
       description: this.orderDescription,
       totalPrice: this.discountedPrice,
-      status: 'EN ATTENTE'
+      status: 'EN_ATTENTE'
     };
 
-    this.commandeService.createCommande(newCommande).subscribe({
+    this.commandeService.createCommande(commande as Commande).subscribe({
       next: (response) => {
-        console.log('Commande créée:', response);
-        if (response.id) {
+        this.loading = false;
+        if (response && response.id) {
           this.router.navigate(['/contract', response.id]);
         } else {
-          this.error = 'Erreur: ID de commande non reçu';
-          this.loading = false;
+          this.router.navigate(['/commandes']);
         }
       },
-      error: (err) => {
-        console.error('Erreur lors de la création de la commande:', err);
-        this.error = 'Erreur lors de la création de la commande';
+      error: (error) => {
         this.loading = false;
+        console.error('Erreur lors de la création de la commande:', error);
+        this.error = 'Erreur lors de la création de la commande';
       }
     });
   }
 
-  onSearch(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm = input.value;
-    // Implémenter la logique de recherche
+  loadCurrentUser(): void {
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.currentUser = user;
+      },
+      error: (error: Error) => {
+        console.error('Error loading current user:', error);
+      }
+    });
   }
 
-  onStatusFilterChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.statusFilter = select.value;
-    // Implémenter la logique de filtrage
+  loadCommandes(): void {
+    this.commandeService.getAllCommandes().subscribe({
+      next: (commandes) => {
+        this.commandes = commandes;
+      },
+      error: (error: Error) => {
+        console.error('Error loading commandes:', error);
+      }
+    });
   }
 
-  onSortChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.sortBy = select.value;
-    // Implémenter la logique de tri
+  confirmerCommande(id: number): void {
+    this.commandeService.confirmCommande(id).subscribe({
+      next: () => {
+        this.loadCommandes();
+      },
+      error: (error: Error) => {
+        console.error('Error confirming commande:', error);
+      }
+    });
   }
 
-  viewCommande(id: number): void {
-    console.log('Voir commande:', id);
+  rejeterCommande(id: number): void {
+    this.commandeService.rejectCommande(id).subscribe({
+      next: () => {
+        this.loadCommandes();
+      },
+      error: (error: Error) => {
+        console.error('Error rejecting commande:', error);
+      }
+    });
   }
 
-  editCommande(id: number): void {
-    console.log('Éditer commande:', id);
-  }
-
-  deleteCommande(id: number): void {
-    console.log('Supprimer commande:', id);
+  isAdmin(): boolean {
+    return this.authService.getRoleFromToken() === 'ADMIN';
   }
 }

@@ -14,13 +14,13 @@ export class ForgotPasswordComponent implements OnInit {
   errorMessage: string = '';
 
   constructor(
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
     private authService: AuthServiceService
   ) {}
 
   ngOnInit(): void {
     // Initialisation du formulaire avec la validation de l'email
-    this.forgotPasswordForm = this.formBuilder.group({
+    this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
   }
@@ -37,18 +37,16 @@ export class ForgotPasswordComponent implements OnInit {
       return;
     }
 
-    // Utilisation de la syntaxe des crochets pour accéder au contrôle 'email'
-    this.authService.requestPasswordReset(this.f['email'].value).subscribe(
-      (response) => {
-        // Si la requête réussit, afficher le message de succès
-        this.successMessage = 'A link to reset your password has been sent to your email.';
-        this.errorMessage = ''; // Réinitialiser le message d'erreur en cas de succès
+    const email = this.forgotPasswordForm.value.email;
+    this.authService.requestPasswordReset(email).subscribe({
+      next: (response: any) => {
+        this.successMessage = 'Un email de réinitialisation a été envoyé à votre adresse email.';
+        this.errorMessage = '';
       },
-      (error) => {
-        // Si une erreur se produit, afficher le message d'erreur
-        this.errorMessage = 'There was an error sending the reset link. Please try again.';
-        this.successMessage = ''; // Réinitialiser le message de succès en cas d'erreur
+      error: (error: any) => {
+        this.errorMessage = error.error?.message || 'Une erreur est survenue lors de la demande de réinitialisation.';
+        this.successMessage = '';
       }
-    );
+    });
   }
 }

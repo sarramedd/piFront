@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FaceppService } from 'src/app/services/facepp.service';
-import { UserService } from 'src/app/services/user.service';
-
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -11,113 +9,184 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  user: any = {
-    genre: "",
-    role: "",
-    phone: "",
-  };
-  confirmPassword: string = '';
-  message: string = '';
-  isLoading: boolean = false;
-
+  registerForm: FormGroup;
+  loading: boolean = false;
+  errorMessage: string = '';
+  imagePreview: string | null = null;
   isVerifyingFace: boolean = false;
-  emailExistsError: boolean = false;
-  phoneRegex = /^\+216[0-9]{8}$/;
-  selectedFile: File | null = null;
-  imagePreview: string | ArrayBuffer | null = null;
   faceVerificationResult: { isValid: boolean; message?: string } | null = null;
+  selectedFile: File | null = null;
 
   constructor(
-    private userService: UserService,
-    private faceppService: FaceppService,
-    private router: Router
-  ) {}
+    private authService: AuthService,
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.registerForm = this.fb.group({
+      cin: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern('^\\+216[0-9]{8}$')]],
+      address: ['', Validators.required],
+      dateDeNaissance: ['', Validators.required],
+      genre: ['', Validators.required],
+      role: ['BORROWER', Validators.required],
+      terms: [false, Validators.requiredTrue],
+      photo: [null]
+    });
+  }
 
   async onFileSelected(event: any): Promise<void> {
     const file = event.target.files[0];
     if (!file) return;
 
+    // Vérifier le type de fichier
+    if (!file.type.startsWith('image/')) {
+      this.errorMessage = 'Veuillez sélectionner une image valide';
+      return;
+    }
+
+    // Vérifier la taille du fichier (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      this.errorMessage = 'L\'image ne doit pas dépasser 5MB';
+      return;
+    }
+
     this.selectedFile = file;
-    this.faceVerificationResult = null;
+    this.registerForm.patchValue({ photo: file });
     
     // Créer un aperçu de l'image
     const reader = new FileReader();
     reader.onload = () => {
-      this.imagePreview = reader.result;
+      this.imagePreview = reader.result as string;
     };
     reader.readAsDataURL(file);
-
-    // Vérifier le visage
-    await this.verifyFace();
   }
 
-  async verifyFace(): Promise<void> {
-    if (!this.selectedFile) return;
+  async register() {
+    if (this.registerForm.valid) {
+      const formData = new FormData();
+      const formValues = this.registerForm.value;
 
-    this.isVerifyingFace = true;
-    this.faceVerificationResult = null;
+      // Ajouter tous les champs au FormData
+      Object.keys(formValues).forEach(key => {
+        if (key !== 'photo' && key !== 'confirmPassword' && key !== 'terms') {
+          formData.append(key, formValues[key]);
+        }
+      });
 
-    try {
-      this.faceVerificationResult = await this.faceppService.validateSingleFace(this.selectedFile);
-      
-      if (!this.faceVerificationResult.isValid) {
-        this.message = this.faceVerificationResult.message || 'Visage non valide';
+      // Ajouter la photo si elle existe
+      if (this.selectedFile) {
+        formData.append('photo', this.selectedFile);
       }
-    } catch (error) {
-      console.error('Erreur de vérification faciale:', error);
-      this.message = 'Erreur lors de la vérification faciale';
-    } finally {
-      this.isVerifyingFace = false;
+
+      // Validation des données
+      if (!formValues.cin || !/^[0-9]{8}$/.test(formValues.cin)) {
+        this.errorMessage = 'Le CIN doit contenir exactement 8 chiffres';
+        return;
+      }
+
+      if (!formValues.name || formValues.name.trim().length === 0) {
+        this.errorMessage = 'Le nom est requis';
+        return;
+      }
+
+      if (!formValues.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.email)) {
+        this.errorMessage = 'Veuillez entrer une adresse email valide';
+        return;
+      }
+
+      if (!formValues.password || formValues.password.length < 6) {
+        this.errorMessage = 'Le mot de passe doit contenir au moins 6 caractères';
+        return;
+      }
+
+      if (formValues.password !== formValues.confirmPassword) {
+        this.errorMessage = 'Les mots de passe ne correspondent pas';
+        return;
+      }
+
+      if (!formValues.phone || !/^\+216[0-9]{8}$/.test(formValues.phone)) {
+        this.errorMessage = 'Veuillez entrer un numéro de téléphone valide avec le format +216XXXXXXXX';
+        return;
     }
-  }
 
-  async register(registerForm: NgForm) {
-    this.message = '';
-    this.emailExistsError = false;
+      if (!formValues.address || formValues.address.trim().length === 0) {
+        this.errorMessage = 'L\'adresse est requise';
+        return;
+      }
 
-    // Validation du formulaire
-    if (registerForm.invalid) {
-      this.message = 'Veuillez remplir tous les champs requis correctement.';
+      if (!formValues.dateDeNaissance) {
+        this.errorMessage = 'La date de naissance est requise';
+        return;
+      }
+
+      // Validation de la date de naissance
+      let birthDate: Date;
+      try {
+        // Convertir la date en format ISO (YYYY-MM-DD)
+        const [day, month, year] = formValues.dateDeNaissance.split('/');
+        birthDate = new Date(`${year}-${month}-${day}`);
+        
+        if (isNaN(birthDate.getTime())) {
+          throw new Error('Format de date invalide');
+        }
+        
+        const today = new Date();
+        
+        if (birthDate > today) {
+          this.errorMessage = 'La date de naissance ne peut pas être dans le futur';
       return;
     }
 
-    if (!this.phoneRegex.test(this.user.phone)) {
-      this.message = 'Numéro de téléphone invalide. Format attendu: +216XXXXXXXX.';
+        if (today.getFullYear() - birthDate.getFullYear() < 18) {
+          this.errorMessage = 'Vous devez avoir au moins 18 ans pour vous inscrire';
       return;
     }
 
-    if (this.user.password !== this.confirmPassword) {
-      this.message = 'Les mots de passe ne correspondent pas.';
+        // Formater la date en ISO string (YYYY-MM-DD)
+        formData.set('dateDeNaissance', birthDate.toISOString().split('T')[0]);
+      } catch (error) {
+        this.errorMessage = 'Format de date invalide. Utilisez le format JJ/MM/AAAA';
       return;
     }
 
+      if (!formValues.genre) {
+        this.errorMessage = 'Veuillez sélectionner un genre';
+        return;
+      }
 
-    // Vérification faciale
-    if (!this.faceVerificationResult?.isValid) {
-      this.message = 'Veuillez uploader une photo valide avec un visage clairement visible.';
+      if (!formValues.terms) {
+        this.errorMessage = 'Vous devez accepter les termes et conditions';
       return;
     }
 
-    this.isLoading = true;
+      this.loading = true;
+      this.errorMessage = '';
 
-    try {
-      const response = await this.userService.registerUser(this.user, this.selectedFile).toPromise();
-      
-      this.isLoading = false;
-      this.message = 'Inscription réussie! Un code de vérification a été envoyé à votre téléphone.';
-      const userId = response.id;
-      
-      setTimeout(() => {
-        this.router.navigate(['/verification-sms', userId]);
-      }, 2000);
-    } catch (err: any) {  // Typing 'err' as 'any' to avoid unknown error type
-      this.isLoading = false;
-      if (err.error === 'Cet email est déjà utilisé.') {
-        this.emailExistsError = true;
-        this.message = 'Cet email est déjà utilisé.';
+      try {
+        await this.authService.register(formData).toPromise();
+        this.loading = false;
+        this.router.navigate(['/login']);
+      } catch (error: any) {
+        this.loading = false;
+        console.error('Erreur d\'inscription:', error);
+        
+        if (error.status === 403) {
+          this.errorMessage = 'Accès refusé. Veuillez vérifier vos autorisations et que vous avez bien sélectionné une photo de profil.';
+        } else if (error.status === 0) {
+          this.errorMessage = 'Impossible de se connecter au serveur. Veuillez vérifier que le serveur est en cours d\'exécution.';
+        } else if (error.error && error.error.message) {
+          this.errorMessage = error.error.message;
+        } else if (error.status === 400) {
+          this.errorMessage = 'Données invalides. Veuillez vérifier vos informations.';
+        } else if (error.status === 409) {
+          this.errorMessage = 'Cet email est déjà utilisé.';
       } else {
-        this.message = 'Erreur lors de l\'inscription. Veuillez réessayer.';
-        console.error('Registration error:', err);
+          this.errorMessage = 'Erreur lors de l\'inscription. Veuillez réessayer.';
+        }
       }
     }
   }

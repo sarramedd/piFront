@@ -64,7 +64,11 @@ export class CommandeListComponent implements OnInit {
     const searchLower = this.searchTerm.toLowerCase();
     this.filteredCommandes = this.commandes.filter(commande => 
       commande.id?.toString().includes(searchLower) ||
-      commande.status?.toLowerCase().includes(searchLower)
+      commande.status?.toLowerCase().includes(searchLower) ||
+      commande.description?.toLowerCase().includes(searchLower) ||
+      commande.item?.name?.toLowerCase().includes(searchLower) ||
+      commande.item?.category?.toLowerCase().includes(searchLower) ||
+      commande.totalPrice?.toString().includes(searchLower)
     );
   }
 
