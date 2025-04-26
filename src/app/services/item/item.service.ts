@@ -7,7 +7,7 @@ import { Injectable } from "@angular/core";
 export class ItemService {
 
   constructor( private http : HttpClient ) { }
-  private url ='http://127.0.0.1:8088/api/items' ;
+  private url ='http://127.0.0.1:8088/borrowit/api/items' ;
     getAllitems(){
     return this.http.get(this.url+'/All');
   }

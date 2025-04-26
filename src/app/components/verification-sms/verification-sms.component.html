@@ -1,0 +1,24 @@
+<div class="verification-container">
+    <h2>Vérification par SMS</h2>
+  
+    <div *ngIf="message" [ngClass]="{ 'success-message': isSuccess, 'error-message': !isSuccess }">
+      {{ message }}
+    </div>
+  
+    <form (ngSubmit)="verifyCode()">
+      <div class="form-group">
+        <label for="code">Code de vérification</label>
+        <input
+          type="text"
+          id="code"
+          [(ngModel)]="verificationCode"
+          name="code"
+          class="form-control"
+          required
+        />
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Vérifier</button>
+    </form>
+  </div>
+  

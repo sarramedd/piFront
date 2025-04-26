@@ -1,99 +1,146 @@
 <div class="container-scroller">
-    <app-sidebar></app-sidebar>
-  
-    <div class="container-fluid page-body-wrapper">
-      <app-navbar></app-navbar>
-  
-      <div class="main-panel" style="height: 100vh; overflow-y: auto; padding-top: 0;">
-        <div class="content-wrapper">
-          <div class="page-header">
-            <h3 class="page-title">Liste des Utilisateurs</h3>
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Tables</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Liste des utilisateurs</li>
-              </ol>
-            </nav>
+  <app-sidebar-back></app-sidebar-back>
+
+  <div class="container-fluid page-body-wrapper">
+    <app-navbar></app-navbar>
+
+    <div class="main-panel" style="height: 100vh; overflow-y: auto; padding-top: 0;">
+      <div class="content-wrapper">
+        <div class="page-header">
+          <h3 class="page-title">Liste des Utilisateurs</h3>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Tables</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Liste des utilisateurs</li>
+            </ol>
+          </nav>
+        </div>
+
+        <!-- Messages d'erreur -->
+        <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ errorMessage }}
+          <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+        </div>
+
+        <!-- Indicateur de chargement -->
+        <div *ngIf="isLoading" class="text-center my-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement...</span>
           </div>
-  
-          <!-- Messages d'erreur -->
-          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ errorMessage }}
-            <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
-          </div>
-  
-          <!-- Indicateur de chargement -->
-          <div *ngIf="isLoading" class="text-center my-4">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-            <p *ngIf="currentAction">{{ getActionName(currentAction) }} en cours...</p>
-          </div>
-  
-          <div class="row" *ngIf="!isLoading">
-            <div class="col-lg-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Utilisateurs</h4>
-                  <div class="table-responsive">
-                    <table class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Nom</th>
-                          <th>Email</th>
-                          <th>Statut</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let user of users">
-                          <td>{{ user.name }}</td>
-                          <td>{{ user.email }}</td>
-                          <td>
-                            <span class="badge" 
-                                  [ngClass]="{
-                                    'bg-success': user.status === 'Active',
-                                    'bg-danger': user.status === 'Banned'
-                                  }">
-                              {{ user.status }}
-                            </span>
-                          </td>
-                          <td>
-                            <div class="btn-group" role="group">
-                              <!-- Bannir -->
-                              <button *ngIf="user.status !== 'Banned'" 
-                                      class="btn btn-warning btn-sm me-2" 
-                                      (click)="confirmAction('ban', user.id)"
-                                      [disabled]="isLoading">
-                                <i class="bi bi-slash-circle"></i> Bannir
-                              </button>
-                              
-                              <!-- Débannir -->
-                              <button *ngIf="user.status === 'Banned'" 
-                                      class="btn btn-success btn-sm me-2" 
-                                      (click)="confirmAction('unban', user.id)"
-                                      [disabled]="isLoading">
-                                <i class="bi bi-check-circle"></i> Débannir
-                              </button>
-                              
-                              <!-- Supprimer -->
-                              <button class="btn btn-danger btn-sm" 
-                                      (click)="confirmAction('delete', user.id)"
-                                      [disabled]="isLoading">
-                                <i class="bi bi-trash"></i> Supprimer
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+          <p *ngIf="currentAction">{{ getActionName(currentAction) }} en cours...</p>
+        </div>
+
+        <div class="row" *ngIf="!isLoading">
+          <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Utilisateurs</h4>
+                
+                <!-- Barre de recherche et sélecteur d'éléments par page -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div class="form-group w-50 me-2">
+                    <input type="text" class="form-control" 
+                           [(ngModel)]="searchTerm" 
+                           (input)="applyFilter()"
+                           placeholder="Rechercher par nom ou email...">
                   </div>
+                  
+                  <div class="d-flex">
+                    <div class="form-group me-2">
+                      <select class="form-select form-select-sm" [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
+                        <option value="5">5 par page</option>
+                        <option value="10">10 par page</option>
+                        <option value="20">20 par page</option>
+                        <option value="50">50 par page</option>
+                      </select>
+                    </div>
+                    <div>
+                      <span class="text-muted">
+                        {{ (currentPage - 1) * itemsPerPage + 1 }}-{{ Math.min(currentPage * itemsPerPage, filteredUsers.length) }} sur {{ filteredUsers.length }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let user of displayedUsers">
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                          <span class="badge" 
+                                [ngClass]="{
+                                  'bg-success': user.status === 'Active',
+                                  'bg-danger': user.status === 'Banned'
+                                }">
+                            {{ user.status }}
+                          </span>
+                        </td>
+                        <td>
+                          <div class="btn-group" role="group">
+                            <button *ngIf="user.status !== 'Banned'" 
+                                    class="btn btn-warning btn-sm me-2" 
+                                    (click)="confirmAction('ban', user.id)"
+                                    [disabled]="isLoading">
+                              <i class="bi bi-slash-circle"></i> Bannir
+                            </button>
+                            
+                            <button *ngIf="user.status === 'Banned'" 
+                                    class="btn btn-success btn-sm me-2" 
+                                    (click)="confirmAction('unban', user.id)"
+                                    [disabled]="isLoading">
+                              <i class="bi bi-check-circle"></i> Débannir
+                            </button>
+                            
+                            <button class="btn btn-danger btn-sm" 
+                                    (click)="confirmAction('delete', user.id)"
+                                    [disabled]="isLoading">
+                              <i class="bi bi-trash"></i> Supprimer
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center mt-3" *ngIf="filteredUsers.length > itemsPerPage">
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                      <li class="page-item" [class.disabled]="currentPage === 1">
+                        <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+                      
+                      <li class="page-item" *ngFor="let page of getPages()" [class.active]="page === currentPage">
+                        <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+                      </li>
+                      
+                      <li class="page-item" [class.disabled]="currentPage === totalPages">
+                        <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <app-footer></app-footer>
       </div>
+      <app-footer-back></app-footer-back>
     </div>
   </div>
+</div>

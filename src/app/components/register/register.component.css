@@ -1,0 +1,19 @@
+/* Style du placeholder */
+select.placeholder-select:invalid {
+    color: #a8a8a8; /* Gris clair */
+  }
+  
+  /* Style normal quand une valeur est sélectionnée */
+  select.placeholder-select {
+    color: #495057; /* Couleur de texte normale */
+  }
+  
+  /* Style des options */
+  select.placeholder-select option {
+    color: #495057; /* Couleur normale */
+  }
+  
+  /* Cache l'option placeholder dans la liste déroulante */
+  select.placeholder-select option[value=""][disabled] {
+    display: none;
+  }

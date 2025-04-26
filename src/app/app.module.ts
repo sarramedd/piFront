@@ -19,9 +19,12 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 
 // E-commerce & Shared
 import { HeaderComponent } from './components/shared/header/header.component';
+import { FooterBackComponent } from './components/footer/footer.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
-import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
 
+
+import { SidebarComponent } from './components/shared/sidebar/sidebar.component'; 
+import { SidebarBackComponent } from './components/sidebar/sidebar.component';
 // Navbar
 import { NavbarComponent } from './components/navbar/navbar.component';  // Ajoute cette ligne
 
@@ -33,6 +36,7 @@ import { IndexComponent } from './components/index/index.component';
 import { ContractComponent } from './components/contract/contract.component';
 import { ItemComponent } from './components/item/item.component';
 import { PaymentComponent } from './components/payment/payment.component';
+
 import { DisplayItemsFrontComponent } from './components/items/display-items-front/display-items-front.component';
 import { AddItemFrontComponent } from './components/items/add-item-front/add-item-front.component';
 import { UpdateItemComponent } from './components/items/update-item/update-item.component';
@@ -49,6 +53,9 @@ import { ItemListComponent } from './BackOffice/items/item-list/item-list.compon
 import { ChartModule } from 'primeng/chart'; // <--- Ajoute ceci
 
 
+import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,14 +64,17 @@ import { ChartModule } from 'primeng/chart'; // <--- Ajoute ceci
     LoginComponent,
     RegisterComponent,
     DashboardComponent,
+    FooterComponent,
     AdminProfileComponent,
     UserListComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
+    FooterBackComponent,
+    SidebarBackComponent,
 
     // Shared & Layout
     HeaderComponent,
-    FooterComponent,
+   // FooterComponent,
     SidebarComponent,
     NavbarComponent,  // Ajoute NavbarComponent ici
 
@@ -77,6 +87,7 @@ import { ChartModule } from 'primeng/chart'; // <--- Ajoute ceci
     ContractComponent,
     ItemComponent,
     PaymentComponent,
+
 
     //Items
     // npm install primeng@16.3.1 chart.js --save
@@ -95,6 +106,9 @@ import { ChartModule } from 'primeng/chart'; // <--- Ajoute ceci
     EditItemComponent,
     AddItemComponent,
     ItemChartComponent,
+
+
+    VerificationSmsComponent,
 
   ],
   imports: [

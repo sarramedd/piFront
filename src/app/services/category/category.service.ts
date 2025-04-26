@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 export class CategoryService {
 
   constructor( private http : HttpClient ) { }
-  private url ='http://127.0.0.1:8088/api/categories' ;
+  private url ='http://127.0.0.1:8088/borrowit/api/categories' ;
     getAllCategories(){
     return this.http.get(this.url+'/All');
   }
