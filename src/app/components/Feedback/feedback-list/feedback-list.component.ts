@@ -22,8 +22,9 @@ export class FeedbackListComponent implements OnInit {
   reportModalOpen: boolean = false; // Toggle for report modal
   reportingFeedback: Feedback | null = null;
   userId: string | null = ''; // Declare userId as a class property
-  
-
+  activePicker: number | null = null; // For reaction picker
+  reactionAnimation: string | null = null; // For animation effects
+  private hidePickerTimeout: any = null;
 
   
   
@@ -38,13 +39,13 @@ export class FeedbackListComponent implements OnInit {
     ANGRY: '😡'
   };
 
-  reactionButtonEmojis: { [key in Reaction]: { emoji: string, label: string } } = {
-    LIKE: { emoji: '👍', label: 'Like' },
-    DISLIKE: { emoji: '👎', label: 'Dislike' },
-    LOVE: { emoji: '❤️', label: 'Love' },
-    LAUGH: { emoji: '😂', label: 'Laugh' },
-    SAD: { emoji: '😢', label: 'Sad' },
-    ANGRY: { emoji: '😡', label: 'Angry' },
+  eactionLabels: { [key in Reaction]: string } = {
+    LIKE: 'Like',
+    DISLIKE: 'Dislike',
+    LOVE: 'Love',
+    LAUGH: 'Haha',
+    SAD: 'Sad',
+    ANGRY: 'Angry'
   };
 
   defaultProfileImage = 'assets/images/Capture.png';
@@ -55,7 +56,8 @@ export class FeedbackListComponent implements OnInit {
     private feedbackService: FeedbacksService,
     private reactsService: ReactsService,
       private cdRef: ChangeDetectorRef,
-      private ngZone: NgZone
+      private ngZone: NgZone,
+      private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -65,55 +67,44 @@ export class FeedbackListComponent implements OnInit {
       alert("User not logged in");
       return;
     }
-  
+
     // Retrieve the user details (cin, name, email, etc.)
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    if (!userData || !userData.id) {
+    if (!userData?.id) {
       alert("User data not found");
       return;
     }
+
     this.loadFeedbacksWithReactions();
-  
-    this.feedbackService.getAllFeedbacks().subscribe(
-      (data: Feedback[]) => {
+    
+    this.feedbackService.getAllFeedbacks().subscribe({
+      next: (data: Feedback[]) => {
         console.log("Fetched feedbacks:", data);
 
-        // Initialize feedbacks with empty reacts array
+        // Initialize feedbacks with empty reacts array and current user reaction
         this.feedbacks = data.map(fb => ({
           ...fb,
           showReacts: false,
-          reacts: []
+          reacts: [],
+          currentUserReaction: this.getUserReaction(fb, parseInt(this.userId!))
         }));
-  
-        // Fetch reactions for each feedback with proper change detection
+
+        // Fetch reactions for each feedback
         this.feedbacks.forEach(fb => {
-          this.reactsService.getReactionsForFeedback(fb.id!).subscribe(
-            (reacts: Reacts[]) => {
-              // Create new array reference to trigger change detection
-              this.feedbacks = this.feedbacks.map(f => 
-                f.id === fb.id ? {...f, reacts: [...reacts]} : f
-              );
-              
-              console.log(`Loaded reacts for feedback ID ${fb.id}`, reacts);
-              
-              // Sort feedbacks by popularity after updating reactions
-              this.sortFeedbacksByPopularity();
-            },
-            (error) => {
-              console.error(`Error fetching reacts for feedback ID ${fb.id}`, error);
-              // Still update the array to trigger change detection, with empty reacts
-              this.feedbacks = this.feedbacks.map(f => 
-                f.id === fb.id ? {...f, reacts: []} : f
-              );
-            }
-          );
+          this.loadReactionsForFeedback(fb.id!);
         });
       },
-      (error) => {
+      error: (error) => {
         console.error('Error loading feedbacks', error);
         this.errorMessage = 'Failed to load feedbacks';
       }
-    );
+    });
+}
+
+private getUserReaction(feedback: Feedback, userId: number): Reaction | null {
+  if (!feedback.reacts) return null;
+  const userReact = feedback.reacts.find(react => react.user?.id === userId);
+  return userReact?.reaction || null;
 }
 
 // Helper method to sort feedbacks by popularity
@@ -160,13 +151,13 @@ private sortFeedbacksByPopularity(): void {
     return this.reactionEmojis[reaction] || '❓';
   }
 
-  getButtonEmoji(reaction: Reaction): string {
+  /*getButtonEmoji(reaction: Reaction): string {
     return this.reactionButtonEmojis[reaction]?.emoji || '❓';
   }
 
   getButtonLabel(reaction: Reaction): string {
     return this.reactionButtonEmojis[reaction]?.label || 'Unknown';
-  }
+  }*/
 
   onMouseOver(event: MouseEvent): void {
     const emojiElement = event.target as HTMLElement;
@@ -261,17 +252,31 @@ private sortFeedbacksByPopularity(): void {
     this.feedbackService.updateFeedback({
       id: feedback.id,
       message: this.editedMessage,
-      // Include other required fields
       userId: feedback.user?.id
     }).subscribe({
-      next: () => {
+      next: (updatedFeedback) => {
+        // Update local state
+        const index = this.feedbacks.findIndex(f => f.id === feedback.id);
+        if (index !== -1) {
+          this.feedbacks[index] = {
+            ...this.feedbacks[index],
+            message: updatedFeedback.message,
+            user: {
+              id: updatedFeedback.userId,
+              name: updatedFeedback.userName,
+              email: updatedFeedback.userEmail,
+            
+            }
+          };
+        }
+        
         this.editingFeedbackId = null;
-        this.loadFeedbacksWithReactions();
-        this.successMessage = '✅ Feedback updated successfully!';
+        this.successMessage = 'Feedback updated successfully!';
+        this.cdRef.detectChanges();
       },
       error: (err) => {
         console.error('Update error:', err);
-        this.errorMessage = err.message || 'Update failed';
+        this.errorMessage = err.message;
       }
     });
   }
@@ -360,25 +365,38 @@ getTotalReactions(feedback: Feedback): number {
     }
   }
   loadFeedbacksWithReactions() {
-    this.feedbackService.getAllFeedbacks().subscribe({
-        next: (feedbacks: Feedback[]) => {
-            this.feedbacks = feedbacks.map(fb => ({
-                ...fb,
-                showReacts: false,
-                reacts: []
-            }));
-
-            // Load reactions for each feedback
-            this.feedbacks.forEach(fb => {
-                this.loadReactionsForFeedback(fb.id!);
-            });
-        },
-        error: (err) => {
-            console.error('Error loading feedbacks', err);
-            this.errorMessage = 'Failed to load feedbacks';
-        }
+    // Store current user data by feedback ID
+    const currentUserData = new Map<number, any>();
+    this.feedbacks.forEach(fb => {
+      if (fb.id && fb.user) {
+        currentUserData.set(fb.id, fb.user);
+      }
     });
-}
+  
+    this.feedbackService.getAllFeedbacks().subscribe({
+      next: (feedbacks: Feedback[]) => {
+        this.feedbacks = feedbacks.map(fb => {
+          const user = currentUserData.get(fb.id!) || fb.user;
+          return {
+            ...fb,
+            user, // Preserve existing user data if available
+            showReacts: false,
+            reacts: [],
+            currentUserReaction: this.getUserReaction(fb, parseInt(this.userId!))
+          };
+        });
+  
+        // Load reactions for each feedback
+        this.feedbacks.forEach(fb => {
+          this.loadReactionsForFeedback(fb.id!);
+        });
+      },
+      error: (err) => {
+        console.error('Error loading feedbacks', err);
+        this.errorMessage = 'Failed to load feedbacks';
+      }
+    });
+  }
 
 loadReactionsForFeedback(feedbackId: number) {
   this.reactsService.getReactionsForFeedback(feedbackId).subscribe({
@@ -404,8 +422,8 @@ getAvatarUrl(userId: number): string {
 }
 
 handleReaction(feedback: Feedback, reaction: Reaction): void {
-  // If clicking the same reaction, remove it
   if (feedback.currentUserReaction === reaction) {
+    // Remove reaction if same one clicked
     this.reactsService.removeReaction(feedback.id!).subscribe({
       next: () => {
         feedback.currentUserReaction = null;
@@ -416,29 +434,72 @@ handleReaction(feedback: Feedback, reaction: Reaction): void {
         this.errorMessage = 'Failed to remove reaction';
       }
     });
-    return;
+  } else {
+    // Add/update reaction
+    this.reactsService.addOrUpdateReaction(feedback.id!, reaction).subscribe({
+      next: (updatedReact) => {
+        feedback.currentUserReaction = reaction;
+        this.reactionAnimation = reaction;
+        this.updateReactionCounts(feedback);
+        setTimeout(() => this.reactionAnimation = null, 300);
+      },
+      error: (err) => {
+        console.error('Error adding reaction:', err);
+        this.errorMessage = 'Failed to add reaction';
+      }
+    });
   }
-  
-  // Otherwise, add/update the reaction
-  this.reactsService.addOrUpdateReaction(feedback.id!, reaction).subscribe({
-    next: (updatedReact) => {
-      feedback.currentUserReaction = reaction;
-      this.updateReactionCounts(feedback);
-    },
-    error: (err) => {
-      console.error('Error adding reaction:', err);
-      this.errorMessage = 'Failed to add reaction';
-    }
-  });
 }
+// Update reaction counts after changes
 private updateReactionCounts(feedback: Feedback): void {
-  // Call your service to refresh reaction counts
   this.reactsService.getReactionsForFeedback(feedback.id!).subscribe({
     next: (reacts) => {
       feedback.reacts = reacts;
-    }
+      this.sortFeedbacksByPopularity();
+    },
+    error: (err) => console.error('Error loading reactions:', err)
   });
 }
+
+
+// Show reaction picker on hover
+showReactionPicker(feedback: Feedback): void {
+  this.activePicker = feedback.id || null;
+  this.cancelHideReactionPicker();
+}
+
+hideReactionPicker(feedback: Feedback): void {
+  if (this.activePicker === feedback.id) {
+    this.activePicker = null;
+  }
+}
+hideReactionPickerWithDelay(feedback: Feedback): void {
+  // Add a small delay to allow movement to the picker
+  this.hidePickerTimeout = setTimeout(() => {
+    this.hideReactionPicker(feedback);
+  }, 300);
+}
+cancelHideReactionPicker(): void {
+  if (this.hidePickerTimeout) {
+    clearTimeout(this.hidePickerTimeout);
+    this.hidePickerTimeout = null;
+  }
+}
+// Get top 3 reactions for summary display
+getTopReactions(feedback: Feedback): Reaction[] {
+  if (!feedback.reacts || feedback.reacts.length === 0) return [];
+  
+  const reactionCounts = this.reactions.map(reaction => ({
+    reaction,
+    count: this.getReactionCount(feedback.reacts || [], reaction)
+  }));
+
+  return reactionCounts
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3)
+    .map(item => item.reaction);
+}
+
 
 
 }

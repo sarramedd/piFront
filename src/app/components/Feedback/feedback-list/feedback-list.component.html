@@ -44,52 +44,56 @@
           <div>
             <p class="user-name"><strong>{{ feedback.user?.name || 'Name not available' }}</strong></p>
             <p class="feedback-date">{{ feedback.date | date:'medium' }}</p>
+            <small *ngIf="editingFeedbackId === feedback.id" style="color: #666;">
+              User ID: {{feedback.user?.id}}, Name: {{feedback.user?.name}}
+            </small>
           </div>
         </div>
 
-        <p><strong>Total reactions:</strong> {{ getTotalReactions(feedback) }}</p>
+        <!-- Facebook-style Reaction System -->
+        <div class="reaction-container">
+          <!-- Reaction Summary -->
+          <div class="reaction-summary" (click)="openReactionModal(feedback)">
+            <div class="reaction-totals">
+              <span *ngFor="let reaction of getTopReactions(feedback)" class="reaction-badge">
+                {{ getReactionEmoji(reaction) }} {{ getReactionCount(feedback.reacts || [], reaction) }}
+              </span>
+              <span *ngIf="getTotalReactions(feedback) > 0" class="total-count">
+                {{ getTotalReactions(feedback) }}
+              </span>
+            </div>
+          </div>
 
-       <!-- Reaction buttons -->
-<div class="reaction-buttons">
-  <!-- Like Button -->
-  <button (click)="handleReaction(feedback, 'LIKE')" 
-          [class.active]="feedback.currentUserReaction === 'LIKE'">
-    👍 {{ getReactionCount(feedback.reacts || [], 'LIKE') }}
-  </button>
-
-  <!-- Dislike Button -->
-  <button (click)="handleReaction(feedback, 'DISLIKE')"
-          [class.active]="feedback.currentUserReaction === 'DISLIKE'">
-    👎 {{ getReactionCount(feedback.reacts || [], 'DISLIKE') }}
-  </button>
-  
-  <!-- Love Button -->
-  <button (click)="handleReaction(feedback, 'LOVE')"
-          [class.active]="feedback.currentUserReaction === 'LOVE'">
-    ❤️ {{ getReactionCount(feedback.reacts || [], 'LOVE') }}
-  </button>
-
-  <!-- Laugh Button -->
-  <button (click)="handleReaction(feedback, 'LAUGH')"
-          [class.active]="feedback.currentUserReaction === 'LAUGH'">
-    😂 {{ getReactionCount(feedback.reacts || [], 'LAUGH') }}
-  </button>
-
-  <!-- Sad Button -->
-  <button (click)="handleReaction(feedback, 'SAD')"
-          [class.active]="feedback.currentUserReaction === 'SAD'">
-    😢 {{ getReactionCount(feedback.reacts || [], 'SAD') }}
-  </button>
-
-  <!-- Angry Button -->
-  <button (click)="handleReaction(feedback, 'ANGRY')"
-          [class.active]="feedback.currentUserReaction === 'ANGRY'">
-    😡 {{ getReactionCount(feedback.reacts || [], 'ANGRY') }}
-  </button>
-
-  <!-- View reactions button -->
-  <button (click)="openReactionModal(feedback)">📊 View reactions</button>
+         <!-- In your feedback card template -->
+<div class="reaction-bar">
+  <div class="reaction-button-container" 
+       (mouseenter)="showReactionPicker(feedback)"
+       (mouseleave)="hideReactionPickerWithDelay(feedback)">
+    <div class="reaction-button">
+      <span class="reaction-emoji">👍</span>
+      <span class="reaction-label">Like</span>
+    </div>
+    
+    <!-- Reaction Picker -->
+    <div class="reaction-picker" *ngIf="activePicker === feedback.id" 
+         (mouseenter)="cancelHideReactionPicker()"
+         (mouseleave)="hideReactionPicker(feedback)">
+      <div class="reaction-option" 
+           *ngFor="let reaction of reactions"
+           (click)="handleReaction(feedback, reaction)"
+           [class.active]="feedback.currentUserReaction === reaction">
+        <span class="picker-emoji">{{ getReactionEmoji(reaction) }}</span>
+        <span class="picker-label">{{ eactionLabels[reaction] }}</span>
+      </div>
+    </div>
+  </div>
 </div>
+        </div>
+
+        <!-- View reactions button -->
+        <button class="view-reactions-btn" (click)="openReactionModal(feedback)">
+          📊 View all reactions
+        </button>
 
         <!-- Reactions list -->
         <div *ngIf="feedback.showReacts">

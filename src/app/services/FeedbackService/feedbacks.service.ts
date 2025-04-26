@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { Feedback } from 'src/app/core/models/feedback';
@@ -57,29 +57,29 @@ export class FeedbacksService {
     return this.http.post<Feedback>(`${this.apiUrl}/add-feedback`, feedbackData, { headers });
   }
   
-  updateFeedback(feedback: any): Observable<any> {
+  updateFeedback(feedback: any): Observable<Feedback> {
     const headers = this.getAuthHeaders();
-    return this.http.put(
+    return this.http.put<Feedback>(
       `${this.apiUrl}/update-feedback`,
       feedback,
-      { 
-        headers,
-        responseType: 'text' // First get raw response
-      }
+      { headers }
     ).pipe(
-      map(response => {
-        try {
-          // Try to parse JSON
-          return JSON.parse(response);
-        } catch (e) {
-          // If parsing fails but we know the update succeeded
-          console.warn('Response parsing failed but operation succeeded');
-          return { success: true };
+      catchError((error: HttpErrorResponse) => {
+        console.error('Full error response:', error);
+        let errorMessage = 'Update failed';
+        
+        if (error.error instanceof ErrorEvent) {
+          // Client-side error
+          errorMessage = `Error: ${error.error.message}`;
+        } else {
+          // Server-side error
+          errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+          if (error.error && error.error.message) {
+            errorMessage += `\nServer Message: ${error.error.message}`;
+          }
         }
-      }),
-      catchError(error => {
-        // Handle cases where the request actually failed
-        return throwError(() => new Error('Update failed'));
+        
+        return throwError(() => new Error(errorMessage));
       })
     );
   }
