@@ -403,5 +403,42 @@ getAvatarUrl(userId: number): string {
   return `/api/users/${userId}/avatar`;
 }
 
+handleReaction(feedback: Feedback, reaction: Reaction): void {
+  // If clicking the same reaction, remove it
+  if (feedback.currentUserReaction === reaction) {
+    this.reactsService.removeReaction(feedback.id!).subscribe({
+      next: () => {
+        feedback.currentUserReaction = null;
+        this.updateReactionCounts(feedback);
+      },
+      error: (err) => {
+        console.error('Error removing reaction:', err);
+        this.errorMessage = 'Failed to remove reaction';
+      }
+    });
+    return;
+  }
+  
+  // Otherwise, add/update the reaction
+  this.reactsService.addOrUpdateReaction(feedback.id!, reaction).subscribe({
+    next: (updatedReact) => {
+      feedback.currentUserReaction = reaction;
+      this.updateReactionCounts(feedback);
+    },
+    error: (err) => {
+      console.error('Error adding reaction:', err);
+      this.errorMessage = 'Failed to add reaction';
+    }
+  });
+}
+private updateReactionCounts(feedback: Feedback): void {
+  // Call your service to refresh reaction counts
+  this.reactsService.getReactionsForFeedback(feedback.id!).subscribe({
+    next: (reacts) => {
+      feedback.reacts = reacts;
+    }
+  });
+}
+
 
 }

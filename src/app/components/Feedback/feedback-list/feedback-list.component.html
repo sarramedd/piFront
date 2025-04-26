@@ -49,18 +49,47 @@
 
         <p><strong>Total reactions:</strong> {{ getTotalReactions(feedback) }}</p>
 
-        <!-- Reaction buttons -->
-        <div class="reaction-buttons">
-          <button *ngFor="let reaction of reactions"
-                  (click)="addReaction(feedback, reaction)"
-                  (mouseenter)="scaleUp($event)"
-                  (mouseleave)="scaleDown($event)">
-            {{ getButtonEmoji(reaction) }} {{ getButtonLabel(reaction) }}
-          </button>
+       <!-- Reaction buttons -->
+<div class="reaction-buttons">
+  <!-- Like Button -->
+  <button (click)="handleReaction(feedback, 'LIKE')" 
+          [class.active]="feedback.currentUserReaction === 'LIKE'">
+    👍 {{ getReactionCount(feedback.reacts || [], 'LIKE') }}
+  </button>
 
-          <!-- View reactions button -->
-          <button (click)="openReactionModal(feedback)">📊 View reactions</button>
-        </div>
+  <!-- Dislike Button -->
+  <button (click)="handleReaction(feedback, 'DISLIKE')"
+          [class.active]="feedback.currentUserReaction === 'DISLIKE'">
+    👎 {{ getReactionCount(feedback.reacts || [], 'DISLIKE') }}
+  </button>
+  
+  <!-- Love Button -->
+  <button (click)="handleReaction(feedback, 'LOVE')"
+          [class.active]="feedback.currentUserReaction === 'LOVE'">
+    ❤️ {{ getReactionCount(feedback.reacts || [], 'LOVE') }}
+  </button>
+
+  <!-- Laugh Button -->
+  <button (click)="handleReaction(feedback, 'LAUGH')"
+          [class.active]="feedback.currentUserReaction === 'LAUGH'">
+    😂 {{ getReactionCount(feedback.reacts || [], 'LAUGH') }}
+  </button>
+
+  <!-- Sad Button -->
+  <button (click)="handleReaction(feedback, 'SAD')"
+          [class.active]="feedback.currentUserReaction === 'SAD'">
+    😢 {{ getReactionCount(feedback.reacts || [], 'SAD') }}
+  </button>
+
+  <!-- Angry Button -->
+  <button (click)="handleReaction(feedback, 'ANGRY')"
+          [class.active]="feedback.currentUserReaction === 'ANGRY'">
+    😡 {{ getReactionCount(feedback.reacts || [], 'ANGRY') }}
+  </button>
+
+  <!-- View reactions button -->
+  <button (click)="openReactionModal(feedback)">📊 View reactions</button>
+</div>
 
         <!-- Reactions list -->
         <div *ngIf="feedback.showReacts">

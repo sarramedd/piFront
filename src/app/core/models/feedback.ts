@@ -1,5 +1,5 @@
 import { Item } from "./item";
-import { Reacts } from "./reacts";
+import { Reaction, Reacts } from "./reacts";
 import { User } from "./user.model";
 
 
@@ -20,6 +20,7 @@ export interface Feedback {
     avatar?: string; // Add if you have user avatars
     // Add other user properties as needed
   };
+  currentUserReaction?: Reaction | null;
   
   // Optional: If you want direct access to user properties
   userId?: number;

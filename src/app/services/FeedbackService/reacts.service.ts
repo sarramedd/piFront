@@ -1,11 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { Reaction, Reacts } from 'src/app/core/models/reacts';
 
-
-
-// Define the DTO interface at the top of the file
 interface ReactResponseDTO {
   id: number;
   reaction: string;
@@ -19,93 +16,123 @@ interface ReactResponseDTO {
   userCin?: number;
   feedbackId?: number;
 }
+
 @Injectable({
   providedIn: 'root'
 })
 export class ReactsService {
-  private apiUrl = 'http://localhost:8089/borrowit/reacts';  // Your Spring Boot API URL
-  private defaultProfileImage = 'assets/images/Capture.png'; // Add this 
+  private apiUrl = 'http://localhost:8089/borrowit/reacts';
+  private defaultProfileImage = 'assets/images/Capture.png';
 
   constructor(private http: HttpClient) {}
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token'); // or sessionStorage depending on where you stored it
+    const token = localStorage.getItem('token');
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      Authorization: token ? `Bearer ${token}` : ''
+      'Authorization': token ? `Bearer ${token}` : ''
     });
+  }
+
+  private getCurrentUserId(): number {
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    return userData?.id || 0; // Return 0 or handle null case as needed
   }
 
   getAllReacts(): Observable<Reacts[]> {
-    const token = localStorage.getItem('token'); // Make sure token is stored after login
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    };
-    return this.http.get<any[]>(`${this.apiUrl}/retrieve-all-reacts`, {
-      headers
-    });
+    const headers = this.getAuthHeaders();
+    return this.http.get<any[]>(`${this.apiUrl}/retrieve-all-reacts`, { headers });
   }
 
-  // Add a reaction to a feedback
   addReaction(react: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/add-react`, react, {
       headers: this.getAuthHeaders()
     });
   }
 
-  // Get reactions for a specific feedback
- // In reacts.service.ts
- getReactionsForFeedback(feedbackId: number): Observable<Reacts[]> {
-  const headers = this.getAuthHeaders();
-  
-  return this.http.get<ReactResponseDTO[]>(
-    `${this.apiUrl}/retrieve-reacts-for-feedback/${feedbackId}`,
-    { headers }
-  ).pipe(
-    map((response: ReactResponseDTO[]) => {
-      if (!response || !Array.isArray(response)) {
-        return [];
-      }
-      return response.map(react => this.transformReactDTO(react));
-    }),
-    catchError(error => {
-      console.error('Error fetching reactions:', error);
-      return of([]);
-    })
-  );
-}
+  getReactionsForFeedback(feedbackId: number): Observable<Reacts[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<ReactResponseDTO[]>(
+      `${this.apiUrl}/retrieve-reacts-for-feedback/${feedbackId}`,
+      { headers }
+    ).pipe(
+      map((response: ReactResponseDTO[]) => {
+        if (!response || !Array.isArray(response)) return [];
+        return response.map(react => this.transformReactDTO(react));
+      }),
+      catchError(error => {
+        console.error('Error fetching reactions:', error);
+        return of([]);
+      })
+    );
+  }
 
-private transformReactDTO(dto: ReactResponseDTO): Reacts {
-  // Create a minimal Feedback object if feedbackId exists
-  const feedback = dto.feedbackId ? { 
-    id: dto.feedbackId,
-    message: '', // Add required properties from Feedback interface
-    date: new Date().toISOString(),
-    // Add other required Feedback properties here
-    user: undefined,
-    reacts: undefined
-  } : undefined;
+  private transformReactDTO(dto: ReactResponseDTO): Reacts {
+    const feedback = dto.feedbackId ? { 
+      id: dto.feedbackId,
+      message: '',
+      date: new Date().toISOString(),
+      user: undefined,
+      reacts: undefined
+    } : undefined;
 
-  return {
-    id: dto.id,
-    reaction: dto.reaction as Reaction,
-    date: dto.date,
-    user: {
-      id: dto.userId,
-      name: dto.userName || 'Anonymous',
-      email: dto.userEmail || '',
-      phone: dto.userPhone || '',
-      avatar: dto.userAvatarUrl || this.defaultProfileImage,
-      genre: dto.userGenre || '',
-      cin: dto.userCin || 0
-    },
-    feedback: feedback
-  };
-}
+    return {
+      id: dto.id,
+      reaction: dto.reaction as Reaction,
+      date: dto.date,
+      user: {
+        id: dto.userId,
+        name: dto.userName || 'Anonymous',
+        email: dto.userEmail || '',
+        phone: dto.userPhone || '',
+        avatar: dto.userAvatarUrl || this.defaultProfileImage,
+        genre: dto.userGenre || '',
+        cin: dto.userCin || 0
+      },
+      feedback: feedback
+    };
+  }
+
   deleteReact(reactId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/remove-react/${reactId}`, {
       headers: this.getAuthHeaders()
     });
+  }
+
+  addOrUpdateReaction(feedbackId: number, reactionType: Reaction): Observable<Reacts> {
+    const userId = this.getCurrentUserId();
+    if (!userId) {
+      return throwError(() => new Error('User not logged in'));
+    }
+  
+    const headers = this.getAuthHeaders();
+    return this.http.post<Reacts>(
+      `${this.apiUrl}/react`,
+      { feedbackId, userId, reactionType },
+      { headers }
+    ).pipe(
+      catchError(error => {
+        console.error('Error adding/updating reaction:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+  
+  removeReaction(feedbackId: number): Observable<void> {
+    const userId = this.getCurrentUserId();
+    if (!userId) {
+      return throwError(() => new Error('User not logged in'));
+    }
+  
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(
+      `${this.apiUrl}/react?feedbackId=${feedbackId}&userId=${userId}`,
+      { headers }
+    ).pipe(
+      catchError(error => {
+        console.error('Error removing reaction:', error);
+        return throwError(() => error);
+      })
+    );
   }
 }
