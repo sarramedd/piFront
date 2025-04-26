@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { Feedback } from 'src/app/core/models/feedback';
 
 @Injectable({
@@ -11,15 +11,39 @@ export class FeedbacksService {
   private apiUrl = 'http://localhost:8089/borrowit/feedbacks';
 
   constructor(private http: HttpClient) {}
+  // Add this method to handle authentication headers
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : ''
+    });
+  }
 
   getAllFeedbacks(): Observable<Feedback[]> {
-    const token = localStorage.getItem('token'); // Make sure token is stored after login
+    const token = localStorage.getItem('token');
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     };
   
-    return this.http.get<Feedback[]>(`${this.apiUrl}/retrieve-all-feedbacks`, { headers });
+    return this.http.get<Feedback[]>(`${this.apiUrl}/retrieve-all-feedbacks`, { headers })
+      .pipe(
+        map(feedbacks => feedbacks.map(fb => ({
+          id: fb.id,
+          message: fb.message,
+          date: fb.date,
+          reacts: fb.reacts || [],
+          showReacts: false,
+          reported: fb.reported || false,
+          reason: fb.reason || '',
+          user: {
+            id: fb.user?.id || fb.userId,
+            name: fb.user?.name || fb.userName,
+            email: fb.user?.email || fb.userEmail
+          }
+        })))
+      );
   }
   
   addFeedback(feedbackData: Feedback): Observable<Feedback> {
@@ -33,15 +57,31 @@ export class FeedbacksService {
     return this.http.post<Feedback>(`${this.apiUrl}/add-feedback`, feedbackData, { headers });
   }
   
-
-  updateFeedback(feedbackData: Feedback): Observable<Feedback> {
-    const token = localStorage.getItem('token');
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    };
-  
-    return this.http.put<Feedback>(`${this.apiUrl}/update-feedback`, feedbackData, { headers });
+  updateFeedback(feedback: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.put(
+      `${this.apiUrl}/update-feedback`,
+      feedback,
+      { 
+        headers,
+        responseType: 'text' // First get raw response
+      }
+    ).pipe(
+      map(response => {
+        try {
+          // Try to parse JSON
+          return JSON.parse(response);
+        } catch (e) {
+          // If parsing fails but we know the update succeeded
+          console.warn('Response parsing failed but operation succeeded');
+          return { success: true };
+        }
+      }),
+      catchError(error => {
+        // Handle cases where the request actually failed
+        return throwError(() => new Error('Update failed'));
+      })
+    );
   }
   
   deleteFeedback(id: string): Observable<void> {

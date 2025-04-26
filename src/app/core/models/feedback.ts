@@ -8,12 +8,21 @@ export interface Feedback {
   id?: number;
   message: string;
   date: string;
- // item?: { id: number }; // au lieu de Item complet
   reacts?: Reacts[];
-  showReacts?: boolean; // Ajouté pour usage UI
+  showReacts?: boolean;
   reported?: boolean;
-  reason?:string;
+  reason?: string;
   showReason?: boolean;
-  user?: User;
+  user?: {
+    id?: number;
+    name?: string;
+    email?: string;
+    avatar?: string; // Add if you have user avatars
+    // Add other user properties as needed
+  };
   
+  // Optional: If you want direct access to user properties
+  userId?: number;
+  userName?: string;
+  userEmail?: string;
 }

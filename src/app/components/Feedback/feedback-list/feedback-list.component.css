@@ -553,7 +553,193 @@ margin-top: 20px;
 
 
 
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
 
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-name {
+  margin: 0;
+  font-size: 1em;
+}
+
+.feedback-date {
+  margin: 0;
+  font-size: 0.8em;
+  color: #666;
+}
+/* Add to your component's CSS */
+.reaction-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 15px;
+}
+
+.reaction-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 150px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.reaction-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reaction-emoji {
+  font-size: 1.2em;
+}
+
+.reaction-type {
+  text-transform: capitalize;
+  color: #555;
+}
+
+.reaction-date {
+  font-size: 0.8em;
+  color: #888;
+}
+
+/* Modal styles */
+.modal {
+  width: 90%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.tabs {
+  display: flex;
+  gap: 5px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+
+.tabs button {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+
+.tabs button:hover {
+  background: #e5e5e5;
+}
+
+/* User info styles */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.user-email, .user-phone {
+  font-size: 0.8em;
+  color: #666;
+}
+
+/* Reaction item styles */
+.reaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.reaction-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reaction-emoji {
+  font-size: 1.2em;
+}
+
+.reaction-type {
+  text-transform: capitalize;
+}
+
+.reaction-date {
+  font-size: 0.8em;
+  color: #666;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.tabs {
+  display: flex;
+  gap: 5px;
+  margin: 10px 0;
+}
 
 
 

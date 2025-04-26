@@ -8,6 +8,14 @@ export interface Reacts {
   id?: number;
   reaction: Reaction;
   date?: string;
-  user?: User;
+  user?: {
+    id?: number;
+    name?: string;
+    email?: string;
+    phone?: string;
+    avatar?: string;
+    genre?: string;
+    cin?: number;
+  };
   feedback?: Feedback;
 }

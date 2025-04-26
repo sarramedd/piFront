@@ -19,6 +19,7 @@ export class User {
     constructor(
       id: number = 0,
       cin: number = 0,
+      avatar?: string,
       name: string = '',
       email: string = '',
       password: string = '',

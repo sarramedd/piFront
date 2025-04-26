@@ -1,9 +1,9 @@
-<!-- Message d'erreur -->
+<!-- Error message -->
 <div *ngIf="errorMessage" class="error-message">
   <p>{{ errorMessage }}</p>
 </div>
 
-<!-- Liste des feedbacks -->
+<!-- Feedback list -->
 <div *ngIf="feedbacks.length > 0; else noFeedback">
   <div class="feedback-container">
     <ul>
@@ -11,37 +11,45 @@
           [ngClass]="{'popular': getFeedbackPopularityScore(feedback) >= 5}"
           class="feedback-card">
 
-        <!-- Icône menu 3 points -->
+        <!-- Three-dot menu icon -->
         <div style="float: right; position: relative;">
           <span (click)="toggleMenu(feedback.id)" style="cursor: pointer;">⋮</span>
           <div *ngIf="openedMenuFeedbackId === feedback.id" class="dropdown-menu">
-            <button (click)="startEditing(feedback)">✏️ Modifier</button>
-            <button (click)="openReportModal(feedback)" [disabled]="feedback.reported">🚩 Signaler</button>
-            <button (click)="deleteFeedback(feedback.id)">🗑️ Supprimer</button>
+            <button (click)="startEditing(feedback)">✏️ Edit</button>
+            <button (click)="openReportModal(feedback)" [disabled]="feedback.reported">🚩 Report</button>
+            <button (click)="deleteFeedback(feedback.id)">🗑️ Delete</button>
           </div>
         </div>
-        
 
-        <!-- Message ou formulaire d'édition -->
+        <!-- Message or edit form -->
         <div *ngIf="editingFeedbackId === feedback.id; else normalMessage">
           <textarea [(ngModel)]="editedMessage" rows="3"></textarea>
           <br>
-          <button (click)="submitEdit(feedback)">💾 Enregistrer</button>
-          <button (click)="cancelEditing()">❌ Annuler</button>
+          <button (click)="submitEdit(feedback)">💾 Save</button>
+          <button (click)="cancelEditing()">❌ Cancel</button>
         </div>
         <ng-template #normalMessage>
           <h3>{{ feedback.message }}</h3>
         </ng-template>
-  <!-- 🔥 Badge Populaire -->
-  <small *ngIf="getFeedbackPopularityScore(feedback) >= 5" class="badge">🔥 Populaire</small>
 
-  
-        <!-- Auteur -->
-        <p><strong>Par:</strong> {{ feedback.user?.name || 'Nom non disponible' }}</p>
-        <p><strong>Date:</strong> {{ feedback.date | date:'medium' }}</p>
-        <p><strong>Réactions totales:</strong> {{ getTotalReactions(feedback) }}</p>
+        <!-- Popular badge -->
+        <small *ngIf="getFeedbackPopularityScore(feedback) >= 5" class="badge">🔥 Popular</small>
 
-        <!-- Réactions avec bouton emoji -->
+        <!-- User Info Section -->
+        <div class="user-info">
+          <img [src]="feedback.user?.avatar || defaultProfileImage" 
+               alt="{{ feedback.user?.name }}" 
+               class="user-avatar"
+               onerror="this.src='assets/images/Capture.png'">
+          <div>
+            <p class="user-name"><strong>{{ feedback.user?.name || 'Name not available' }}</strong></p>
+            <p class="feedback-date">{{ feedback.date | date:'medium' }}</p>
+          </div>
+        </div>
+
+        <p><strong>Total reactions:</strong> {{ getTotalReactions(feedback) }}</p>
+
+        <!-- Reaction buttons -->
         <div class="reaction-buttons">
           <button *ngFor="let reaction of reactions"
                   (click)="addReaction(feedback, reaction)"
@@ -50,11 +58,11 @@
             {{ getButtonEmoji(reaction) }} {{ getButtonLabel(reaction) }}
           </button>
 
-          <!-- Voir les réactions -->
-          <button (click)="openReactionModal(feedback)">📊 Voir les réactions</button>
+          <!-- View reactions button -->
+          <button (click)="openReactionModal(feedback)">📊 View reactions</button>
         </div>
 
-        <!-- Liste des réactions -->
+        <!-- Reactions list -->
         <div *ngIf="feedback.showReacts">
           <p *ngFor="let reaction of reactions">
             {{ getReactionEmoji(reaction) }} : {{ getReactionCount(feedback.reacts || [], reaction) }}
@@ -65,38 +73,58 @@
   </div>
 </div>
 
-<!-- Template si pas de feedback -->
+<!-- No feedback template -->
 <ng-template #noFeedback>
-  <p>Aucun feedback trouvé.</p>
+  <p>No feedback found.</p>
 </ng-template>
 
-<!-- Modal des réactions -->
+<!-- Reactions modal -->
 <div *ngIf="activeFeedback" class="modal-overlay">
   <div class="modal">
-    <h2>Réactions :</h2>
-    <button (click)="closeModal()">❌ Fermer</button>
+    <h2>Reactions:</h2>
+    <button (click)="closeModal()">❌ Close</button>
     <div class="tabs">
       <button *ngFor="let reaction of reactions" (click)="selectTab(reaction)">
         {{ getReactionEmoji(reaction) }}
       </button>
-      <button (click)="selectTab('ALL')">📋 Tous</button>
+      <button (click)="selectTab('ALL')">📋 All</button>
     </div>
-    <ul>
-      <li *ngFor="let react of filteredReacts" style="color: black;">
-        {{ getReactionEmoji(react.reaction) }} 👤{{ react.user?.name || 'N/A' }}
-      </li>
-    </ul>
+
+    <!-- Reactions list with detailed user info -->
+    <div *ngIf="activeFeedback?.reacts?.length; else noReacts" class="reaction-list">
+      <div *ngFor="let react of filteredReacts" class="reaction-item">
+        <div class="user-info">
+          <img [src]="react.user?.avatar || defaultProfileImage" 
+               alt="{{ react.user?.name }}" 
+               class="user-avatar"
+               onerror="this.src='assets/images/Capture.png'">
+          <div class="user-details">
+            <span class="user-name">{{ react.user?.name || 'Anonymous' }}</span>
+            <small *ngIf="react.user?.email" class="user-email">{{ react.user?.email }}</small>
+            <small *ngIf="react.user?.phone" class="user-phone">{{ react.user?.phone }}</small>
+          </div>
+        </div>
+        <div class="reaction-info">
+          <span class="reaction-emoji">{{ getReactionEmoji(react.reaction) }}</span>
+          <span class="reaction-type">{{ react.reaction }}</span>
+          <span class="reaction-date">{{ react.date | date:'short' }}</span>
+        </div>
+      </div>
+    </div>
+    <ng-template #noReacts>
+      <p style="color: red;">❌ No reactions found.</p>
+    </ng-template>
   </div>
 </div>
 
-<!-- Modal de signalement -->
+<!-- Report modal -->
 <div *ngIf="reportModalOpen" class="modal-overlay">
   <div class="modal">
-    <h2>🚩 Signaler le feedback</h2>
+    <h2>🚩 Report feedback</h2>
     <p>Message: "{{ reportingFeedback?.message }}"</p>
-    <textarea [(ngModel)]="reasonForReport" placeholder="Indiquez la raison..." rows="3"></textarea>
+    <textarea [(ngModel)]="reasonForReport" placeholder="Please provide a reason..." rows="3"></textarea>
     <br>
-    <button (click)="reportFeedback()">✅ Signaler</button>
-    <button (click)="closeReportModal()">❌ Annuler</button>
+    <button (click)="reportFeedback()">✅ Report</button>
+    <button (click)="closeReportModal()">❌ Cancel</button>
   </div>
 </div>

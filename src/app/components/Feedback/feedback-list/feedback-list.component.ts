@@ -22,6 +22,7 @@ export class FeedbackListComponent implements OnInit {
   reportModalOpen: boolean = false; // Toggle for report modal
   reportingFeedback: Feedback | null = null;
   userId: string | null = ''; // Declare userId as a class property
+  
 
 
   
@@ -46,7 +47,7 @@ export class FeedbackListComponent implements OnInit {
     ANGRY: { emoji: '😡', label: 'Angry' },
   };
 
-  defaultProfileImage = 'https://via.placeholder.com/40';
+  defaultProfileImage = 'assets/images/Capture.png';
   activeFeedback: Feedback | null = null;
   selectedTab: Reaction | 'ALL' = 'ALL';
 
@@ -64,28 +65,48 @@ export class FeedbackListComponent implements OnInit {
       alert("User not logged in");
       return;
     }
-
+  
     // Retrieve the user details (cin, name, email, etc.)
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  if (!userData || !userData.id) {
-    alert("User data not found");
-    return;
-  }
-
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (!userData || !userData.id) {
+      alert("User data not found");
+      return;
+    }
+    this.loadFeedbacksWithReactions();
+  
     this.feedbackService.getAllFeedbacks().subscribe(
       (data: Feedback[]) => {
-        
-        // Étape 1 : Ajouter showReacts à chaque feedback
+        console.log("Fetched feedbacks:", data);
+
+        // Initialize feedbacks with empty reacts array
         this.feedbacks = data.map(fb => ({
           ...fb,
           showReacts: false,
+          reacts: []
         }));
   
-        // 🔧 Étape 2 : Trier les feedbacks par popularité
-        this.feedbacks.sort((a, b) => {
-          const scoreA = this.getFeedbackPopularityScore(a);
-          const scoreB = this.getFeedbackPopularityScore(b);
-          return scoreB - scoreA; // Du plus populaire au moins populaire
+        // Fetch reactions for each feedback with proper change detection
+        this.feedbacks.forEach(fb => {
+          this.reactsService.getReactionsForFeedback(fb.id!).subscribe(
+            (reacts: Reacts[]) => {
+              // Create new array reference to trigger change detection
+              this.feedbacks = this.feedbacks.map(f => 
+                f.id === fb.id ? {...f, reacts: [...reacts]} : f
+              );
+              
+              console.log(`Loaded reacts for feedback ID ${fb.id}`, reacts);
+              
+              // Sort feedbacks by popularity after updating reactions
+              this.sortFeedbacksByPopularity();
+            },
+            (error) => {
+              console.error(`Error fetching reacts for feedback ID ${fb.id}`, error);
+              // Still update the array to trigger change detection, with empty reacts
+              this.feedbacks = this.feedbacks.map(f => 
+                f.id === fb.id ? {...f, reacts: []} : f
+              );
+            }
+          );
         });
       },
       (error) => {
@@ -93,7 +114,20 @@ export class FeedbackListComponent implements OnInit {
         this.errorMessage = 'Failed to load feedbacks';
       }
     );
-  }
+}
+
+// Helper method to sort feedbacks by popularity
+private sortFeedbacksByPopularity(): void {
+    this.feedbacks.sort((a, b) => {
+      const scoreA = this.getFeedbackPopularityScore(a);
+      const scoreB = this.getFeedbackPopularityScore(b);
+      return scoreB - scoreA; // Sort from most to least popular
+    });
+    
+    // Trigger change detection explicitly
+    this.cdRef.detectChanges();
+}
+  
   
 
   addReaction(feedback: Feedback, reactionType: Reaction): void {
@@ -161,12 +195,16 @@ export class FeedbackListComponent implements OnInit {
   }
 
   openReactionModal(feedback: Feedback): void {
+    this.ngZone.run(() => {
+      this.activeFeedback = feedback;
+      this.cdRef.detectChanges();
+    });
     this.activeFeedback = feedback;
     this.selectedTab = 'ALL';
-    console.log('Modal opened for feedback:', feedback); // ← ajoute ceci
-    this.selectedTab = 'ALL';
-    
+    console.log('Modal opened for feedback:', feedback);
+    console.log('Reacts for feedback:', feedback.reacts);
   }
+
   closeModal(): void {
     this.activeFeedback = null;
   }
@@ -203,9 +241,11 @@ export class FeedbackListComponent implements OnInit {
   }
 
   getFeedbackPopularityScore(feedback: Feedback): number {
-    if (!feedback.reacts) return 0;
-    return feedback.reacts.filter(r => r.reaction === 'LIKE' || r.reaction === 'LOVE').length;
+    // Ensure reacts is always an array, even if it's undefined or not an array
+    const reacts = Array.isArray(feedback.reacts) ? feedback.reacts : [];
+    return reacts.filter(r => r.reaction === 'LIKE' || r.reaction === 'LOVE').length;
   }
+  
 
   startEditing(feedback: Feedback): void {
     this.editingFeedbackId = feedback.id || null;
@@ -218,48 +258,22 @@ export class FeedbackListComponent implements OnInit {
   }
   
   submitEdit(feedback: Feedback): void {
-    const userId = localStorage.getItem('userId');
-    console.log('Retrieved userId:', userId);
-    if (!userId) {
-      alert("User not logged in");
-      return;
-    }
-  
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    if (!userData || !userData.id) {
-      alert("User data not found");
-      return;
-    }
-  
-    const updatedFeedback: Feedback = {
-      ...feedback,
+    this.feedbackService.updateFeedback({
+      id: feedback.id,
       message: this.editedMessage,
-      user: {
-        id: userData.id,
-        cin: userData.cin,         // Use actual CIN from userData
-        name: userData.name,       // Use actual name
-        email: userData.email,     // Use actual email
-        password: '',              // Not typically needed
-        phone: userData.phone,     // Use actual phone number
-        address: userData.address, // Use actual address
-        genre: userData.genre,     // Use actual gender
-        status: userData.status,   // Use actual status
-        dateDeNaissance: userData.dateDeNaissance, // Use actual DOB
-        role: userData.role as 'BORROWER',  // Ensure correct role
-      }
-    };
-  
-    this.feedbackService.updateFeedback(updatedFeedback).subscribe(
-      () => {
+      // Include other required fields
+      userId: feedback.user?.id
+    }).subscribe({
+      next: () => {
         this.editingFeedbackId = null;
-        this.ngOnInit(); // Refresh the feedback list
-        alert('✅ Feedback updated successfully!');
+        this.loadFeedbacksWithReactions();
+        this.successMessage = '✅ Feedback updated successfully!';
       },
-      (error) => {
-        console.error('Update failed', error);
-        this.errorMessage = 'Failed to update feedback';
+      error: (err) => {
+        console.error('Update error:', err);
+        this.errorMessage = err.message || 'Update failed';
       }
-    );
+    });
   }
   
   
@@ -344,4 +358,50 @@ getTotalReactions(feedback: Feedback): number {
         }
       });
     }
-  }}
+  }
+  loadFeedbacksWithReactions() {
+    this.feedbackService.getAllFeedbacks().subscribe({
+        next: (feedbacks: Feedback[]) => {
+            this.feedbacks = feedbacks.map(fb => ({
+                ...fb,
+                showReacts: false,
+                reacts: []
+            }));
+
+            // Load reactions for each feedback
+            this.feedbacks.forEach(fb => {
+                this.loadReactionsForFeedback(fb.id!);
+            });
+        },
+        error: (err) => {
+            console.error('Error loading feedbacks', err);
+            this.errorMessage = 'Failed to load feedbacks';
+        }
+    });
+}
+
+loadReactionsForFeedback(feedbackId: number) {
+  this.reactsService.getReactionsForFeedback(feedbackId).subscribe({
+    next: (reacts: Reacts[]) => {
+      // No need to check Array.isArray here since service handles it
+      this.feedbacks = this.feedbacks.map(fb => 
+        fb.id === feedbackId ? { ...fb, reacts: [...reacts] } : fb
+      );
+      this.sortFeedbacksByPopularity();
+    },
+    error: (err) => {
+      console.error(`Error loading reactions for feedback ${feedbackId}`, err);
+      this.feedbacks = this.feedbacks.map(fb => 
+        fb.id === feedbackId ? { ...fb, reacts: [] } : fb
+      );
+    }
+  });
+}
+
+// In your component
+getAvatarUrl(userId: number): string {
+  return `/api/users/${userId}/avatar`;
+}
+
+
+}
