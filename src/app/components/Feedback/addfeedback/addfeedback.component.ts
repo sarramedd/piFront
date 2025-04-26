@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FeedbacksService } from 'src/app/services/FeedbackService/feedbacks.service';
+import { ProfanityFilterServiceService } from 'src/app/services/FeedbackService/profanity-filter-service.service';
 
 @Component({
   selector: 'app-addfeedback',
@@ -14,7 +15,8 @@ export class AddfeedbackComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private feedbackService: FeedbacksService,
-    private router: Router
+    private router: Router,
+    private profanityFilter: ProfanityFilterServiceService,
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +34,12 @@ export class AddfeedbackComponent implements OnInit {
         alert("User not logged in");
         return;
       }
+      const message = this.feedbackForm.value.message;
+    
+    if (this.profanityFilter.containsProfanity(message)) {
+      alert('Votre message contient du langage inapproprié. Veuillez le modifier.');
+      return;
+    }
 
       const feedbackData = {
         message: this.feedbackForm.value.message,
