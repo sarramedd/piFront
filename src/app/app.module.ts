@@ -37,6 +37,8 @@ import { ContractComponent } from './components/contract/contract.component';
 import { ItemComponent } from './components/item/item.component';
 import { PaymentComponent } from './components/payment/payment.component';
 import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
+import { ProfileUserComponent } from './components/profile-user/profile-user.component';
+import { HeaderUserComponent } from './components/header-user/header-user.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,8 @@ import { VerificationSmsComponent } from './components/verification-sms/verifica
     ItemComponent,
     PaymentComponent,
     VerificationSmsComponent,
+    ProfileUserComponent,
+    HeaderUserComponent,
   ],
   imports: [
     BrowserModule,

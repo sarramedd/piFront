@@ -11,7 +11,7 @@ import { ContractComponent } from './components/contract/contract.component';
 import { ItemComponent } from './components/item/item.component';
 import { PaymentComponent } from './components/payment/payment.component';
 import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
-
+import { ProfileUserComponent } from './components/profile-user/profile-user.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -35,6 +35,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'profileBorrower', component: ProfileUserComponent },
+
   { path: 'dashboard', component: DashboardComponent },
   { path: 'profile', component: AdminProfileComponent },
   { path: 'ListUser', component: UserListComponent },

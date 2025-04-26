@@ -1,0 +1,146 @@
+<app-header-user></app-header-user>
+<app-sidebar-front></app-sidebar-front>
+
+<div class="container my-5">
+    <div class="row g-4">
+        <!-- Sidebar Profil - Version améliorée -->
+        <aside class="col-lg-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="profile-avatar mb-4">
+                        <img src="./img/user-placeholder.png" 
+                             class="rounded-circle img-thumbnail border-primary" 
+                             alt="Photo de profil de John Doe"
+                             width="150" 
+                             height="150">
+                        <div class="position-absolute bottom-0 end-0 p-2">
+                            <button class="btn btn-sm btn-light rounded-circle shadow-sm">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <h3 class="h5 mb-1">John Doe</h3>
+                    <p class="text-muted small mb-4">
+                        <i class="fas fa-star text-warning"></i> Client fidèle depuis 2022
+                    </p>
+                    
+                    <nav class="nav flex-column mb-auto">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-user-circle me-2"></i> Mon Profil
+                        </a>
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-shopping-bag me-2"></i> Mes Commandes
+                        </a>
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-heart me-2"></i> Mes Favoris
+                        </a>
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-lock me-2"></i> Sécurité
+                        </a>
+                    </nav>
+                    
+                    <div class="mt-auto pt-3">
+                        <button class="btn btn-outline-primary btn-sm w-100 mb-2">
+                            <i class="fas fa-edit me-1"></i> Modifier Profil
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm w-100">
+                            <i class="fas fa-sign-out-alt me-1"></i> Déconnexion
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Contenu Principal - Version améliorée -->
+        <main class="col-lg-9">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h4 mb-0">Mes Informations Personnelles</h2>
+                        <span class="badge bg-primary">Compte vérifié</span>
+                    </div>
+                    
+                    <form>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label for="nom" class="form-label">Nom <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="nom" value="John" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="prenom" class="form-label">Prénom <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="prenom" value="Doe" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label for="email" class="form-label">Adresse Email <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" value="johndoe@email.com" required>
+                                </div>
+                                <small class="text-muted">Nous ne partagerons jamais votre email</small>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="telephone" class="form-label">Téléphone</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input type="tel" class="form-control" id="telephone" value="+021-95-51-84">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="date-naissance" class="form-label">Date de naissance</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
+                                    <input type="date" class="form-control" id="date-naissance">
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label for="adresse" class="form-label">Adresse</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                    <input type="text" class="form-control" id="adresse" value="1734 Stonecoal Road">
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mt-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <button type="submit" class="btn btn-primary px-4">
+                                        <i class="fas fa-save me-2"></i> Enregistrer
+                                    </button>
+                                    <a href="#" class="text-muted small">Demander la suppression de mon compte</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Section supplémentaire pour les préférences -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-body">
+                    <h3 class="h5 mb-4">Préférences de communication</h3>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="newsletter" checked>
+                        <label class="form-check-label" for="newsletter">Recevoir la newsletter</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="promotions" checked>
+                        <label class="form-check-label" for="promotions">Recevoir les offres promotionnelles</label>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<app-footer></app-footer>
