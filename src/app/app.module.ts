@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
@@ -23,7 +23,7 @@ import { FooterBackComponent } from './components/footer/footer.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 
 
-import { SidebarComponent } from './components/shared/sidebar/sidebar.component'; 
+import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
 import { SidebarBackComponent } from './components/sidebar/sidebar.component';
 // Navbar
 import { NavbarComponent } from './components/navbar/navbar.component';  // Ajoute cette ligne
@@ -54,6 +54,7 @@ import { ChartModule } from 'primeng/chart'; // <--- Ajoute ceci
 
 
 import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
+import {AuthInterceptor} from "./services/auth.interceptor";
 
 
 @NgModule({
@@ -91,8 +92,8 @@ import { VerificationSmsComponent } from './components/verification-sms/verifica
 
     //Items
     // npm install primeng@16.3.1 chart.js --save
-    //npm i angular-animations   
-    //ng add @angular/material  
+    //npm i angular-animations
+    //ng add @angular/material
     //npm install primeicons --save
     //kdfiljkihdfsk@erkHUG5
     DisplayItemsFrontComponent,
@@ -100,7 +101,7 @@ import { VerificationSmsComponent } from './components/verification-sms/verifica
     UpdateItemComponent,
     // BackOffice
     AddCategoryComponent,
-    CategoryListComponent,  
+    CategoryListComponent,
     EditCategoryComponent,
     ItemListComponent,
     EditItemComponent,
@@ -123,7 +124,7 @@ import { VerificationSmsComponent } from './components/verification-sms/verifica
     ToastrModule.forRoot(),
     ChartModule
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

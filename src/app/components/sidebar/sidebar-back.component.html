@@ -56,14 +56,7 @@
     <li class="nav-item nav-category">
       <span class="nav-link">Navigation</span>
     </li>
-    <li class="nav-item menu-items">
-      <a class="nav-link" href="../../index.html">
-        <span class="menu-icon">
-          <i class="mdi mdi-speedometer"></i>
-        </span>
-        <span class="menu-title">Dashboard</span>
-      </a>
-    </li>
+    
     <li class="nav-item menu-items">
       <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
         <span class="menu-icon">
@@ -98,17 +91,44 @@
         <i class="menu-arrow"></i>
       </a>
     </li>
-    
-    
     <li class="nav-item menu-items">
-      <a class="nav-link" href="../../pages/charts/chartjs.html">
+      <a class="nav-link" [routerLink]="['/dashboard/listCategorie']">
         <span class="menu-icon">
-          <i class="mdi mdi-chart-bar"></i>
+          <i class="mdi mdi-tag-multiple"></i>
         </span>
-        <span class="menu-title">Charts</span>
+        <span class="menu-title">Categories</span>
         <i class="menu-arrow"></i>
       </a>
     </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" [routerLink]="['/dashboard/listItems']">
+        <span class="menu-icon">
+          <i class="mdi mdi-format-list-bulleted"></i>
+        </span>
+        <span class="menu-title">Items</span>
+        <i class="menu-arrow"></i>
+      </a>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" [routerLink]="['/dashboard/pieChart']">
+        <span class="menu-icon">
+          <i class="mdi mdi-chart-pie"></i>
+        </span>
+        <span class="menu-title">Piechart </span>
+        <i class="menu-arrow"></i>
+      </a>
+    </li>
+
+
+<!--    <li class="nav-item menu-items">-->
+<!--      <a class="nav-link" href="../../pages/charts/chartjs.html">-->
+<!--        <span class="menu-icon">-->
+<!--          <i class="mdi mdi-chart-bar"></i>-->
+<!--        </span>-->
+<!--        <span class="menu-title">Charts</span>-->
+<!--        <i class="menu-arrow"></i>-->
+<!--      </a>-->
+<!--    </li>-->
     <li class="nav-item menu-items">
       <a class="nav-link" href="../../pages/icons/font-awesome.html">
         <span class="menu-icon">

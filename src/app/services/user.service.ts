@@ -16,7 +16,7 @@ export class UserService {
     formData.append('user', new Blob([JSON.stringify(user)], {
       type: 'application/json'
     }));
-    
+
     if (imageFile) {
       formData.append('image', imageFile);
     }
@@ -50,10 +50,10 @@ getUserImageByEmail(email: string): Observable<string> {
     if (imageFile) {
       formData.append('image', imageFile);
     }
-  
+
     return this.http.put<any>(`${this.baseUrl}/${id}`, formData);
   }
-  
+
 
   banUser(userId: number): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/ban/${userId}`, {});

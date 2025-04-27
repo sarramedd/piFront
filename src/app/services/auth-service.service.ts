@@ -32,7 +32,7 @@ export class AuthServiceService {
   decodeToken(): any {
     const token = this.getToken();
     if (!token) return null;
-  
+
     try {
       const payload = token.split('.')[1];
       const decodedPayload = atob(payload);
@@ -42,7 +42,7 @@ export class AuthServiceService {
       return null;
     }
   }
-  
+
 
   requestPasswordReset(email: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/request-reset?email=${email}`, {});

@@ -6,12 +6,12 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class PaymentService {
-  private backendUrl = 'http://localhost:8088/borrowit/stripe';
+  private backendUrl = 'http://localhost:8089/borrowit/stripe';
 
   constructor(private http: HttpClient) {}
 
   createPaymentIntent(contractId: number, amount: number): Observable<any> {
-    return this.http.post(`${this.backendUrl}/create-payment-intent`, { 
+    return this.http.post(`${this.backendUrl}/create-payment-intent`, {
       contractId: contractId,
       amount: amount
     });
