@@ -21,18 +21,12 @@ export class FeedbacksService {
   }
 
   getAllFeedbacks(): Observable<Feedback[]> {
-    const token = localStorage.getItem('token');
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    };
-  
+    const headers = this.getAuthHeaders();
+    
     return this.http.get<Feedback[]>(`${this.apiUrl}/retrieve-all-feedbacks`, { headers })
       .pipe(
         map(feedbacks => feedbacks.map(fb => ({
-          id: fb.id,
-          message: fb.message,
-          date: fb.date,
+          ...fb,
           reacts: fb.reacts || [],
           showReacts: false,
           reported: fb.reported || false,
@@ -40,21 +34,36 @@ export class FeedbacksService {
           user: {
             id: fb.user?.id || fb.userId,
             name: fb.user?.name || fb.userName,
-            email: fb.user?.email || fb.userEmail
+            email: fb.user?.email || fb.userEmail,
+            avatar: fb.user?.avatar
           }
-        })))
+        }))),
+      
       );
   }
   
   addFeedback(feedbackData: Feedback): Observable<Feedback> {
-    const token = localStorage.getItem('token'); // Make sure token is stored after login
-  
-    const headers = {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
-    };
+    });
   
-    return this.http.post<Feedback>(`${this.apiUrl}/add-feedback`, feedbackData, { headers });
+    return this.http.post<Feedback>(
+      `${this.apiUrl}/add-feedback`, 
+      feedbackData, 
+      { headers }
+    ).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error details:', error);
+        if (error.status === 403) {
+          alert('Session expired or unauthorized. Please login again.');
+          // Optional: redirect to login
+          // this.router.navigate(['/login']);
+        }
+        return throwError(() => error);
+      })
+    );
   }
   
   updateFeedback(feedback: any): Observable<Feedback> {

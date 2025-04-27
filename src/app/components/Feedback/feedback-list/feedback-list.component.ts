@@ -37,6 +37,7 @@ export class FeedbackListComponent implements OnInit {
     LAUGH: '😂',
     SAD: '😢',
     ANGRY: '😡'
+    
   };
 
   eactionLabels: { [key in Reaction]: string } = {
@@ -59,7 +60,6 @@ export class FeedbackListComponent implements OnInit {
       private ngZone: NgZone,
       private route: ActivatedRoute
   ) {}
-
   ngOnInit(): void {
     // Retrieve the user ID from localStorage
     this.userId = localStorage.getItem('userId');
@@ -79,20 +79,57 @@ export class FeedbackListComponent implements OnInit {
     
     this.feedbackService.getAllFeedbacks().subscribe({
       next: (data: Feedback[]) => {
-        console.log("Fetched feedbacks:", data);
-
-        // Initialize feedbacks with empty reacts array and current user reaction
-        this.feedbacks = data.map(fb => ({
-          ...fb,
-          showReacts: false,
-          reacts: [],
-          currentUserReaction: this.getUserReaction(fb, parseInt(this.userId!))
-        }));
-
-        // Fetch reactions for each feedback
+        // Debugging logs (conservés inchangés)
+        console.log("Raw feedback data:", data);
+        console.log("First feedback analysis:", {
+          score: data[0]?.sentimentScore,
+          reaction: data[0]?.suggestedReaction
+        });
+        
+        // Detailed analysis of all feedbacks (conservé inchangé)
+        console.log("Fetched feedbacks with analysis:", data.map(fb => ({
+          id: fb.id,
+          message: fb.message,
+          suggestedReaction: fb.suggestedReaction,
+          sentimentScore: fb.sentimentScore,
+          hasSuggestedReaction: fb.suggestedReaction !== undefined && fb.suggestedReaction !== null,
+          hasSentimentScore: fb.sentimentScore !== undefined && fb.sentimentScore !== null
+        })));
+    
+        // Initialize feedbacks - SEULE PARTIE MODIFIÉE
+        this.feedbacks = data.map(fb => {
+          const feedbackWithDefaults = {
+            ...fb,
+            // Modification ici pour une meilleure gestion des valeurs par défaut
+            sentimentScore: fb.sentimentScore !== undefined && fb.sentimentScore !== null 
+              ? fb.sentimentScore 
+              : 0.5,
+            suggestedReaction: this.getSafeSuggestedReaction(fb),
+            showReacts: false,
+            reacts: fb.reacts || [],
+            currentUserReaction: this.getUserReaction(fb, parseInt(this.userId!))
+          };
+          
+          // Debug individual feedback (conservé inchangé)
+          if (fb.message === 'Excellent') {
+            console.log('Excellent feedback analysis:', {
+              original: fb.sentimentScore,
+              mapped: feedbackWithDefaults.sentimentScore,
+              originalReaction: fb.suggestedReaction,
+              mappedReaction: feedbackWithDefaults.suggestedReaction
+            });
+          }
+          
+          return feedbackWithDefaults;
+        });
+    
+        // Fetch reactions for each feedback (conservé inchangé)
         this.feedbacks.forEach(fb => {
           this.loadReactionsForFeedback(fb.id!);
         });
+    
+        // Verify the first few feedbacks in UI (conservé inchangé)
+        console.log("First 3 feedbacks for UI:", this.feedbacks.slice(0, 3));
       },
       error: (error) => {
         console.error('Error loading feedbacks', error);
@@ -499,6 +536,20 @@ getTopReactions(feedback: Feedback): Reaction[] {
     .slice(0, 3)
     .map(item => item.reaction);
 }
+
+// In your component class
+getSafeSentimentScore(feedback: Feedback): number {
+  return feedback.sentimentScore ?? 0.5;
+}
+
+getSafeSuggestedReaction(feedback: Feedback): Reaction {
+  if (!feedback.suggestedReaction) return 'DISLIKE';
+  const validReactions = [...this.reactions, 'DISLIKE'];
+  return validReactions.includes(feedback.suggestedReaction as Reaction) 
+    ? feedback.suggestedReaction as Reaction 
+    : 'DISLIKE';
+}
+
 
 
 

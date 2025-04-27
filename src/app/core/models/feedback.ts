@@ -19,8 +19,11 @@ export interface Feedback {
     email?: string;
     avatar?: string; // Add if you have user avatars
     // Add other user properties as needed
+  
   };
   currentUserReaction?: Reaction | null;
+  suggestedReaction?: Reaction;
+  sentimentScore?: number | null ;
   
   // Optional: If you want direct access to user properties
   userId?: number;

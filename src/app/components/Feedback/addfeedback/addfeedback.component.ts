@@ -35,11 +35,11 @@ export class AddfeedbackComponent implements OnInit {
         return;
       }
       const message = this.feedbackForm.value.message;
-    
-    if (this.profanityFilter.containsProfanity(message)) {
-      alert('Votre message contient du langage inapproprié. Veuillez le modifier.');
-      return;
-    }
+     
+      if (this.profanityFilter.containsProfanity(message)) {
+        alert('Votre message contient du langage inapproprié');
+        return;
+      }
 
       const feedbackData = {
         message: this.feedbackForm.value.message,
@@ -59,17 +59,19 @@ export class AddfeedbackComponent implements OnInit {
         }
       };
 
-      this.feedbackService.addFeedback(feedbackData).subscribe(
-        (response: any) => {
-          console.log('Feedback submitted successfully!', response);
-          alert('Feedback submitted successfully!');
+      this.feedbackService.addFeedback(feedbackData).subscribe({
+        next: (response: any) => {
+          console.log('Feedback submitted with analysis:', response);
+          if (response.sentimentScore) {
+            alert(`Merci ! Sentiment: ${response.sentimentScore > 0.5 ? 'Positif' : 'Negatif'}`);
+          }
           this.router.navigate(['/listFeedback']);
         },
-        (error: any) => {
-          console.error('Error submitting feedback', error);
-          alert('Error submitting feedback! Please try again.');
+        error: (err) => {
+          console.error('Error:', err);
+          alert('Erreur: ' + (err.error?.error || err.message));
         }
-      );
+      });
     }
   }
 }
