@@ -1,0 +1,39 @@
+/* Animation for alert messages */
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  .fadeInOut {
+    animation: fadeInOut 0.3s ease-out;
+  }
+  
+  /* Custom styles */
+  .login-bg {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+  }
+  
+  .card {
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    border: none;
+  }
+  
+  .btn-google {
+    background-color: #db4437;
+    color: white !important;
+  }
+  
+  .btn-google:hover {
+    background-color: #c23321;
+  }
+  
+  .form-control {
+    padding: 12px 15px;
+    border-radius: 8px;
+  }
+  
+  .invalid-feedback {
+    font-size: 0.85rem;
+  }
