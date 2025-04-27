@@ -41,6 +41,7 @@ import { ContractAffichageComponent } from './components/contarctAffichage/contr
 import { ContractDetailsComponent } from './components/contractDetails/ContractDetails.component';
 import { CommandesComponent } from './components/commande/Commande.component';
 import { ContractSignComponent } from './components/borrowerSign/ContractSign.component';
+import { ChatbotComponent } from './components/chatbot/chatbot.componenet';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { ContractSignComponent } from './components/borrowerSign/ContractSign.co
     ContractAffichageComponent,
     ContractDetailsComponent,
     CommandesComponent,
-    ContractSignComponent
+    ContractSignComponent,
+    ChatbotComponent
   ],
   imports: [
     BrowserModule,

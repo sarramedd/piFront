@@ -4,6 +4,7 @@ import { Contract } from 'src/app/core/models/contract';
 import { ContractService } from 'src/app/services/contract.service';
 import { AuthServiceService } from 'src/app/services/auth-service.service';
 import { User } from 'src/app/core/models/user.model';
+import { PaymentService } from 'src/app/services/payment.service';
 
 @Component({
   selector: 'app-contract-affichage',
@@ -18,6 +19,7 @@ export class ContractAffichageComponent implements OnInit {
 
   constructor(
     private contractService: ContractService,
+    private paymentService: PaymentService,
     private authService: AuthServiceService,  // Injecte le service d'authentification
     private route: ActivatedRoute,
     private router: Router
@@ -46,5 +48,15 @@ export class ContractAffichageComponent implements OnInit {
 
   isBorrower(contract: Contract): boolean {
     return this.user.role === 'BORROWER' ;
+  }
+  viewInvoice(contractId: number): void {
+    // Appeler une méthode de ton service de paiement pour récupérer la facture
+    this.paymentService.getInvoice(contractId).subscribe({
+      next: (invoiceUrl) => {
+        // Redirige vers l'URL de la facture
+        window.open(invoiceUrl, '_blank');
+      },
+      error: (err) => console.error('Erreur lors de la récupération de la facture:', err)
+    });
   }
 }

@@ -27,6 +27,7 @@
     "bootstrap-icons": "^1.11.3",
     "canvg": "^4.0.3",
     "font-awesome": "^4.7.0",
+    "fuse.js": "^7.1.0",
     "glyphicons": "^0.2.0",
     "html2pdf.js": "^0.10.3",
     "jquery": "^3.7.1",

@@ -1,0 +1,14 @@
+<div class="chatbot-container">
+    <h2>🤖 Assistance Contrat</h2>
+  
+    <input [(ngModel)]="userQuestion" 
+           (keyup.enter)="askQuestion()" 
+           placeholder="Posez votre question..." />
+  
+    <button (click)="askQuestion()">Envoyer</button>
+  
+    <div class="bot-response" *ngIf="botAnswer">
+      <strong>Bot :</strong> {{ botAnswer }}
+    </div>
+  </div>
+  

@@ -22,6 +22,12 @@
         </td>
         <td>
           <button class="btn btn-primary btn-sm" (click)="goToContractDetails(contract.id)">Voir</button>
+          
+          <!-- Ajouter le bouton Voir facture -->
+          <button class="btn btn-info btn-sm" (click)="viewInvoice(contract.id)">
+            Voir la facture
+          </button>
+          
           <!-- Afficher le bouton Signer uniquement si l'utilisateur est le borrower et si la signature du borrower est manquante -->
           <button *ngIf="isBorrower(contract) && !contract.borrowerSignature" 
                   class="btn btn-success btn-sm" (click)="signContract(contract.id)">
@@ -32,3 +38,4 @@
     </tbody>
   </table>
 </div>
+<app-chatbot></app-chatbot>

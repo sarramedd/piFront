@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { Payment } from "../core/models/payment";
 
 @Injectable({
   providedIn: 'root'
@@ -27,4 +28,8 @@ export class PaymentService {
 
     return this.http.post(`${this.apiUrl}/confirm`, null, { params });
   }
+  getInvoice(contractId: number): Observable<string> {
+    return this.http.get<string>(`${this.apiUrl}/by-contract/${contractId}`);
+  }
+ 
 }
