@@ -67,6 +67,7 @@ export class DiscountComponent implements OnInit {
     this.itemService.getAllItems().subscribe({
       next: (data) => {
         this.items = data;
+        console.log(this.items);  // Vérifie que la liste des items est bien chargée
       },
       error: (err) => {
         console.error('Erreur lors du chargement des items:', err);

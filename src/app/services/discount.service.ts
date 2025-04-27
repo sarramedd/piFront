@@ -44,8 +44,14 @@ export class DiscountService {
   }
 
   // Obtenir les discounts actifs pour un item
-  getActiveDiscountsForItem(itemId: number, token: string): Observable<Discount[]> {
+  /*getActiveDiscountsForItem(itemId: number, token: string): Observable<Discount[]> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<Discount[]>(`${this.apiUrl}/item/${itemId}/active`, { headers });
   }
-} 
+*/
+getActiveDiscountsForItem(itemId: number, active: boolean): Observable<Discount[]> {
+  return this.http.get<Discount[]>(`${this.apiUrl}/itemactive/${itemId}/${active}`);
+}
+
+
+  } 

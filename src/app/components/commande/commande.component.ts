@@ -78,7 +78,7 @@ export class CommandeComponent implements OnInit {
         return;
       }
       
-      this.discountService.getActiveDiscountsForItem(this.item.id, token).subscribe({
+      this.discountService.getActiveDiscountsForItem(this.item.id, true).subscribe({
         next: (discounts: Discount[]) => {
           this.activeDiscount = discounts.length > 0 ? discounts[0] : null;
           this.calculateDiscountedPrice();

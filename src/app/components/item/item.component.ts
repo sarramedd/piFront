@@ -17,7 +17,7 @@ import { catchError, of } from 'rxjs';
 export class ItemComponent implements OnInit {
   items: Item[] = [];
   activeDiscounts: { [key: number]: Discount | null } = {};
-  borrowerId: number = 2;
+  borrowerId: number = 3;
   errorMessage: string = '';
   loading: boolean = false;
 
@@ -71,7 +71,7 @@ export class ItemComponent implements OnInit {
     const token = this.authService.getToken();
     if (!token) return;
 
-    this.discountService.getActiveDiscountsForItem(itemId, token)
+    this.discountService.getActiveDiscountsForItem(itemId, true)
       .pipe(
         catchError(error => {
           console.log(`No active discount for item ${itemId}`);
