@@ -24,13 +24,12 @@ export class ContractService {
   getContractById(id: number): Observable<Contract> {
     return this.http.get<Contract>(`${this.apiUrl}/${id}`);
   }
-  createContract(borrowerId: number, ownerId: number, contract: Contract): Observable<Contract> {
+  createContract(borrowerId: number, ownerId: number, commandeId: number, contract: Contract): Observable<Contract> {
     const params = new HttpParams()
       .set('borrowerId', borrowerId)
-      .set('ownerId', ownerId);
+      .set('ownerId', ownerId)
+      .set('commandeId', commandeId);
   
-    console.log("Données envoyées :", params.toString(), contract);
-
     return this.http.post<Contract>(this.apiUrl, contract, { params });
   }
   

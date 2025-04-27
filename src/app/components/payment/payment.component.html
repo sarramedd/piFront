@@ -1,8 +1,17 @@
-<!-- src/app/payment/payment.component.html -->
-<div class="payment-form">
-  <h2>Formulaire de paiement</h2>
-  <form (submit)="handleSubmit($event)">
-    <div id="card-element"></div> <!-- Où Stripe Elements va se charger -->
-    <button type="submit" class="submit-btn">Payer</button>
-  </form>
+<app-header></app-header>
+<div class="payment-container">
+  <h2 class="payment-title">Paiement de votre commande</h2>
+
+  <div class="payment-card">
+    <p class="payment-amount">💰 Montant à payer : <strong>{{ amount | currency:'DT' }}</strong></p>
+
+    <form (submit)="handleSubmit($event)" class="payment-form">
+      <div id="card-element" class="card-element"></div>
+
+      <button type="submit" class="submit-btn" [disabled]="isLoading">
+        <span *ngIf="!isLoading">💳 Payer maintenant</span>
+        <span *ngIf="isLoading">Traitement en cours...</span>
+      </button>
+    </form>
+  </div>
 </div>

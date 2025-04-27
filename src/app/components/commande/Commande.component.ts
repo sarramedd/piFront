@@ -58,13 +58,11 @@ ngOnInit(): void {
     const contract: Contract = {
       id: 0,
       startDate: new Date(),
-      endDate: new Date(), // tu peux personnaliser la logique ici
+      endDate: new Date(), // à adapter
       terms: "Le locataire doit restituer l'objet en bon état.",
       ownerSignature: "",
       borrowerSignature: "",
-      // 🔁 borrower = celui qui a réservé (item.owner)
       borrower: { id: commande.user.id, name: item.owner.name } as User,
-      // 🔁 owner = utilisateur connecté
       owner: { id: this.userId, name: "Moi" } as User,
       details: `Nom: ${item.name}, 
                 Propriétaire: ${item.owner.name}, 
@@ -72,7 +70,13 @@ ngOnInit(): void {
                 Description: ${item.description}`,
     };
   
-    this.contractService.createContract(contract.borrower.id, contract.owner.id, contract).subscribe({
+    // ✅ Appel avec commandeId
+    this.contractService.createContract(
+      contract.borrower.id,
+      contract.owner.id,
+      commande.id, // <--- IMPORTANT
+      contract
+    ).subscribe({
       next: (response) => {
         console.log("Contrat créé avec succès", response);
         if (response && response.id) {
@@ -86,5 +90,6 @@ ngOnInit(): void {
       }
     });
   }
+  
   
 }

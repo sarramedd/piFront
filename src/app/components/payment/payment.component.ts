@@ -13,6 +13,9 @@ export class PaymentComponent implements OnInit {
   elements: any;
   card: any;
   contractId: number | null = null;
+  amount: number | null = null;
+  isLoading = false;
+  errorMessage: string | null = null;
 
   constructor(
     private stripeService: StripeService,
@@ -22,7 +25,8 @@ export class PaymentComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.contractId = +params.get('contractId')!;
+      const id = params.get('contractId');
+      this.contractId = id ? +id : null;
     });
 
     this.stripeService.getStripe().then((stripe) => {
@@ -33,33 +37,48 @@ export class PaymentComponent implements OnInit {
     });
   }
 
-  handleSubmit(event: Event) {
-    event.preventDefault();
-    const amount = 50; // Exemple de montant, vous pouvez le rendre dynamique
+async handleSubmit(event: Event) {
+  event.preventDefault();
+  this.errorMessage = null;
+  
+  if (!this.contractId) {
+    this.errorMessage = 'Contract ID is missing';
+    return;
+  }
 
-    if (this.contractId === null) {
-      console.error('Contract ID is missing');
-      return;
+  this.isLoading = true;
+
+  try {
+    // 1. Créer l'intention de paiement
+    const intentResponse = await this.paymentService.createPaymentIntent(this.contractId).toPromise();
+    const clientSecret = intentResponse.clientSecret;
+    this.amount = intentResponse.amount;
+
+    if (!clientSecret) throw new Error('Échec de la création du paiement');
+
+    // 2. Confirmer avec Stripe Elements
+    const { error, paymentIntent } = await this.stripe.confirmCardPayment(clientSecret, {
+      payment_method: { card: this.card }
+    });
+
+    if (error) throw error;
+    if (!paymentIntent || paymentIntent.status !== 'succeeded') {
+      throw new Error('Paiement non confirmé');
     }
 
-    this.paymentService.createPaymentIntent(this.contractId, amount).subscribe({
-      next: async (response) => {
-        const clientSecret = response.clientSecret;
-        const result = await this.stripe.confirmCardPayment(clientSecret, {
-          payment_method: { card: this.card }
-        });
+    // 3. Confirmer avec notre backend
+    await this.paymentService.confirmPayment(
+      paymentIntent.id, 
+      'succeeded',
+      this.contractId
+    ).toPromise();
 
-        if (result.error) {
-          console.error('Payment error:', result.error.message);
-        } else if (result.paymentIntent.status === 'succeeded') {
-          this.paymentService.confirmPayment(result.paymentIntent.id, 'succeeded').subscribe();
-        } else {
-          this.paymentService.confirmPayment(result.paymentIntent.id, 'failed').subscribe();
-        }
-      },
-      error: (err) => {
-        console.error('Error with API:', err);
-      }
-    });
+    alert('✅ Paiement réussi ! Email envoyé.');
+
+  } catch (error: unknown) {
+    this.errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+  } finally {
+    this.isLoading = false;
   }
+}
 }

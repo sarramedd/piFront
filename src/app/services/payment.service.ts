@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
@@ -7,20 +7,24 @@ import { Observable } from "rxjs";
 })
 export class PaymentService {
   private backendUrl = 'http://localhost:8088/borrowit/stripe';
+  private apiUrl = 'http://localhost:8088/borrowit/payments';
+
+
 
   constructor(private http: HttpClient) {}
 
-  createPaymentIntent(contractId: number, amount: number): Observable<any> {
+  createPaymentIntent(contractId: number): Observable<any> {
     return this.http.post(`${this.backendUrl}/create-payment-intent`, { 
       contractId: contractId,
-      amount: amount
     });
   }
 
-  confirmPayment(paymentIntentId: string, status: string): Observable<any> {
-    return this.http.post(`${this.backendUrl}/confirm-payment`, {
-      paymentIntentId: paymentIntentId,
-      status: status
-    });
+  confirmPayment(paymentIntentId: string, status: string, contractId: number): Observable<any> {
+    const params = new HttpParams()
+      .set('paymentIntentId', paymentIntentId)
+      .set('status', status)
+      .set('contractId', contractId.toString());
+
+    return this.http.post(`${this.apiUrl}/confirm`, null, { params });
   }
 }

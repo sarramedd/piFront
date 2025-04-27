@@ -39,43 +39,7 @@ export class ItemComponent implements OnInit {
     });
   }
 
-  createNewContract(item: Item) {
-    if (!item) {
-      console.error("Erreur : Aucun item sélectionné !");
-      return;
-    }
-  
-    const contract: Contract = {
-      id: 0,
-      startDate: new Date(),
-      endDate: new Date(),
-      terms: "Le locataire doit restituer l'objet en bon état.",
-      ownerSignature: "",
-      borrowerSignature: "",
-      borrower: { id: this.borrowerId, name: "borrower" } as User,
-      owner: { id: this.ownerId, name: item.owner.name } as User,
-      details: `Nom: ${item.name}, 
-                Propriétaire: ${item.owner.name}, 
-                Prix: ${item.price}€, 
-                Description: ${item.description}`,
-    };
-  
-    this.contractService.createContract(this.borrowerId, this.ownerId, contract).subscribe({
-      next: (response) => {
-        console.log("Contrat créé avec succès", response);
-        if (response && response.id) {
-          console.log("L'ID du contrat est :", response.id);
-          // Navigation avec l'ID dans l'URL
-          this.router.navigate(['/contract', response.id]);
-        } else {
-          console.error("L'ID du contrat est manquant dans la réponse");
-        }
-      },
-      error: (err) => {
-        console.error("Erreur lors de la création du contrat", err);
-      }
-    });
-  }
+
   
   
   selectItem(item: Item) {
