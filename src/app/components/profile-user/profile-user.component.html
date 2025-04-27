@@ -9,14 +9,13 @@
         <div class="card-body text-center d-flex flex-column">
             <div class="profile-avatar-container">
                 <div class="avatar-wrapper">
-                  <img [src]="userProfile?.imageUrl || './assets/images/default-avatar.webp'"
+                  <img [src]="userProfile.imageUrl || './assets/images/default-avatar.webp'"
                        class="profile-image"
                        alt="Photo de profil"
                        loading="lazy"
                        width="160"
                        height="160">
-                  
-                  <label for="profileImageUpload" class="upload-button">
+                   <label for="profileImageUpload" class="upload-button">
                     <i class="fas fa-camera"></i>
                     <input id="profileImageUpload" 
                            type="file" 
@@ -26,7 +25,7 @@
                 </div>
               </div>
 
-          <h3 class="h5 mb-1">{{ userProfile?.nom || 'Chargement...' }}</h3>
+          <h3 class="h5 mb-1">{{ userProfile.nom || 'Chargement...' }}</h3>
           <p class="text-muted small mb-4" *ngIf="userProfile">
             <i class="fas fa-star text-warning"></i>
             Client depuis {{ userProfile.dateDeNaissance ? (userProfile.dateDeNaissance | date:'yyyy') : '2022' }}
