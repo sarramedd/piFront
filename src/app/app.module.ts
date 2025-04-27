@@ -39,6 +39,7 @@ import { PaymentComponent } from './components/payment/payment.component';
 import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
 import { ProfileUserComponent } from './components/profile-user/profile-user.component';
 import { HeaderUserComponent } from './components/header-user/header-user.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { HeaderUserComponent } from './components/header-user/header-user.compon
     VerificationSmsComponent,
     ProfileUserComponent,
     HeaderUserComponent,
+    UnauthorizedComponent,
   ],
   imports: [
     BrowserModule,
