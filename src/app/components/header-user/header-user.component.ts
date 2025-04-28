@@ -4,16 +4,16 @@ import { AuthServiceService } from '../../services/auth-service.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
+  selector: 'app-header-user',
+  templateUrl: './header-User.component.html',
   styleUrls: [
-    'home.component.css',
-    '../../../assets/css/style.css',
+    './header-user.component.css',
     '../../../assets/css/bootstrap.min.css',
+    '../../../assets/css/style.css',
     '../../../assets/css/nouislider.min.css'
   ]
 })
-export class HomeComponent implements OnInit {
+export class HeaderUserComponent implements OnInit {
   userImageUrl: string = 'assets/img/default-avatar.png';
   userEmail: string = '';
 
@@ -24,20 +24,19 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const user = JSON.parse(localStorage.getItem('loggedUser')!);
-    if (user?.email) {
+    const user = JSON.parse(localStorage.getItem('loggedUser') || '{}');
+    if (user.email) {
       this.userEmail = user.email;
       this.userService.getUserImageByEmail(this.userEmail).subscribe({
         next: (base64Image: string) => {
           console.log("Image Base64 récupérée :", base64Image);
           this.userImageUrl = `data:image/jpeg;base64,${base64Image}`;
         },
-        error: () => {
-          console.error("Erreur lors de la récupération de l'image.");
+        error: (error) => {
+          console.error("Erreur lors de la récupération de l'image :", error);
           this.userImageUrl = 'assets/img/default-avatar.png';
         }
       });
-      
     }
   }
 

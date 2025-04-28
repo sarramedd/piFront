@@ -54,7 +54,13 @@ import { ChartModule } from 'primeng/chart'; // <--- Ajoute ceci
 
 
 import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
+
 import {AuthInterceptor} from "./services/auth.interceptor";
+
+
+import { ProfileUserComponent } from './components/profile-user/profile-user.component';
+import { HeaderUserComponent } from './components/header-user/header-user.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 
 
 @NgModule({
@@ -110,6 +116,10 @@ import {AuthInterceptor} from "./services/auth.interceptor";
 
 
     VerificationSmsComponent,
+
+    ProfileUserComponent,
+    HeaderUserComponent,
+    UnauthorizedComponent,
 
   ],
   imports: [
