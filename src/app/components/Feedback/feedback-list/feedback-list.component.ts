@@ -554,29 +554,28 @@ getSafeSuggestedReaction(feedback: Feedback): Reaction {
     ? feedback.suggestedReaction as Reaction 
     : 'DISLIKE';
 }
-// Add these methods to your FeedbackListComponent class
 
-getSafeAvatar(feedback: Feedback): string {
-  // Check if we have a base64 avatar from the DTO
-  if (feedback.user?.avatar) {
-    // If it's already a complete data URL
-    if (feedback.user.avatar.startsWith('data:')) {
-      return feedback.user.avatar;
-    }
-    // If it's just the base64 data
-    return `data:image/jpeg;base64,${feedback.user.avatar}`;
-  }
-  
-  // Fallback to default image
-  return this.defaultProfileImage;
-}
 getDisplayName(feedback: Feedback): string {
   return feedback.user?.name || feedback.userName || 'Anonymous';
 }
 
+getSafeAvatar(feedback: Feedback): string {
+  // First check if we have a direct avatar on the user object
+  if (feedback.user?.avatar) {
+    return this.avatarService.getSafeAvatar(feedback.user);
+  }
+  
+  // Then check for userAvatar from DTO
+  if (feedback.userAvatar) {
+    return this.avatarService.getSafeAvatar({ avatar: feedback.userAvatar });
+  }
+  
+  // Fallback to default
+  return this.avatarService.getSafeAvatar(null);
+}
+
 handleImageError(event: Event) {
-  const img = event.target as HTMLImageElement;
-  img.src = this.defaultProfileImage;
+  this.avatarService.handleImageError(event);
 }
 
 

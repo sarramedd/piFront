@@ -7,7 +7,7 @@ export interface ReactDTO {
   userName: string;
   userEmail: string;
   userPhone: string;
-  userAvatarUrl: string;
+  userAvatar?: string;
   userGenre: string;
   userCin: number;
   feedbackId: number;

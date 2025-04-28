@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Feedback } from 'src/app/core/models/feedback';
 import { FeedbackDTO } from 'src/app/core/models/FeedbackDTO';
 import { Reaction, Reacts } from 'src/app/core/models/reacts';
@@ -25,40 +25,68 @@ export class FeedbacksService {
   }
 
   // In your feedbacks.service.ts
-getAllFeedbacks(): Observable<Feedback[]> {
-  const headers = this.getAuthHeaders();
+  getAllFeedbacks(): Observable<Feedback[]> {
+    const headers = this.getAuthHeaders();
+    
+    return this.http.get<FeedbackDTO[]>(`${this.apiUrl}/retrieve-all-feedbacks`, { headers })
+      .pipe(
+        // Debug logging for avatar data
+        tap((feedbacks: FeedbackDTO[]) => {
+          console.log('[DEBUG] Received feedbacks with avatar data:', 
+            feedbacks.map(f => ({
+              id: f.id,
+              hasAvatar: !!f.userAvatar,
+              avatarLength: f.userAvatar?.length,
+              hasUserData: !!f.userId
+            }))
+          );
+        }),
+        
+        // Main mapping logic
+        map((feedbacks: FeedbackDTO[]) => feedbacks.map(fb => {
+          // Convert reactTypes to reacts (keeping your existing logic)
+          const reacts = fb.reactTypes 
+            ? fb.reactTypes
+                .filter(type => type !== null && type !== undefined)
+                .map(type => this.createReactsObject(type))
+            : [];
   
-  return this.http.get<FeedbackDTO[]>(`${this.apiUrl}/retrieve-all-feedbacks`, { headers })
-    .pipe(
-      map((feedbacks: FeedbackDTO[]) => feedbacks.map(fb => {
-        // Convert reactTypes to reacts if needed
-        const reacts = fb.reactTypes 
-          ? fb.reactTypes
-              .filter(type => type !== null && type !== undefined)
-              .map(type => this.createReactsObject(type))
-          : [];
-
-       // In getAllFeedbacks() method
-return {
-  ...fb,
-  reacts,
-  showReacts: false,
-  reported: fb.isReported || false,
-  reason: fb.reportReason || '',
-  sentimentScore: fb.sentimentScore || null,
-  user: {
-    id: fb.userId,
-    name: fb.userName,
-    email: fb.userEmail,
-    avatar: fb.userAvatar // This comes from backend DTO as base64
-  },
-  userId: fb.userId,
-  userName: fb.userName,
-  userEmail: fb.userEmail
-} as Feedback;
-      }))
-    );
-}
+          // Create the feedback object with all properties
+          const mappedFeedback: Feedback = {
+            ...fb,
+            reacts,
+            showReacts: false,
+            reported: fb.isReported || false,
+            reason: fb.reportReason || '',
+            sentimentScore: fb.sentimentScore || null,
+            user: {
+              id: fb.userId,
+              name: fb.userName,
+              email: fb.userEmail,
+              avatar: fb.userAvatar  // Properly mapped from DTO
+            },
+            // Keep these for backward compatibility
+            userId: fb.userId,
+            userName: fb.userName,
+            userEmail: fb.userEmail
+          };
+  
+          console.log('[DEBUG] Mapped feedback:', {
+            id: mappedFeedback.id,
+            hasAvatar: !!mappedFeedback.user?.avatar,
+            reactCount: mappedFeedback.reacts?.length
+          });
+  
+          return mappedFeedback;
+        })),
+        
+        // Error handling
+        catchError(error => {
+          console.error('[ERROR] Failed to load feedbacks:', error);
+          return throwError(() => new Error('Failed to load feedbacks'));
+        })
+      );
+  }
   
   // Méthode helper pour créer un objet Reacts valide
   private createReactsObject(reactionType: string): Reacts {

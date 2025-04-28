@@ -1,4 +1,3 @@
-<p>user-specific-feedbacks works!</p>
 <app-header-user></app-header-user>
 
 <!-- NAVIGATION -->
@@ -22,7 +21,7 @@
           <span (click)="toggleMenu(feedback.id)" style="cursor: pointer;">⋮</span>
           <div *ngIf="openedMenuFeedbackId === feedback.id" class="dropdown-menu">
             <button (click)="startEditing(feedback)">✏️ Edit</button>
-            <button (click)="openReportModal(feedback)" [disabled]="feedback.reported">🚩 Report</button>
+            <!-- <button (click)="openReportModal(feedback)" [disabled]="feedback.reported">🚩 Report</button>-->
             <button (click)="deleteFeedback(feedback.id)">🗑️ Delete</button>
           </div>
         </div>

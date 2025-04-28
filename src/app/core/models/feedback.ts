@@ -13,22 +13,20 @@ export interface Feedback {
   showReacts?: boolean;
   reported?: boolean;
   reason?: string;
-  reportReason?: string; // Add this to match DTO
+  reportReason?: string;
   showReason?: boolean;
   user?: {
     id?: number;
     name?: string;
     email?: string;
-    avatar?: string; // Add if you have user avatars
-    // Add other user properties as needed
-  
+    avatar?: string; // Ensure this is here
+    image?: string; // Add this as an alternative
   };
   currentUserReaction?: Reaction | null;
   suggestedReaction?: Reaction;
-  sentimentScore?: number | null ;
-  
-  // Optional: If you want direct access to user properties
+  sentimentScore?: number | null;
   userId?: number;
   userName?: string;
   userEmail?: string;
+  userAvatar?: string; // Add this to match DTO
 }

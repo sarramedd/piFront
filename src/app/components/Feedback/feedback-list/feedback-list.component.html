@@ -22,9 +22,9 @@
         <div style="float: right; position: relative;">
           <span (click)="toggleMenu(feedback.id)" style="cursor: pointer;">⋮</span>
           <div *ngIf="openedMenuFeedbackId === feedback.id" class="dropdown-menu">
-            <button (click)="startEditing(feedback)">✏️ Edit</button>
+           <!-- <button (click)="startEditing(feedback)">✏️ Edit</button>-->
             <button (click)="openReportModal(feedback)" [disabled]="feedback.reported">🚩 Report</button>
-            <button (click)="deleteFeedback(feedback.id)">🗑️ Delete</button>
+           <!--  <button (click)="deleteFeedback(feedback.id)">🗑️ Delete</button>-->
           </div>
         </div>
 
@@ -43,20 +43,17 @@
         <small *ngIf="getFeedbackPopularityScore(feedback) >= 5" class="badge">🔥 Popular</small>
 
         <!-- User Info Section -->
-        <div class="user-info">
-          <!-- Replace your img tag with this: -->
-<img [src]="avatarService.getSafeAvatar(feedback.user)" 
-[alt]="feedback.user?.name || 'User'" 
-class="user-avatar"
-(error)="avatarService.handleImageError($event)">
-          <div>
-            <p class="user-name"><strong>{{ feedback.user?.name || 'Name not available' }}</strong></p>
-            <p class="feedback-date">{{ feedback.date | date:'medium' }}</p>
-            <small *ngIf="editingFeedbackId === feedback.id" style="color: #666;">
-              User ID: {{feedback.user?.id}}, Name: {{feedback.user?.name}}
-            </small>
-          </div>
-        </div>
+        <!-- In your feedback card template -->
+<div class="user-info">
+  <img [src]="getSafeAvatar(feedback)" 
+       [alt]="feedback.user?.name || 'User'" 
+       class="user-avatar"
+       (error)="handleImageError($event)">
+  <div>
+    <p class="user-name"><strong>{{ feedback.user?.name || 'Name not available' }}</strong></p>
+    <p class="feedback-date">{{ feedback.date | date:'medium' }}</p>
+  </div>
+</div>
 
         <!-- Facebook-style Reaction System -->
         <div class="reaction-container">
@@ -135,23 +132,23 @@ class="user-avatar"
     <div *ngIf="activeFeedback?.reacts?.length; else noReacts" class="reaction-list">
       <div *ngFor="let react of filteredReacts" class="reaction-item">
         <div class="user-info">
-               <img [src]="avatarService.getSafeAvatar(react.user)" 
-[alt]="react.user?.name || 'User'" 
-class="user-avatar"
-(error)="avatarService.handleImageError($event)">
-
-          <div class="user-details">
-            <span class="user-name">{{ react.user?.name || 'Anonymous' }}</span>
-            <small *ngIf="react.user?.email" class="user-email">{{ react.user?.email }}</small>
-            <small *ngIf="react.user?.phone" class="user-phone">{{ react.user?.phone }}</small>
-          </div>
+            <img [src]="react.user?.avatar" 
+                 [alt]="react.user?.name || 'User'" 
+                 class="user-avatar"
+                 (error)="avatarService.handleImageError($event)">
+            
+            <div class="user-details">
+                <span class="user-name">{{ react.user?.name || 'Anonymous' }}</span>
+                <small *ngIf="react.user?.email" class="user-email">{{ react.user?.email }}</small>
+                <small *ngIf="react.user?.phone" class="user-phone">{{ react.user?.phone }}</small>
+            </div>
         </div>
         <div class="reaction-info">
-          <span class="reaction-emoji">{{ getReactionEmoji(react.reaction) }}</span>
-          <span class="reaction-type">{{ react.reaction }}</span>
-          <span class="reaction-date">{{ react.date | date:'short' }}</span>
+            <span class="reaction-emoji">{{ getReactionEmoji(react.reaction) }}</span>
+            <span class="reaction-type">{{ react.reaction }}</span>
+            <span class="reaction-date">{{ react.date | date:'short' }}</span>
         </div>
-      </div>
+    </div>
     </div>
     <ng-template #noReacts>
       <p style="color: red;">❌ No reactions found.</p>

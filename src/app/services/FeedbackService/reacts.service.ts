@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { Reaction, Reacts } from 'src/app/core/models/reacts';
+import { AvatarService } from './avatar.service';
 
 interface ReactResponseDTO {
   id: number;
@@ -11,7 +12,7 @@ interface ReactResponseDTO {
   userName?: string;
   userEmail?: string;
   userPhone?: string;
-  userAvatarUrl?: string;
+  userAvatar?: string;
   userGenre?: string;
   userCin?: number;
   feedbackId?: number;
@@ -24,7 +25,7 @@ export class ReactsService {
   private apiUrl = 'http://localhost:8089/borrowit/reacts';
   private defaultProfileImage = 'assets/images/Capture.png';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private avatarService: AvatarService ) {}
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
@@ -53,45 +54,51 @@ export class ReactsService {
   getReactionsForFeedback(feedbackId: number): Observable<Reacts[]> {
     const headers = this.getAuthHeaders();
     return this.http.get<ReactResponseDTO[]>(
-      `${this.apiUrl}/retrieve-reacts-for-feedback/${feedbackId}`,
-      { headers }
+        `${this.apiUrl}/retrieve-reacts-for-feedback/${feedbackId}`,
+        { headers }
     ).pipe(
-      map((response: ReactResponseDTO[]) => {
-        if (!response || !Array.isArray(response)) return [];
-        return response.map(react => this.transformReactDTO(react));
-      }),
-      catchError(error => {
-        console.error('Error fetching reactions:', error);
-        return of([]);
-      })
+        tap(response => console.log('Raw reaction response:', response)),
+        map((response: ReactResponseDTO[]) => {
+            if (!response || !Array.isArray(response)) return [];
+            const transformed = response.map(react => {
+                const result = this.transformReactDTO(react);
+                console.log('Transformed react:', result);
+                return result;
+            });
+            return transformed;
+        }),
+        catchError(error => {
+            console.error('Error fetching reactions:', error);
+            return of([]);
+        })
     );
-  }
+}
 
-  private transformReactDTO(dto: ReactResponseDTO): Reacts {
-    const feedback = dto.feedbackId ? { 
+private transformReactDTO(dto: ReactResponseDTO): Reacts {
+  const feedback = dto.feedbackId ? { 
       id: dto.feedbackId,
       message: '',
       date: new Date().toISOString(),
       user: undefined,
       reacts: undefined
-    } : undefined;
+  } : undefined;
 
-    return {
+  return {
       id: dto.id,
       reaction: dto.reaction as Reaction,
       date: dto.date,
       user: {
-        id: dto.userId,
-        name: dto.userName || 'Anonymous',
-        email: dto.userEmail || '',
-        phone: dto.userPhone || '',
-        avatar: dto.userAvatarUrl || this.defaultProfileImage,
-        genre: dto.userGenre || '',
-        cin: dto.userCin || 0
+          id: dto.userId,
+          name: dto.userName || 'Anonymous',
+          email: dto.userEmail || '',
+          phone: dto.userPhone || '',
+          avatar: dto.userAvatar || this.defaultProfileImage, // Use direct avatar URL
+          genre: dto.userGenre || '',
+          cin: dto.userCin || 0
       },
       feedback: feedback
-    };
-  }
+  };
+}
 
   deleteReact(reactId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/remove-react/${reactId}`, {
@@ -135,4 +142,6 @@ export class ReactsService {
       })
     );
   }
+
+  
 }
