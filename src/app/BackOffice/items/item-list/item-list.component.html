@@ -1,0 +1,87 @@
+<div style="padding: 10px 5%;">
+  <select [(ngModel)]="selectedCategory" class="form-control" style="width: 30%; display: inline-block;">
+    <option value="">Toutes les catégories</option>
+    <option *ngFor="let category of categories" [value]="category">
+      {{ category }}
+    </option>
+  </select>
+</div>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Liste des Items</h2>
+      <!-- <input
+        type="text"
+        class="form-control w-25"
+        placeholder="Rechercher..."
+        [(ngModel)]="searchTerm"
+      /> -->
+    </div>
+  
+    <table class="table table-hover table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th>Nom</th>
+          <th>Description</th>
+          <th>Item Condition</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Availability</th>
+          <th>Image</th>
+          <th style="width: 150px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of itemsFiltered()">
+          <td>{{ item.name }}</td>
+          <td>{{ item.description }}</td>
+          <td>{{ item.itemCondition }}</td>
+          <td>{{ item.price }} DT</td>
+          <td>{{ item.categoryType }}</td>
+          <!-- Availability check -->
+          <td *ngIf="item.availability; else noAvailable">Available</td>
+          <ng-template #noAvailable>
+            <td>No available</td>
+          </ng-template>
+  
+          <td>            <img [src]="item.image" class="custom-block-image img-fluid" alt="" style="display: block; width: 100px; height: 100px; object-fit: cover;" />
+           
+          </td>
+  
+          <!-- Action buttons -->
+          <td>
+            <!-- Option to edit the item -->
+            <button class="btn btn-sm btn-primary me-2" [routerLink]="['/dashboard/editItem', item.id]">
+              Modifier
+            </button>
+            <button class="btn btn-sm me-2"
+        [ngClass]="getButtonClass(item.statusItem)"
+        (click)="toggleStatus(item)">
+  {{ getButtonLabel(item.statusItem) }}
+</button>
+
+             
+  
+            <!-- Delete button -->
+            <button class="btn btn-sm btn-danger" (click)="deleteItem(item.id)">
+              Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Pagination (optional) -->
+    <!-- <div class="d-flex justify-content-end">
+      <button class="btn btn-secondary me-2" [disabled]="page === 1" (click)="page--">Précédent</button>
+      <button class="btn btn-secondary" [disabled]="page >= maxPage()" (click)="page++">Suivant</button>
+    </div> -->
+  </div>
+  
+  <!-- Add Item button -->
+   <div style="padding-left: 5%;">
+
+     <button style="width: 12%;" class="btn btn-sm btn-success" (click)="addItem()">
+       Add Item
+      </button>
+    </div>
+  

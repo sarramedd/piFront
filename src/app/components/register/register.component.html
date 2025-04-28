@@ -1,67 +1,78 @@
 <div class="container-scroller">
   <div class="container-fluid page-body-wrapper full-page-wrapper">
-    <div class="row w-100">
-      <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+    <div class="row w-100 m-0">
+      <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg p-0">
         <div class="card col-lg-6 mx-auto">
           <div class="card-body px-5 py-5">
-            <h3 class="card-title text-start mb-3">Créer un compte</h3>
+            <h3 class="card-title text-center mb-4">Créer un compte</h3>
 
-            <form [formGroup]="registerForm" (ngSubmit)="register()">
+            <!-- Message d'erreur global -->
+            <div *ngIf="message" class="alert alert-dismissible" 
+                 [ngClass]="{'alert-danger': message !== 'Inscription réussie!', 'alert-success': message === 'Inscription réussie!'}">
+              <button type="button" class="btn-close" (click)="message = ''"></button>
+              <i class="fas" 
+                 [class.fa-exclamation-circle]="message !== 'Inscription réussie!'"
+                 [class.fa-check-circle]="message === 'Inscription réussie!'"></i>
+              {{ message }}
+            </div>
 
+            <form #registerForm="ngForm" (ngSubmit)="register(registerForm)" novalidate>
               <!-- CIN -->
-              <div class="form-group">
-                <label for="cin">CIN</label>
-                <input type="text" id="cin" formControlName="cin" class="form-control p_input"
-                  placeholder="Entrez votre CIN (8 chiffres)">
-                <div *ngIf="registerForm.get('cin')?.invalid && registerForm.get('cin')?.touched" class="text-danger">
+              <div class="mb-3">
+                <label for="cin" class="form-label">CIN</label>
+                <input type="text" id="cin" name="cin" [(ngModel)]="user.cin" 
+                       class="form-control" placeholder="Entrez votre CIN (8 chiffres)"
+                       required pattern="[0-9]{8}">
+                <div *ngIf="registerForm.submitted && registerForm.controls['cin']?.errors" class="invalid-feedback d-block">
                   Le CIN doit contenir 8 chiffres.
                 </div>
               </div>
 
               <!-- Nom complet -->
-              <div class="form-group">
-                <label for="name">Nom complet</label>
-                <input type="text" id="name" formControlName="name" class="form-control p_input"
-                  placeholder="Entrez votre nom complet">
-                <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="text-danger">
+              <div class="mb-3">
+                <label for="name" class="form-label">Nom complet</label>
+                <input type="text" id="name" name="name" [(ngModel)]="user.name"
+                       class="form-control" placeholder="Entrez votre nom complet" required>
+                <div *ngIf="registerForm.submitted && registerForm.controls['name']?.errors" class="invalid-feedback d-block">
                   Le nom est requis.
                 </div>
               </div>
 
               <!-- Email -->
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" formControlName="email" class="form-control p_input"
-                       placeholder="exemple@domaine.com">
-                <div *ngIf="registerForm.get('email')?.errors?.['required'] && registerForm.get('email')?.touched"
-                     class="text-danger">
-                  L'e-mail est requis.
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" [(ngModel)]="user.email"
+                       class="form-control" placeholder="exemple@domaine.com"
+                       required email>
+                <div *ngIf="registerForm.submitted && registerForm.controls['email']?.errors" class="invalid-feedback d-block">
+                  <div *ngIf="registerForm.controls['email']?.errors?.['required']">L'e-mail est requis.</div>
+                  <div *ngIf="registerForm.controls['email']?.errors?.['email']">Format de l'e-mail invalide.</div>
                 </div>
-                <div *ngIf="registerForm.get('email')?.errors?.['email'] && registerForm.get('email')?.touched"
-                     class="text-danger">
-                  Format de l'e-mail invalide.
+                <div *ngIf="emailExistsError" class="text-danger small">
+                  Cet email est déjà utilisé.
                 </div>
               </div>
 
               <!-- Photo de profil -->
-              <div class="form-group">
-                <label for="photo">Photo de profil</label>
-                <input type="file" id="photo" (change)="onFileSelected($event)" class="form-control p_input" accept="image/*">
+              <div class="mb-3">
+                <label for="photo" class="form-label">Photo de profil</label>
+                <input type="file" id="photo" (change)="onFileSelected($event)" 
+                       class="form-control" accept="image/*">
                 
                 <!-- Aperçu et statut de vérification -->
                 <div *ngIf="imagePreview" class="mt-3">
                   <div class="d-flex align-items-center">
-                    <img [src]="imagePreview" alt="Image Preview" class="img-thumbnail me-3" width="100" height="100">
+                    <img [src]="imagePreview" alt="Aperçu" class="img-thumbnail me-3" width="100" height="100">
                     
                     <div>
                       <div *ngIf="isVerifyingFace" class="text-info">
-                        <i class="fas fa-spinner fa-spin"></i> Vérification du visage en cours...
+                        <i class="fas fa-spinner fa-spin me-2"></i> Vérification en cours...
                       </div>
                       
                       <div *ngIf="faceVerificationResult" 
                            [class.text-success]="faceVerificationResult.isValid"
                            [class.text-danger]="!faceVerificationResult.isValid">
-                        <i class="fas" 
+                        <i class="fas me-2" 
                            [class.fa-check-circle]="faceVerificationResult.isValid"
                            [class.fa-times-circle]="!faceVerificationResult.isValid"></i>
                         {{ faceVerificationResult.message || 
@@ -77,112 +88,111 @@
               </div>
 
               <!-- Mot de passe -->
-              <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" formControlName="password" class="form-control p_input"
-                  placeholder="Entrez un mot de passe (min. 6 caractères)">
-                <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-danger">
+              <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input type="password" id="password" name="password" [(ngModel)]="user.password"
+                       class="form-control" placeholder="Entrez un mot de passe (min. 6 caractères)"
+                       required minlength="6">
+                <div *ngIf="registerForm.submitted && registerForm.controls['password']?.errors" class="invalid-feedback d-block">
                   Le mot de passe doit contenir au moins 6 caractères.
                 </div>
               </div>
 
               <!-- Confirmation mot de passe -->
-              <div class="form-group">
-                <label for="confirmPassword">Confirmer mot de passe</label>
-                <input type="password" id="confirmPassword" formControlName="confirmPassword"
-                  class="form-control p_input" placeholder="Confirmez le mot de passe">
-                <div *ngIf="registerForm.get('confirmPassword')?.value !== registerForm.get('password')?.value && registerForm.get('confirmPassword')?.touched" class="text-danger">
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirmer mot de passe</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword"
+                       class="form-control" placeholder="Confirmez le mot de passe" required>
+                <div *ngIf="registerForm.submitted && user.password !== confirmPassword" class="invalid-feedback d-block">
                   Les mots de passe ne correspondent pas.
                 </div>
               </div>
 
               <!-- Téléphone -->
-              <div class="form-group">
-                <label for="phone">Téléphone</label>
-                <input type="text" id="phone" formControlName="phone" class="form-control p_input"
-                       placeholder="Entrez votre numéro de téléphone (min. 8 chiffres)">
-                <div *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" class="text-danger">
-                  <small>Veuillez entrer un numéro valide avec le format +216XXXXXXXX.</small>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Téléphone</label>
+                <input type="tel" id="phone" name="phone" [(ngModel)]="user.phone"
+                       class="form-control" placeholder="+216XXXXXXXX"
+                       required pattern="^\+216[0-9]{8}$">
+                <div *ngIf="registerForm.submitted && registerForm.controls['phone']?.errors" class="invalid-feedback d-block">
+                  Format attendu: +216 suivi de 8 chiffres.
                 </div>
               </div>
 
               <!-- Adresse -->
-              <div class="form-group">
-                <label for="address">Adresse</label>
-                <input type="text" id="address" formControlName="address" class="form-control p_input"
-                  placeholder="Entrez votre adresse">
-                <div *ngIf="registerForm.get('address')?.invalid && registerForm.get('address')?.touched" class="text-danger">
+              <div class="mb-3">
+                <label for="address" class="form-label">Adresse</label>
+                <input type="text" id="address" name="address" [(ngModel)]="user.address"
+                       class="form-control" placeholder="Entrez votre adresse" required>
+                <div *ngIf="registerForm.submitted && registerForm.controls['address']?.errors" class="invalid-feedback d-block">
                   L'adresse est requise.
                 </div>
               </div>
 
               <!-- Date de naissance -->
-              <div class="form-group">
-                <label for="dateDeNaissance">Date de naissance</label>
-                <input type="date" id="dateDeNaissance" formControlName="dateDeNaissance"
-                  class="form-control p_input">
-                <div *ngIf="registerForm.get('dateDeNaissance')?.invalid && registerForm.get('dateDeNaissance')?.touched"
-                  class="text-danger">
+              <div class="mb-3">
+                <label for="dateDeNaissance" class="form-label">Date de naissance</label>
+                <input type="date" id="dateDeNaissance" name="dateDeNaissance" [(ngModel)]="user.dateDeNaissance"
+                       class="form-control" required>
+                <div *ngIf="registerForm.submitted && registerForm.controls['dateDeNaissance']?.errors" class="invalid-feedback d-block">
                   La date de naissance est requise.
                 </div>
               </div>
 
               <!-- Genre -->
-              <div class="form-group">
-                <label>Genre</label>
-                <select formControlName="genre" class="form-control p_input placeholder-select">
+              <div class="mb-3">
+                <label for="genre" class="form-label">Genre</label>
+                <select id="genre" name="genre" [(ngModel)]="user.genre" class="form-select" required>
                   <option value="" disabled selected>Sélectionnez votre genre</option>
                   <option value="Homme">Homme</option>
                   <option value="Femme">Femme</option>
                   <option value="Autre">Autre</option>
                 </select>
-                <div *ngIf="registerForm.get('genre')?.invalid && registerForm.get('genre')?.touched" class="text-danger">
+                <div *ngIf="registerForm.submitted && registerForm.controls['genre']?.errors" class="invalid-feedback d-block">
                   Veuillez sélectionner un genre.
                 </div>
               </div>
 
               <!-- Rôle -->
-              <div class="form-group">
-                <label>Rôle</label>
-                <select formControlName="role" class="form-control p_input placeholder-select">
-                  <option value="" disabled selected hidden>Sélectionnez votre rôle</option>
+              <div class="mb-3">
+                <label for="role" class="form-label">Rôle</label>
+                <select id="role" name="role" [(ngModel)]="user.role" class="form-select" required>
+                  <option value="" disabled selected>Sélectionnez votre rôle</option>
                   <option value="BORROWER">Emprunteur</option>
                   <option value="OWNER">Propriétaire</option>
                 </select>
-                <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="text-danger">
+                <div *ngIf="registerForm.submitted && registerForm.controls['role']?.errors" class="invalid-feedback d-block">
                   Le rôle est requis.
                 </div>
               </div>
 
               <!-- Conditions générales -->
-              <div class="form-check mb-3">
-                <input type="checkbox" id="terms" formControlName="terms" class="form-check-input">
+              <div class="mb-4 form-check">
+                <input type="checkbox" id="terms" name="terms" ngModel required class="form-check-input">
                 <label class="form-check-label" for="terms">
-                  J'accepte les termes et conditions
+                  J'accepte les <a href="#" class="text-primary">termes et conditions</a>
                 </label>
-                <div *ngIf="registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched" class="text-danger">
+                <div *ngIf="registerForm.submitted && registerForm.controls['terms']?.errors" class="invalid-feedback d-block">
                   Vous devez accepter les termes.
                 </div>
               </div>
 
-              <!-- Message d'erreur global -->
-              <div *ngIf="errorMessage" class="text-danger text-center mb-2">{{ errorMessage }}</div>
-
               <!-- Bouton de soumission -->
-              <div class="text-center d-grid gap-2">
-                <button type="submit" class="btn btn-success btn-block enter-btn" [disabled]="loading">
-                  <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  S'inscrire
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg" [disabled]="isLoading">
+                  <span *ngIf="!isLoading">S'inscrire</span>
+                  <span *ngIf="isLoading">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Traitement...
+                  </span>
                 </button>
               </div>
 
               <!-- Lien de connexion -->
-              <p class="sign-up text-center mt-3">
-                Vous avez déjà un compte ? <a routerLink="/login">Se connecter</a>
+              <p class="text-center mt-4">
+                Vous avez déjà un compte ? <a routerLink="/login" class="text-primary">Se connecter</a>
               </p>
-
             </form>
-
           </div>
         </div>
       </div>

@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ItemService } from 'src/app/services/item.service';
-import { CommandeService } from 'src/app/services/commande.service';
-import { DiscountService } from 'src/app/services/discount.service';
+
 import { AuthServiceService } from 'src/app/services/auth-service.service';
 import { UserService } from 'src/app/services/user.service';
-import { Item } from 'src/app/core/models/item';
 import { Commande } from 'src/app/core/models/commande';
 import { Discount } from 'src/app/core/models/discount';
 import { User } from 'src/app/core/models/user.model';
-import { switchMap } from 'rxjs/operators';
+import { CommandeService } from 'src/app/services/commande.service';
+import { DiscountService } from 'src/app/services/discount.service';
+import { Item } from 'src/app/core/models/item';
+import { ItemService } from 'src/app/services/item/item.service';
 
 @Component({
   selector: 'app-commande',
@@ -131,16 +131,24 @@ export class CommandeComponent implements OnInit {
   }
 
   loadCurrentUser(): void {
-    this.userService.getCurrentUser().subscribe({
+    const tokenData = this.authService.decodeToken();
+    if (!tokenData || !tokenData.email) {
+      console.error('Aucun email trouvé dans le token');
+      return;
+    }
+  
+    // Appel au service UserService pour récupérer l'utilisateur par email
+    this.userService.getUserByEmail(tokenData.email).subscribe({
       next: (user) => {
         this.currentUser = user;
       },
       error: (error: Error) => {
-        console.error('Error loading current user:', error);
+        console.error('Erreur lors du chargement de l\'utilisateur actuel:', error);
+        this.error = 'Erreur lors du chargement de l\'utilisateur';
       }
     });
   }
-
+  
   loadCommandes(): void {
     this.commandeService.getAllCommandes().subscribe({
       next: (commandes) => {

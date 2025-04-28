@@ -9,6 +9,7 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './home.component.html',
 
   styleUrls: [
+    'home.component.css',
     '../../../assets/css/style.css',
     '../../../assets/css/bootstrap.min.css',
     '../../../assets/css/nouislider.min.css'

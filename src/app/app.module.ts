@@ -1,59 +1,65 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from './app-routing.module';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { AddCategoryComponent } from "./BackOffice/catrgory/add-category/add-category.component";
+import { CategoryListComponent } from "./BackOffice/catrgory/category-list/category-list.component";
+import { EditCategoryComponent } from "./BackOffice/catrgory/edit-category/edit-category.component";
+import { ItemChartComponent } from "./BackOffice/item-chart/item-chart.component";
+import { AddItemComponent } from "./BackOffice/items/add-item/add-item.component";
+import { EditItemComponent } from "./BackOffice/items/edit-item/edit-item.component";
+import { ItemListComponent } from "./BackOffice/items/item-list/item-list.component";
+import { AdminProfileComponent } from "./components/admin-profile-component/admin-profile-component.component";
+import { CheckoutComponent } from "./components/checkout/checkout.component";
+import { ContractComponent } from "./components/contract/contract.component";
+import { FooterBackComponent } from "./components/footer/footer.component";
+import { ForgotPasswordComponent } from "./components/forgot-password/forgot-password.component";
+import { HeaderUserComponent } from "./components/header-user/header-user.component";
+import { HomeComponent } from "./components/home/home.component";
+import { IndexComponent } from "./components/index/index.component";
+import { AddItemFrontComponent } from "./components/items/add-item-front/add-item-front.component";
+import { DisplayItemsFrontComponent } from "./components/items/display-items-front/display-items-front.component";
+import { UpdateItemComponent } from "./components/items/update-item/update-item.component";
+import { LoginComponent } from "./components/login/login.component";
+import { NavbarComponent } from "./components/navbar/navbar.component";
+import { PaymentComponent } from "./components/payment/payment.component";
+import { ProductComponent } from "./components/product/product.component";
+import { ProfileUserComponent } from "./components/profile-user/profile-user.component";
+import { RegisterComponent } from "./components/register/register.component";
+import { ResetPasswordComponent } from "./components/reset-password/reset-password.component";
+import { FooterComponent } from "./components/shared/footer/footer.component";
+import { HeaderComponent } from "./components/shared/header/header.component";
+import { SidebarComponent } from "./components/shared/sidebar/sidebar.component";
+import { SidebarBackComponent } from "./components/sidebar/sidebar.component";
+import { StoreComponent } from "./components/store/store.component";
+import { UnauthorizedComponent } from "./components/unauthorized/unauthorized.component";
+import { UserListComponent } from "./components/user-list/user-list.component";
+import { VerificationSmsComponent } from "./components/verification-sms/verification-sms.component";
+import { HttpClientModule } from "@angular/common/http";
+import { RouterModule } from "@angular/router";
+import { BrowserModule } from "@angular/platform-browser";
+import { AuthInterceptor } from "./services/auth.interceptor";
+import { ToastrModule } from 'ngx-toastr';
+import { MaterialModule } from 'material.module';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { ChartModule } from 'primeng/chart';
+import { NgModule } from "@angular/core";
+import { CommandeComponent } from "./components/commande/commande.component";
+import { CommandeListComponent } from "./components/commande-list/commande-list.component";
+import { DiscountComponent } from "./BackOffice/discount/discount.component";
+import { DiscountService } from "./services/discount.service";
 
-// Racine
-import { AppComponent } from './app.component';
-
-// Auth & Admin
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { AdminProfileComponent } from './components/admin-profile-component/admin-profile-component.component';
-import { UserListComponent } from './components/user-list/user-list.component';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-import { ProfileComponent } from './components/profile/profile.component';
-
-// E-commerce & Shared
-import { HeaderComponent } from './components/shared/header/header.component';
-import { FooterBackComponent } from './components/footer/footer.component';
-import { FooterComponent } from './components/shared/footer/footer.component';
-
-
-import { SidebarComponent } from './components/shared/sidebar/sidebar.component'; 
-import { SidebarBackComponent } from './components/sidebar/sidebar.component';
-// Navbar
-import { NavbarComponent } from './components/navbar/navbar.component';  // Ajoute cette ligne
-
-import { HomeComponent } from './components/home/home.component';
-import { StoreComponent } from './components/store/store.component';
-import { ProductComponent } from './components/product/product.component';
-import { CheckoutComponent } from './components/checkout/checkout.component';
-import { IndexComponent } from './components/index/index.component';
-import { ContractComponent } from './components/contract/contract.component';
-import { ItemComponent } from './components/item/item.component';
-import { PaymentComponent } from './components/payment/payment.component';
-import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
-import { CommandeComponent } from './components/commande/commande.component';
-import { DiscountComponent } from './components/discount/discount.component';
-import { CommandeListComponent } from './components/commande-list/commande-list.component';
-import { AuthGuard } from './guards/auth.guard';
-import { AuthService } from './services/auth.service';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
-
+    AppComponent ,
+    CommandeComponent,
+    CommandeListComponent,
+    DiscountComponent,
     // Auth & Admin
     LoginComponent,
     RegisterComponent,
-    DashboardComponent,
     FooterComponent,
     AdminProfileComponent,
     UserListComponent,
@@ -61,13 +67,13 @@ import { AuthService } from './services/auth.service';
     ResetPasswordComponent,
     FooterBackComponent,
     SidebarBackComponent,
-    ProfileComponent,
 
     // Shared & Layout
     HeaderComponent,
    // FooterComponent,
     SidebarComponent,
-    NavbarComponent,  // Ajoute NavbarComponent ici
+    NavbarComponent
+    ,  // Ajoute NavbarComponent ici
 
     // E-commerce
     HomeComponent,
@@ -76,32 +82,50 @@ import { AuthService } from './services/auth.service';
     CheckoutComponent,
     IndexComponent,
     ContractComponent,
-    ItemComponent,
     PaymentComponent,
+
+
+    //Items
+    // npm install primeng@16.3.1 chart.js --save
+    //npm i angular-animations
+    //ng add @angular/material
+    //npm install primeicons --save
+    //kdfiljkihdfsk@erkHUG5
+
+    DisplayItemsFrontComponent,
+    AddItemFrontComponent,
+    UpdateItemComponent,
+    // BackOffice
+    AddCategoryComponent,
+    CategoryListComponent,
+    EditCategoryComponent,
+    ItemListComponent,
+    EditItemComponent,
+    AddItemComponent,
+    ItemChartComponent,
+
+
+
     VerificationSmsComponent,
-    CommandeComponent,
-    DiscountComponent,
-    CommandeListComponent
 
-    
-    
-    ],
-  
+    ProfileUserComponent,
+    HeaderUserComponent,
+    UnauthorizedComponent,
 
+  ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    RouterModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
-    RouterModule,
-    CommonModule
-
+    MaterialModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+    ChartModule
   ],
-  providers: [
-    AuthService,
-    AuthGuard
-  ],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],  
   bootstrap: [AppComponent]
 })
 export class AppModule { }

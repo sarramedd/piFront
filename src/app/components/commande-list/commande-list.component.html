@@ -49,6 +49,10 @@
                 <div class="item-details">
                   <div class="item-name">{{ commande.item.name }}</div>
                   <div class="item-category">{{ commande.item.category || 'Non catégorisé' }}</div>
+                  <button class="btn btn-sm btn-info mt-2" 
+                          [routerLink]="['/commandes/item', commande.itemId]">
+                    <i class="mdi mdi-eye"></i> Voir les détails
+                  </button>
                 </div>
               </div>
               <span *ngIf="!commande.item">-</span>

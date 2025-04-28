@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { DiscountService } from 'src/app/services/discount.service';
 import { Discount } from 'src/app/core/models/discount';
-import { ItemService } from 'src/app/services/item.service';
 import { Item } from 'src/app/core/models/item';
+import { ItemListComponent } from '../items/item-list/item-list.component';
+import { DiscountService } from 'src/app/services/discount.service';
+import { ItemService } from 'src/app/services/item/item.service';
+
+
 
 @Component({
   selector: 'app-discount',
@@ -61,16 +64,15 @@ export class DiscountComponent implements OnInit {
         this.loading = false;
       }
     });
-  }
+  } 
 
   loadItems(): void {
     this.itemService.getAllItems().subscribe({
-      next: (data) => {
+      next: (data: Item[]) => {
         this.items = data;
-        console.log(this.items);  // Vérifie que la liste des items est bien chargée
       },
-      error: (err) => {
-        console.error('Erreur lors du chargement des items:', err);
+      error: (err: any) => {
+        console.error('Error fetching items:', err);
       }
     });
   }

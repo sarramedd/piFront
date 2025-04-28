@@ -1,4 +1,4 @@
-.container {
+/*.container {
   padding: 2rem 0;
   background-color: #000;
   min-height: 100vh;
@@ -170,9 +170,9 @@
   .rent-btn {
     padding: 0.8rem 1.5rem;
   }
-}
+}*/
 
-/* Table Styles */
+/* Table Styles 
 table {
   width: 100%;
   border-collapse: collapse;
@@ -238,7 +238,7 @@ tr:last-child td {
   background-color: #2342dc;
 }
 
-/* Responsive table */
+/* Responsive table 
 @media (max-width: 768px) {
   table {
     display: block;
@@ -251,7 +251,7 @@ tr:last-child td {
   }
 }
 
-/* Page title */
+/* Page title 
 h1, h2, h3 {
   color: #fff;
   margin-bottom: 2rem;
@@ -272,4 +272,4 @@ h1, h2, h3 {
   width: 100%;
   border-radius: 4px;
 }
-  
+  */

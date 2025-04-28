@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService, User } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +8,10 @@ import { AuthService, User } from './auth.service';
 export class AuthServiceService {
   private baseUrl = 'http://localhost:8088/borrowit/api/auth';
 
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) {}
+  constructor(private http: HttpClient) {}
 
   login(credentials: { email: string, password: string }): Observable<any> {
-    return this.authService.login(credentials);
+    return this.http.post(`${this.baseUrl}/login`, credentials);
   }
 
   saveToken(token: string): void {
@@ -23,17 +19,16 @@ export class AuthServiceService {
   }
 
   getToken(): string | null {
-    return this.authService.getToken();
+    return localStorage.getItem('token');
   }
 
   logout(): void {
-    this.authService.logout();
+    localStorage.removeItem('token');
   }
 
   isLoggedIn(): boolean {
-    return this.authService.isAuthenticated();
+    return !!localStorage.getItem('token');
   }
-
   decodeToken(): any {
     const token = this.getToken();
     if (!token) return null;
@@ -47,6 +42,7 @@ export class AuthServiceService {
       return null;
     }
   }
+  
 
   requestPasswordReset(email: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/request-reset?email=${email}`, {});
@@ -68,14 +64,12 @@ export class AuthServiceService {
       const payload = token.split('.')[1];
       const decodedPayload = atob(payload);
       const parsedPayload = JSON.parse(decodedPayload);
+
+      // Adapte ici si ton backend utilise un autre nom que "role"
       return parsedPayload.role || null;
     } catch (e) {
       console.error('Erreur lors du décodage du token :', e);
       return null;
     }
   }
-
-  getCurrentUser(): Observable<User | null> {
-    return this.authService.currentUser$;
-  }
-} 
+}

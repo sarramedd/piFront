@@ -12,11 +12,13 @@ export interface Item {
   owner: User;
   photo: string;
   image: string;
-  category: string;
   itemCondition: string;
   status: string;
   createdDate?: string;
   updatedDate?: string;
+  category?: string;
+  statusItem?: string;
+  categoryType?: string;
   //itemCondition: string;
   //owner: User;
 

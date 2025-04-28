@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { ItemService } from '../../services/item.service';
+/*import { Component, OnInit } from '@angular/core';
 import { CommandeService } from '../../services/commande.service';
 import { DiscountService } from '../../services/discount.service';
 import { AuthService } from '../../services/auth.service';
@@ -8,6 +7,7 @@ import { Commande } from '../../core/models/commande';
 import { Discount } from '../../core/models/discount';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { ItemService } from 'src/app/services/item/item.service';
 
 @Component({
   selector: 'app-item',
@@ -107,3 +107,4 @@ export class ItemComponent implements OnInit {
     this.router.navigate(['/commande', item.id]);
   }
 }
+*/

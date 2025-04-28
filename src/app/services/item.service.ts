@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/* import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -10,8 +10,9 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class ItemService {
-  private apiUrl = 'http://localhost:8088/borrowit/items';
+  //private apiUrl = 'http://localhost:8088/borrowit/items';
   private allowedRoles = ['OWNER', 'BORROWER', 'ADMIN'];
+  private apiUrl = 'http://localhost:8088/borrowit/api/items';
 
   constructor(
     private http: HttpClient,
@@ -130,4 +131,4 @@ export class ItemService {
       catchError(this.handleError.bind(this))
     );
   }
-}
+}*/

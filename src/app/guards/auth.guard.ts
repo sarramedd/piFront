@@ -1,37 +1,44 @@
 import { Injectable } from '@angular/core';
-import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { take, map } from 'rxjs/operators';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTree } from '@angular/router';
+import { AuthServiceService } from '../services/auth-service.service'; // ajuste si nécessaire
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.authService.currentUser$.pipe(
-      take(1),
-      map(currentUser => {
-        if (currentUser) {
-          // Vérifier si la route nécessite un rôle spécifique
-          if (route.data['roles'] && !route.data['roles'].includes(currentUser.role)) {
-            // Rôle non autorisé, rediriger vers la page d'accueil
-            this.router.navigate(['/']);
-            return false;
-          }
+  constructor(private authService: AuthServiceService, private router: Router) {}
 
-          // Utilisateur authentifié et autorisé
-          return true;
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
+    const isLoggedIn = this.authService.isLoggedIn();
+    const expectedRole = route.data['expectedRole'];
+
+    // Cas particulier : routes login/register => rediriger si déjà connecté
+    if (state.url === '/login' || state.url === '/register') {
+      if (isLoggedIn) {
+        const role = this.authService.getRoleFromToken();
+        if (role === 'ADMIN') {
+          return this.router.parseUrl('/dashboard');
+        } else if (role === 'BORROWER') {
+          return this.router.parseUrl('/home');
         }
+      }
+      return true; // pas connecté, il peut aller sur login/register
+    }
 
-        // Non authentifié, rediriger vers la page de connexion
-        this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
-        return false;
-      })
-    );
+    // Cas général : vérifier si connecté
+    if (!isLoggedIn) {
+      return this.router.parseUrl('/login');
+    }
+
+    // Cas : rôle spécifique requis
+    if (expectedRole) {
+      const userRole = this.authService.getRoleFromToken();
+      if (userRole !== expectedRole) {
+        return this.router.parseUrl('/unauthorized');
+      }
+    }
+
+    return true; // tout est OK
   }
-} 
+}

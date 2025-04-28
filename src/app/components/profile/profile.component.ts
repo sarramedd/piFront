@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+/*import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService, User } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 
@@ -38,4 +38,4 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.userSubscription.unsubscribe();
     }
   }
-} 
+} */
