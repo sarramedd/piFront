@@ -9,7 +9,14 @@
       ownerSignature: string;
       borrowerSignature: string;
       borrower: User;
-      owner: User;
+      owner: {
+        id: number;
+        name: string;
+        email: string;
+        phone: string;
+        address: string;
+        // autres attributs utilisateur
+      };
       details:string;
     // item: Item;
       //payment: Payment;

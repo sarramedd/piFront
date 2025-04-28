@@ -4,5 +4,5 @@ export interface Payment {
   id?: number;
   amount: number;
   date?: Date;
-  status?: 'PENDING' | 'COMPLETED' | 'FAILED';
+  status?: 'PENDING' | 'SUCCEEDED' | 'FAILED';
   contract?: Contract}

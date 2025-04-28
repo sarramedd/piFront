@@ -15,6 +15,8 @@ import { ContractService } from 'src/app/services/contract.service';
 export class CommandesComponent implements OnInit {
   commandes: Commande[] = [];
   userId!: number;
+  email:any
+  user!:User;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,16 +27,30 @@ export class CommandesComponent implements OnInit {
   ) { }
 
  // CommandesComponent.ts
-ngOnInit(): void {
-    this.userId = +this.route.snapshot.paramMap.get('userId')!;
-    this.commandeService.getCommandesWithItemsAndOwners(this.userId).subscribe({
-      next: data => {
-        this.commandes = data;
-        console.log("Commandes récupérées:", this.commandes);
-      },
-      error: err => console.error(err)
-    });
+ ngOnInit(): void {
+  const token = this.authService.getToken();
+  if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    console.log('Payload JWT :', payload);
+    this.email = payload.sub;
+    this.user=payload;
   }
+  
+  this.commandeService.getCommandesWithItemsAndOwners(this.email).subscribe({
+    next: data => {
+      console.log("Commandes récupérées:", data);
+      this.commandes = data;
+      // Vérification si item et owner existent dans chaque commande
+      this.commandes.forEach(commande => {
+        if (!commande.item || !commande.item.owner.email) {
+          console.warn(`Commande #${commande.id} a des données manquantes.`);
+        }
+      });
+    },
+    error: err => console.error(err)
+  });
+}
+
   
   getItemAndOwner(commande: Commande) {
     if (commande && commande.item) {
@@ -48,12 +64,16 @@ ngOnInit(): void {
 
   
   createNewContractFromCommande(commande: Commande) {
-    if (!commande || !commande.item || !commande.item.owner) {
+    // Vérifier que l'item et l'owner sont bien présents
+    if (!commande || !commande.item ||  !commande.user || !commande.user.name) {
       console.error("Erreur : Informations incomplètes sur la commande ou l'item !");
+      console.log(commande.item);  // Afficher les données de la commande pour déboguer
       return;
     }
   
     const item = commande.item;
+    const user = commande.user;
+    const itemOwnerName = item.owner ? item.owner.name : 'Propriétaire inconnu'; // Valeur par défaut si owner est manquant
   
     const contract: Contract = {
       id: 0,
@@ -62,12 +82,12 @@ ngOnInit(): void {
       terms: "Le locataire doit restituer l'objet en bon état.",
       ownerSignature: "",
       borrowerSignature: "",
-      borrower: { id: commande.user.id, name: item.owner.name } as User,
-      owner: { id: this.userId, name: "Moi" } as User,
+      borrower: { id: user.id, name: user.name } as User,
+      owner: { id: this.user.id, name: itemOwnerName } as User, // Utilisation de itemOwnerName
       details: `Nom: ${item.name}, 
-                Propriétaire: ${item.owner.name}, 
+                Propriétaire: ${itemOwnerName}, 
                 Prix: ${item.price}€, 
-                Description: ${item.description}`,
+                Description: ${item.description || 'Aucune description'}`, // Valeur par défaut si description est manquante
     };
   
     // ✅ Appel avec commandeId
@@ -90,6 +110,8 @@ ngOnInit(): void {
       }
     });
   }
+  
+  
   
   
 }

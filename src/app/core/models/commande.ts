@@ -1,3 +1,5 @@
+import { User } from "./user.model";
+
 export interface Commande {
     id: number;
     createdDate: Date;
@@ -17,10 +19,7 @@ export interface Commande {
       name: string;
       description: string;
       price: number;
-      owner: {
-        id: number;
-        name: string;
-      };
+      owner:User;
     };
   }
   

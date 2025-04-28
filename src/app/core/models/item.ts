@@ -9,5 +9,4 @@ export interface Item {
   availability: boolean;
   price: number;
   owner: User;
-
 }

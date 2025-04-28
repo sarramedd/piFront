@@ -1,0 +1,144 @@
+/* Dark theme variables */
+:root {
+  --dark-bg: #1a1a2e;
+  --darker-bg: #16213e;
+  --dark-card: #0f3460;
+  --accent-color: #00b4d8;
+  --accent-dark: #0096c7;
+  --text-light: #e6f1ff;
+  --text-muted: #a8b2d1;
+  --success-color: #2ecc71;
+  --border-radius: 10px;
+  --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Base styles */
+body {
+  background-color: var(--dark-bg);
+  color: var(--text-light);
+}
+
+.container {
+  max-width: 1000px;
+}
+
+/* Dark theme cards */
+.dark-theme {
+  background-color: var(--darker-bg);
+  color: var(--text-light);
+  border: none;
+}
+
+.dark-card {
+  background-color: var(--dark-card);
+  border-radius: var(--border-radius);
+  border-left: 3px solid var(--accent-color);
+  transition: transform 0.3s ease;
+}
+
+.dark-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--box-shadow);
+}
+
+/* Header gradient */
+.bg-dark-gradient {
+  background: linear-gradient(135deg, var(--dark-card), var(--dark-bg));
+  border-bottom: 1px solid rgba(0, 180, 216, 0.3);
+}
+
+/* Text styles */
+.section-title {
+  color: var(--accent-color) !important;
+  border-bottom: 1px solid rgba(0, 180, 216, 0.3);
+  padding-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.info-label {
+  color: var(--text-muted);
+  min-width: 100px;
+}
+
+.info-value {
+  color: var(--text-light);
+}
+
+.highlight {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+/* Badges */
+.status-badge {
+  background-color: rgba(46, 204, 113, 0.2);
+  color: var(--success-color);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1.5rem;
+}
+
+.btn-accent {
+  background-color: var(--accent-color);
+  color: #111;
+  border: none;
+}
+
+.btn-accent:hover {
+  background-color: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 180, 216, 0.4);
+}
+
+.btn-dark-outline {
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  background: transparent;
+}
+
+.btn-dark-outline:hover {
+  background-color: rgba(0, 180, 216, 0.1);
+}
+
+/* Alert */
+.alert-dark {
+  background-color: rgba(231, 76, 60, 0.1);
+  border-left: 4px solid #a02e21;
+  color: #a92222;
+}
+
+/* Loading spinner */
+.loading-spinner .spinner-border {
+  color: var(--accent-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .info-label {
+    margin-bottom: 0.3rem;
+  }
+  
+  .text-end {
+    text-align: center !important;
+  }
+  
+  .btn {
+    width: 100%;
+    margin-bottom: 0.7rem;
+  }
+}

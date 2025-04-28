@@ -19,6 +19,9 @@ export class PaymentService {
       contractId: contractId,
     });
   }
+  getPaymentById(id: number): Observable<Payment> {
+    return this.http.get<Payment>(`${this.apiUrl}/${id}`);
+  }
 
   confirmPayment(paymentIntentId: string, status: string, contractId: number): Observable<any> {
     const params = new HttpParams()
@@ -28,8 +31,8 @@ export class PaymentService {
 
     return this.http.post(`${this.apiUrl}/confirm`, null, { params });
   }
-  getInvoice(contractId: number): Observable<string> {
-    return this.http.get<string>(`${this.apiUrl}/by-contract/${contractId}`);
+  getInvoice(contractId: number): Observable<Payment> {
+    return this.http.get<Payment>(`${this.apiUrl}/by-contract/${contractId}`);
   }
  
 }

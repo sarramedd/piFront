@@ -1,0 +1,101 @@
+<div class="container mt-5">
+    <div *ngIf="loading" class="text-center loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+      <p class="mt-2">Chargement de la facture...</p>
+    </div>
+  
+    <div *ngIf="!loading && payment" class="invoice-card glass-morphism p-4 rounded-4">
+      <div class="card-header bg-gradient-primary text-white rounded-3 mb-4 p-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <h3 class="m-0">Détails de la Facture</h3>
+          <span class="badge bg-white text-primary fs-6">#{{ payment.id }}</span>
+        </div>
+      </div>
+  
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="info-card p-3 h-100">
+            <h5 class="section-title"><i class="bi bi-credit-card me-2"></i>Informations Paiement</h5>
+            <div class="info-item">
+              <span class="info-label">Montant :</span>
+              <span class="info-value">{{ payment.amount  }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Date :</span>
+              <span class="info-value">{{ payment.date | date:'fullDate' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Statut :</span>
+              <span class="status-badge bg-success-light text-success">
+                <i class="bi bi-check-circle-fill me-1"></i>SUCCEEDED
+              </span>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-md-6" *ngIf="payment.contract">
+          <div class="info-card p-3 h-100">
+            <h5 class="section-title"><i class="bi bi-file-earmark-text me-2"></i>Informations Contrat</h5>
+            <div class="info-item">
+              <span class="info-label">Période :</span>
+              <span class="info-value">{{ payment.contract.startDate | date:'mediumDate' }} - {{ payment.contract.endDate | date:'mediumDate' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Termes :</span>
+              <span class="info-value">{{ payment.contract.terms }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Détails :</span>
+              <span class="info-value">{{ payment.contract.details }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row g-4 mt-2">
+        <div class="col-md-6">
+          <div class="info-card p-3 h-100">
+            <h5 class="section-title"><i class="bi bi-person-badge me-2"></i>Propriétaire</h5>
+            <div class="info-item">
+              <span class="info-label">Nom :</span>
+              <span class="info-value">{{ owner?.name }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email :</span>
+              <span class="info-value">{{ owner?.email }}</span>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-md-6">
+          <div class="info-card p-3 h-100">
+            <h5 class="section-title"><i class="bi bi-person me-2"></i>Emprunteur</h5>
+            <div class="info-item">
+              <span class="info-label">Nom :</span>
+              <span class="info-value">{{ borrower?.name }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email :</span>
+              <span class="info-value">{{ borrower?.email }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="mt-4 text-end">
+        <button class="btn btn-primary me-2">
+          <i class="bi bi-printer me-1"></i> Imprimer
+        </button>
+        <button class="btn btn-outline-primary">
+          <i class="bi bi-download me-1"></i> Télécharger
+        </button>
+      </div>
+    </div>
+  
+    <div *ngIf="!loading && !payment" class="alert alert-modern mt-4">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      Aucune facture trouvée.
+    </div>
+</div>

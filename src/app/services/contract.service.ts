@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Contract } from '../core/models/contract';
+import { User } from '../core/models/user.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,8 +13,8 @@ export class ContractService {
   constructor(private http: HttpClient) {}
  
   
-  getContractsByUserId(userId: number): Observable<Contract[]> {
-    const url = `${this.apiUrl}/user/${userId}`;
+  getContractsByUserEmail(email: string): Observable<Contract[]> {
+    const url = `${this.apiUrl}/user/${email}`;
     return this.http.get<Contract[]>(url);
   }
   
@@ -32,8 +33,17 @@ export class ContractService {
   
     return this.http.post<Contract>(this.apiUrl, contract, { params });
   }
+  getBorrowerByContract(contractId:number):Observable<User>{ 
+    return this.http.get<User> (`${this.apiUrl}/borrower-by-contract/${contractId}`);
+
+
+  }
   
-  
+  getOwnerByContract(contractId:number):Observable<User>{ 
+    return this.http.get<User> (`${this.apiUrl}/owner-by-contract/${contractId}`);
+
+
+  }
 
   
   updateContract(id: number, contract: Contract): Observable<Contract> {

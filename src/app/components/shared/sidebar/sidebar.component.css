@@ -1,0 +1,13 @@
+.main-nav.navbar-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+  }
+  
+  .main-nav.navbar-nav li {
+    display: inline-block !important; /* Double garantie */
+    margin: 0 10px !important;
+  }

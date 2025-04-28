@@ -12,7 +12,7 @@ constructor(private http: HttpClient) {}
 getAllCommandes(): Observable<Commande[]> {
     return this.http.get<Commande[]>(this.apiUrl);
   }
-  getCommandesWithItemsAndOwners(userId: number): Observable<Commande[]> {
-    return this.http.get<Commande[]>(`${this.apiUrl}/owner/${userId}`);
+  getCommandesWithItemsAndOwners(email: string): Observable<Commande[]> {
+    return this.http.get<Commande[]>(`${this.apiUrl}/${email}`);
   }
 }

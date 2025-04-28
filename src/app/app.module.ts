@@ -42,6 +42,12 @@ import { ContractDetailsComponent } from './components/contractDetails/ContractD
 import { CommandesComponent } from './components/commande/Commande.component';
 import { ContractSignComponent } from './components/borrowerSign/ContractSign.component';
 import { ChatbotComponent } from './components/chatbot/chatbot.componenet';
+import { ProfileUserComponent } from './components/profile-user/profile-user.component';
+import { HeaderUserComponent } from './components/header-user/header-user.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
+import { InvoiceDetailsComponent } from './components/facture/facture.Component';
+
 
 @NgModule({
   declarations: [
@@ -74,11 +80,18 @@ import { ChatbotComponent } from './components/chatbot/chatbot.componenet';
     ContractComponent,
     ItemComponent,
     PaymentComponent,
+    InvoiceDetailsComponent,
+
     ContractAffichageComponent,
     ContractDetailsComponent,
     CommandesComponent,
     ContractSignComponent,
-    ChatbotComponent
+    ChatbotComponent,
+
+    VerificationSmsComponent,
+    ProfileUserComponent,
+    HeaderUserComponent,
+    UnauthorizedComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,8 +99,11 @@ import { ChatbotComponent } from './components/chatbot/chatbot.componenet';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
+
     RouterModule,
     CommonModule
+
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

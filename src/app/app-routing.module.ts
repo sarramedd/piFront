@@ -23,6 +23,11 @@ import { ContractAffichageComponent } from './components/contarctAffichage/contr
 import { ContractDetailsComponent } from './components/contractDetails/ContractDetails.component';
 import { CommandesComponent } from './components/commande/Commande.component';
 import { ContractSignComponent } from './components/borrowerSign/ContractSign.component';
+import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
+import { AuthGuard } from './guards/auth.guard';
+import { ProfileUserComponent } from './components/profile-user/profile-user.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { InvoiceDetailsComponent } from './components/facture/facture.Component';
 
 const routes: Routes = [
   // E-commerce
@@ -38,6 +43,8 @@ const routes: Routes = [
  { path: 'contract-details/:id', component: ContractDetailsComponent },
  { path: 'commandes/user/:userId', component: CommandesComponent },
  { path: 'contract-sign/:id', component: ContractSignComponent },
+ { path: 'facture/:id', component:  InvoiceDetailsComponent},
+
 
   // Auth & Admin
   { path: 'login', component: LoginComponent },
@@ -47,6 +54,19 @@ const routes: Routes = [
   { path: 'ListUser', component: UserListComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'verification-sms/:id', component: VerificationSmsComponent },
+//Pages accessibles à tous les utilisateurs connectés (peu importe le rôle)
+{ path: 'home', component: HomeComponent, canActivate: [AuthGuard], data: { expectedRoles: ['BORROWER', 'OWNER'] } },
+
+  // Pages réservées uniquement aux BORROWERS
+  { path: 'client', component: ProfileUserComponent, canActivate: [AuthGuard], data: { expectedRoles: ['BORROWER', 'OWNER'] } },
+  // Pages réservées uniquement aux ADMINS
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { expectedRole: 'ADMIN' } },
+  { path: 'profile', component: AdminProfileComponent, canActivate: [AuthGuard], data: { expectedRole: 'ADMIN' } },
+  { path: 'ListUser', component: UserListComponent, canActivate: [AuthGuard], data: { expectedRole: 'ADMIN' } },
+
+  // Page accès refusé
+  { path: 'unauthorized', component: UnauthorizedComponent },
 ];
 
 @NgModule({

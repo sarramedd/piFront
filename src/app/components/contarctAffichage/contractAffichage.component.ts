@@ -16,6 +16,7 @@ export class ContractAffichageComponent implements OnInit {
   user!: User;
   contracts: Contract[] = [];
   currentUserId!: number;  // ID de l'utilisateur connecté
+  email:any
 
   constructor(
     private contractService: ContractService,
@@ -31,11 +32,13 @@ export class ContractAffichageComponent implements OnInit {
       const payload = JSON.parse(atob(token.split('.')[1]));
       console.log('Payload JWT :', payload);
       this.user = payload;
+        this.email=payload.sub ;
     }
-    this.contractService.getContractsByUserId(this.user.id).subscribe({
+    this.contractService.getContractsByUserEmail(this.email).subscribe({
       next: data => this.contracts = data,
       error: err => console.error(err)
     });
+    console.log(this.contracts)
   }
 
   goToContractDetails(contractId: number): void {
@@ -54,7 +57,7 @@ export class ContractAffichageComponent implements OnInit {
     this.paymentService.getInvoice(contractId).subscribe({
       next: (invoiceUrl) => {
         // Redirige vers l'URL de la facture
-        window.open(invoiceUrl, '_blank');
+        this.router.navigate([`/facture/${contractId}`])
       },
       error: (err) => console.error('Erreur lors de la récupération de la facture:', err)
     });
