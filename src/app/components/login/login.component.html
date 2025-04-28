@@ -1,68 +1,102 @@
 <div class="container-scroller">
   <div class="container-fluid page-body-wrapper full-page-wrapper">
-    <div class="row w-100">
-      <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+    <div class="row w-100 m-0">
+      <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg p-0">
         <div class="card col-lg-4 mx-auto">
           <div class="card-body px-5 py-5">
-            <h3 class="card-title text-start mb-3">Login</h3>
+            <h3 class="card-title text-center mb-4">Connexion</h3>
 
-            <!-- ✅ Message d'erreur global -->
-            <div *ngIf="errorMessage" class="alert alert-danger text-center">
-              {{ errorMessage }}
+            <!-- Alert Messages -->
+            <div *ngIf="errorMessage" @fadeInOut class="alert alert-dismissible alert-danger">
+              <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+              <div class="d-flex align-items-center">
+                <i class="fa fa-exclamation-circle me-2"></i>
+                <span>{{ errorMessage }}</span>
+              </div>
+              <a *ngIf="showResendLink" 
+                 (click)="resendVerificationEmail()"
+                 class="d-block mt-2 small text-danger text-decoration-underline">
+                Renvoyer l'email de vérification
+              </a>
             </div>
 
-            <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
-              <div class="form-group">
-                <label>Username or email *</label>
-                <input type="text" class="form-control p_input" 
-                       formControlName="usernameOrEmail">
-                <div *ngIf="loginForm.get('usernameOrEmail')?.invalid && 
-                           (loginForm.get('usernameOrEmail')?.dirty || loginForm.get('usernameOrEmail')?.touched)"
-                     class="text-danger">
-                  L'email ou nom d'utilisateur est requis.
+            <form (ngSubmit)="onSubmit()" [formGroup]="loginForm" novalidate>
+              <!-- Email Field -->
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" 
+                       class="form-control" 
+                       formControlName="usernameOrEmail"
+                       [ngClass]="{
+                         'is-invalid': loginForm.get('usernameOrEmail')?.invalid && 
+                                     (loginForm.get('usernameOrEmail')?.dirty || 
+                                      loginForm.get('usernameOrEmail')?.touched)
+                       }"
+                       placeholder="votre@email.com">
+                <div *ngIf="loginForm.get('usernameOrEmail')?.errors?.['required']" 
+                     class="invalid-feedback">
+                  L'email est requis
+                </div>
+                <div *ngIf="loginForm.get('usernameOrEmail')?.errors?.['email']" 
+                     class="invalid-feedback">
+                  Veuillez entrer un email valide
                 </div>
               </div>
 
-              <div class="form-group">
-                <label>Password *</label>
-                <input type="password" class="form-control p_input" 
-                       formControlName="password">
-                <div *ngIf="loginForm.get('password')?.invalid && 
-                           (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
-                     class="text-danger">
-                  Le mot de passe est requis.
+              <!-- Password Field -->
+              <div class="mb-3">
+                <label class="form-label">Mot de passe</label>
+                <input type="password" 
+                       class="form-control" 
+                       formControlName="password"
+                       [ngClass]="{
+                         'is-invalid': loginForm.get('password')?.invalid && 
+                                     (loginForm.get('password')?.dirty || 
+                                      loginForm.get('password')?.touched)
+                       }"
+                       placeholder="••••••••">
+                <div *ngIf="loginForm.get('password')?.errors?.['required']" 
+                     class="invalid-feedback">
+                  Le mot de passe est requis
                 </div>
               </div>
 
-              <div class="form-group d-flex align-items-center justify-content-between">
+              <!-- Remember Me & Forgot Password -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="form-check">
-                  <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" 
-                           formControlName="rememberMe"> Remember me
-                  </label>
+                  <input type="checkbox" 
+                         class="form-check-input" 
+                         id="rememberMe"
+                         formControlName="rememberMe">
+                  <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
                 </div>
-                <a routerLink="/forgot-password" class="forgot-pass">Forgot password</a>
+                <a routerLink="/forgot-password" class="text-primary small">Mot de passe oublié ?</a>
               </div>
 
-              <div class="text-center d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-block enter-btn" 
-                        [disabled]="!loginForm.valid">Login</button>
+              <!-- Submit Button -->
+              <button type="submit" 
+                      class="btn btn-primary w-100 py-2 mb-3" 
+                      [disabled]="loginForm.invalid || isLoading">
+                <span *ngIf="!isLoading">Se connecter</span>
+                <span *ngIf="isLoading">
+                  <i class="fa fa-spinner fa-spin me-2"></i>Connexion...
+                </span>
+              </button>
+
+              <!-- Social Login -->
+              <div class="d-grid gap-2">
+                <a href="http://localhost:8088/oauth2/authorization/google" 
+                   class="btn btn-outline-danger">
+                  <i class="fa fa-google me-2"></i>Continuer avec Google
+                </a>
               </div>
 
-              <div class="d-flex">
-                <button class="btn btn-facebook me-2 col">
-                  <i class="mdi mdi-facebook"></i> Facebook
-                </button>
-                <a class="btn btn-google col text-white text-decoration-none text-center" 
-                href="http://localhost:8088/oauth2/authorization/google">
-               <i class="mdi mdi-google-plus"></i> Login with Google
-             </a>
-             
-              </div>
-
-              <p class="sign-up">Don't have an Account? <a routerLink="/register">Sign Up</a></p>
+              <!-- Registration Link -->
+              <p class="text-center mt-4">
+                Pas encore de compte ? 
+                <a routerLink="/register" class="text-primary">S'inscrire</a>
+              </p>
             </form>
-
           </div>
         </div>
       </div>
