@@ -9,9 +9,11 @@ export interface Feedback {
   message: string;
   date: string;
   reacts?: Reacts[];
+  reactTypes?: string[];
   showReacts?: boolean;
   reported?: boolean;
   reason?: string;
+  reportReason?: string; // Add this to match DTO
   showReason?: boolean;
   user?: {
     id?: number;

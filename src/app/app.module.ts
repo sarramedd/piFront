@@ -59,6 +59,14 @@ import { FeedbacksChartComponent } from './FeedbackAdmin/feedbacks-chart/feedbac
 
 
 import { VerificationSmsComponent } from './components/verification-sms/verification-sms.component';
+import { ProfileUserComponent } from './components/profile-user/profile-user.component';
+import { HeaderUserComponent } from './components/header-user/header-user.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { AnalyseChartComponent } from './FeedbackAdmin/analyse-chart/analyse-chart.component';
+import { UserSpecificFeedbacksComponent } from './components/Feedback/user-specific-feedbacks/user-specific-feedbacks.component';
+
+
+
 
 
 @NgModule({
@@ -119,6 +127,11 @@ import { VerificationSmsComponent } from './components/verification-sms/verifica
 
 
     VerificationSmsComponent,
+    ProfileUserComponent,
+    HeaderUserComponent,
+    UnauthorizedComponent,
+    AnalyseChartComponent,
+    UserSpecificFeedbacksComponent,
   ],
   imports: [
     BrowserModule,

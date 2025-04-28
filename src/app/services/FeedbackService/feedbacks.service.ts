@@ -2,6 +2,10 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { Feedback } from 'src/app/core/models/feedback';
+import { FeedbackDTO } from 'src/app/core/models/FeedbackDTO';
+import { Reaction, Reacts } from 'src/app/core/models/reacts';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -20,26 +24,56 @@ export class FeedbacksService {
     });
   }
 
-  getAllFeedbacks(): Observable<Feedback[]> {
-    const headers = this.getAuthHeaders();
-    
-    return this.http.get<Feedback[]>(`${this.apiUrl}/retrieve-all-feedbacks`, { headers })
-      .pipe(
-        map(feedbacks => feedbacks.map(fb => ({
-          ...fb,
-          reacts: fb.reacts || [],
-          showReacts: false,
-          reported: fb.reported || false,
-          reason: fb.reason || '',
-          user: {
-            id: fb.user?.id || fb.userId,
-            name: fb.user?.name || fb.userName,
-            email: fb.user?.email || fb.userEmail,
-            avatar: fb.user?.avatar
-          }
-        }))),
-      
-      );
+  // In your feedbacks.service.ts
+getAllFeedbacks(): Observable<Feedback[]> {
+  const headers = this.getAuthHeaders();
+  
+  return this.http.get<FeedbackDTO[]>(`${this.apiUrl}/retrieve-all-feedbacks`, { headers })
+    .pipe(
+      map((feedbacks: FeedbackDTO[]) => feedbacks.map(fb => {
+        // Convert reactTypes to reacts if needed
+        const reacts = fb.reactTypes 
+          ? fb.reactTypes
+              .filter(type => type !== null && type !== undefined)
+              .map(type => this.createReactsObject(type))
+          : [];
+
+       // In getAllFeedbacks() method
+return {
+  ...fb,
+  reacts,
+  showReacts: false,
+  reported: fb.isReported || false,
+  reason: fb.reportReason || '',
+  sentimentScore: fb.sentimentScore || null,
+  user: {
+    id: fb.userId,
+    name: fb.userName,
+    email: fb.userEmail,
+    avatar: fb.userAvatar // This comes from backend DTO as base64
+  },
+  userId: fb.userId,
+  userName: fb.userName,
+  userEmail: fb.userEmail
+} as Feedback;
+      }))
+    );
+}
+  
+  // Méthode helper pour créer un objet Reacts valide
+  private createReactsObject(reactionType: string): Reacts {
+    const validReactions: Reaction[] = ['LIKE', 'DISLIKE', 'LOVE', 'LAUGH', 'SAD', 'ANGRY'];
+    const reaction: Reaction = validReactions.includes(reactionType as Reaction) 
+      ? reactionType as Reaction 
+      : 'LIKE'; // Valeur par défaut
+  
+    return {
+      reaction,
+      id: 0, // ID par défaut (à adapter selon vos besoins)
+      date: new Date().toISOString(),
+      user: undefined, // À remplir si nécessaire
+      feedback: undefined // À remplir si nécessaire
+    };
   }
   
   addFeedback(feedbackData: Feedback): Observable<Feedback> {
@@ -122,20 +156,47 @@ export class FeedbacksService {
 
   
 
-   getReportedFeedbacks(): Observable<Feedback[]> {
-    return this.http.get<Feedback[]>(`${this.apiUrl}/retrieve-reported-feedbacks`);
+  getReportedFeedbacks(): Observable<Feedback[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<any[]>(`${this.apiUrl}/retrieve-reported-feedbacks`, { headers })
+      .pipe(
+        map(feedbacks => feedbacks.map(fb => ({
+          id: fb.id,
+          message: fb.message,
+          date: fb.date,
+          reason: fb.reportReason || fb.reason || '', // Handle both DTO and legacy fields
+          reported: fb.isReported || fb.reported || false,
+          showReason: false,
+          user: {
+            id: fb.userId,
+            name: fb.userName,
+            email: fb.userEmail
+          },
+          // Include other fields as needed
+          reacts: fb.reactTypes ? fb.reactTypes.map((type: string) => ({ reaction: type })) : []
+        })))
+      );
   }
 
   // Supprimer un feedback signalé
-  deleteReportedFeedback(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete-reported-feedback/${id}`);
-  }
+deleteReportedFeedback(id: number): Observable<void> {
+  const headers = this.getAuthHeaders();
+  return this.http.delete<void>(`${this.apiUrl}/delete-reported-feedback/${id}`, { 
+    headers 
+  });
+}
 
-  rejectFeedback(feedbackId: number): Observable<string> {
-    return this.http.put<string>(`${this.apiUrl}/reject-feedback/${feedbackId}`, {}, {
-      responseType: 'text' as 'json'
-    });
-  }
+rejectFeedback(feedbackId: number): Observable<string> {
+  const headers = this.getAuthHeaders();
+  return this.http.put<string>(
+    `${this.apiUrl}/reject-feedback/${feedbackId}`, 
+    {}, 
+    { 
+      headers,
+      responseType: 'text' as 'json' 
+    }
+  );
+}
 
   // feedbacks.service.ts
 getFeedbacksByItem(itemId: number): Observable<Feedback[]> {
@@ -143,7 +204,39 @@ getFeedbacksByItem(itemId: number): Observable<Feedback[]> {
 }
 
   
+  // Add this method to your FeedbacksService
+getFeedbacksByUserId(userId: number): Observable<Feedback[]> {
+  const headers = this.getAuthHeaders();
   
+  return this.http.get<FeedbackDTO[]>(`${this.apiUrl}/retrieve-user-feedbacks/${userId}`, { headers })
+    .pipe(
+      map((feedbacks: FeedbackDTO[]) => feedbacks.map(fb => {
+        const reacts = fb.reactTypes 
+          ? fb.reactTypes
+              .filter(type => type !== null && type !== undefined)
+              .map(type => this.createReactsObject(type))
+          : [];
+
+        return {
+          ...fb,
+          reacts,
+          showReacts: false,
+          reported: fb.isReported || false,
+          reason: fb.reportReason || '',
+          sentimentScore: fb.sentimentScore || null,
+          user: {
+            id: fb.userId,
+            name: fb.userName,
+            email: fb.userEmail,
+            avatar: fb.userAvatar
+          },
+          userId: fb.userId,
+          userName: fb.userName,
+          userEmail: fb.userEmail
+        } as Feedback;
+      }))
+    );
+}
   
   
 

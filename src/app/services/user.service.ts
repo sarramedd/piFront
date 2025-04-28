@@ -66,4 +66,6 @@ getUserImageByEmail(email: string): Observable<string> {
   deleteUser(userId: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${userId}`);
   }
+
+  
 }

@@ -1,3 +1,10 @@
+
+<app-header-user></app-header-user>
+	<!-- /HEADER -->
+	 
+	<!-- NAVIGATION -->
+<!-- NAVIGATION -->
+<app-sidebar-front></app-sidebar-front>
 <!-- Error message -->
 <div *ngIf="errorMessage" class="error-message">
   <p>{{ errorMessage }}</p>
@@ -37,10 +44,11 @@
 
         <!-- User Info Section -->
         <div class="user-info">
-          <img [src]="feedback.user?.avatar || defaultProfileImage" 
-               alt="{{ feedback.user?.name }}" 
-               class="user-avatar"
-               onerror="this.src='assets/images/Capture.png'">
+          <!-- Replace your img tag with this: -->
+<img [src]="avatarService.getSafeAvatar(feedback.user)" 
+[alt]="feedback.user?.name || 'User'" 
+class="user-avatar"
+(error)="avatarService.handleImageError($event)">
           <div>
             <p class="user-name"><strong>{{ feedback.user?.name || 'Name not available' }}</strong></p>
             <p class="feedback-date">{{ feedback.date | date:'medium' }}</p>
@@ -127,10 +135,11 @@
     <div *ngIf="activeFeedback?.reacts?.length; else noReacts" class="reaction-list">
       <div *ngFor="let react of filteredReacts" class="reaction-item">
         <div class="user-info">
-          <img [src]="react.user?.avatar || defaultProfileImage" 
-               alt="{{ react.user?.name }}" 
-               class="user-avatar"
-               onerror="this.src='assets/images/Capture.png'">
+               <img [src]="avatarService.getSafeAvatar(react.user)" 
+[alt]="react.user?.name || 'User'" 
+class="user-avatar"
+(error)="avatarService.handleImageError($event)">
+
           <div class="user-details">
             <span class="user-name">{{ react.user?.name || 'Anonymous' }}</span>
             <small *ngIf="react.user?.email" class="user-email">{{ react.user?.email }}</small>
@@ -161,3 +170,6 @@
     <button (click)="closeReportModal()">❌ Cancel</button>
   </div>
 </div>
+
+
+<app-footer></app-footer>	

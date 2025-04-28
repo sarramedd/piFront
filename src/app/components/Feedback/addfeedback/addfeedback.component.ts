@@ -7,7 +7,11 @@ import { ProfanityFilterServiceService } from 'src/app/services/FeedbackService/
 @Component({
   selector: 'app-addfeedback',
   templateUrl: './addfeedback.component.html',
-  styleUrls: ['./addfeedback.component.css']
+  styleUrls: ['./addfeedback.component.css',
+    '../../../../assets/css/style.css',
+    
+    
+  ],
 })
 export class AddfeedbackComponent implements OnInit {
   feedbackForm: FormGroup = new FormGroup({});

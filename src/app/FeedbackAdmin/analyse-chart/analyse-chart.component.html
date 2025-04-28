@@ -1,0 +1,136 @@
+<div class="container-scroller">
+    <app-sidebar-back></app-sidebar-back>
+    <div class="container-fluid page-body-wrapper">
+      <app-navbar></app-navbar>
+      <div class="main-panel" style="height: 100vh; overflow-y: auto; padding-top: 0;">
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h3 class="page-title">
+              <i class="mdi mdi-chart-arc"></i> Analyse des Sentiments
+            </h3>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#"><i class="mdi mdi-home"></i> Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Analyse des Feedbacks</li>
+              </ol>
+            </nav>
+          </div>
+  
+          <div class="row">
+            <div class="col-12">
+              <button class="btn btn-outline-danger mb-3" (click)="goToReportedFeedbacks()">
+                <i class="mdi mdi-alert"></i> Feedbacks Signalés
+              </button>
+            </div>
+          </div>
+  
+          <!-- Chart Controls -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="btn-group" role="group">
+                <button class="btn btn-outline-primary" 
+                        *ngFor="let type of ['pie', 'bar', 'line', 'doughnut', 'polarArea', 'radar']"
+                        [class.active]="selectedChartType === type"
+                        (click)="changeChartType(type)">
+                  <i class="mdi mdi-chart-{{type === 'bar' ? 'bar' : type === 'line' ? 'line' : type === 'doughnut' ? 'doughnut' : type === 'polarArea' ? 'polar-area' : type === 'radar' ? 'radar' : 'pie'}}"></i>
+                  {{type === 'pie' ? 'Camembert' : type === 'bar' ? 'Barres' : type === 'line' ? 'Ligne' : type === 'doughnut' ? 'Anneau' : type === 'polarArea' ? 'Polaire' : 'Radar'}}
+                </button>
+              </div>
+            </div>
+          </div>
+  
+         <!-- Chart Display -->
+<div class="row">
+    <div class="col-md-8 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="chart-container">
+            <div *ngIf="selectedChartType === 'pie'" class="chart-wrapper">
+              <p-chart type="pie" [data]="pieChartData" [options]="chartOptions"></p-chart>
+            </div>
+            <div *ngIf="selectedChartType === 'bar'" class="chart-wrapper">
+              <p-chart type="bar" [data]="barChartData" [options]="chartOptions"></p-chart>
+            </div>
+            <div *ngIf="selectedChartType === 'line'" class="chart-wrapper">
+              <p-chart type="line" [data]="lineChartData" [options]="chartOptions"></p-chart>
+            </div>
+            <div *ngIf="selectedChartType === 'doughnut'" class="chart-wrapper">
+              <p-chart type="doughnut" [data]="doughnutChartData" [options]="chartOptions"></p-chart>
+            </div>
+            <div *ngIf="selectedChartType === 'polarArea'" class="chart-wrapper">
+              <p-chart type="polarArea" [data]="polarAreaChartData" [options]="chartOptions"></p-chart>
+            </div>
+            <div *ngIf="selectedChartType === 'radar'" class="chart-wrapper">
+              <p-chart type="radar" [data]="radarChartData" [options]="chartOptions"></p-chart>
+            </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Sentiment Analysis -->
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">
+                    <i class="mdi mdi-text-box-outline"></i> Analyse Détailée
+                  </h4>
+                  <div class="alert alert-info">
+                    <pre class="sentiment-analysis">{{ sentimentAnalysis }}</pre>
+                  </div>
+                  
+                  <!-- Quick Stats -->
+                  <div class="mt-4">
+                    <h5>Statistiques Rapides</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>Positifs:</span>
+                      <span class="font-weight-bold text-success">{{ positivePercentage.toFixed(1) }}%</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>Neutres:</span>
+                      <span class="font-weight-bold text-warning">{{ neutralPercentage.toFixed(1) }}%</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <span>Négatifs:</span>
+                      <span class="font-weight-bold text-danger">{{ negativePercentage.toFixed(1) }}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Chart Interpretation -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">
+                    <i class="mdi mdi-comment-question-outline"></i> Comment interpréter ces résultats
+                  </h4>
+                  <div *ngIf="selectedChartType === 'pie'">
+                    <p>Le graphique en camembert montre la proportion relative des différents sentiments. Une grande section positive indique une bonne satisfaction utilisateur.</p>
+                  </div>
+                  <div *ngIf="selectedChartType === 'bar'">
+                    <p>Le diagramme en barres permet de comparer facilement le volume de chaque type de sentiment. Des barres négatives élevées nécessitent une attention particulière.</p>
+                  </div>
+                  <div *ngIf="selectedChartType === 'line'">
+                    <p>Le graphique linéaire montre la distribution des sentiments. Une ligne stable avec des valeurs positives élevées est idéale.</p>
+                  </div>
+                  <div *ngIf="selectedChartType === 'doughnut'">
+                    <p>Similaire au camembert mais avec une visualisation différente. Le centre vide peut être utilisé pour afficher un indicateur global.</p>
+                  </div>
+                  <div *ngIf="selectedChartType === 'polarArea'">
+                    <p>Ce type de graphique accentue les différences entre les catégories. Les zones plus larges représentent des volumes plus importants.</p>
+                  </div>
+                  <div *ngIf="selectedChartType === 'radar'">
+                    <p>Le radar est utile pour comparer plusieurs dimensions. Une forme équilibrée vers les valeurs positives est souhaitable.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

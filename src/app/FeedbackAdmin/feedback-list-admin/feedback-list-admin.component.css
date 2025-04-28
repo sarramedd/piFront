@@ -1,252 +1,79 @@
-/* General container */
-.feedback-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 2rem;
+/* Conteneur principal des graphiques */
+.chart-container {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+/* Wrapper de chaque graphique */
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  margin: 0 auto;
+}
+
+/* Contrôles des graphiques */
+.chart-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.chart-controls .btn {
+  min-width: 120px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* Options spécifiques pour les différents types de graphiques */
+.pie-chart-container,
+.doughnut-chart-container,
+.polar-area-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.bar-chart-container,
+.line-chart-container,
+.radar-chart-container {
+  height: 450px;
+}
+
+/* Adaptation responsive */
+@media (max-width: 768px) {
+  .chart-wrapper {
+    min-height: 250px;
   }
   
-  /* Feedback cards */
-  .card {
-    width: 100%;
-    max-width: 700px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    background: #ffffff;
-    border-radius: 12px;
-    border-left: 6px solid #007bff;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease;
+  .chart-controls .btn {
+    min-width: 100px;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
   }
   
-  .card:hover {
-    transform: translateY(-3px);
+  .bar-chart-container,
+  .line-chart-container,
+  .radar-chart-container {
+    height: 350px;
+  }
+}
+
+@media (max-width: 576px) {
+  .chart-wrapper {
+    min-height: 200px;
   }
   
-  /* Feedback message */
-  .card h5 {
-    margin-bottom: 0.75rem;
-    font-weight: 600;
-    font-size: 1.2rem;
-    color: #2c3e50;
+  .chart-controls {
+    gap: 5px;
   }
   
-  /* Delete button */
-  .card button {
-    background-color: #dc3545;
-    border: none;
-    color: #fff;
-    padding: 6px 10px;
-    font-size: 0.9rem;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
-    display: inline-flex;
-    align-items: center;
+  .chart-controls .btn {
+    min-width: 80px;
+    font-size: 0.75rem;
   }
-  
-  .card button i {
-    margin-right: 4px;
-  }
-  
-  /* Delete icon only */
-  .delete-icon-btn {
-    background: none;
-    border: none;
-    color: #dc3545;
-    font-size: 1.1rem;
-    margin-left: auto;
-    cursor: pointer;
-    transition: color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .delete-icon-btn:hover {
-    color: #a71d2a;
-    transform: scale(1.2);
-  }
-  
-  /* Search input */
-  .search-container {
-    max-width: 700px;
-    margin: 2rem auto 1rem auto;
-  }
-  
-  .alert {
-    max-width: 700px;
-    margin: 1rem auto;
-  }
-  
-  /* Reaction section */
-  .reaction-section {
-    margin-top: 0.5rem;
-  }
-  
-  .reaction-label {
-    color: #444;
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 0.3rem;
-  }
-  
-  .card ul {
-    padding-left: 1.5rem;
-    margin-top: 0.4rem;
-  }
-  
-  .card ul li {
-    color: #555;
-    font-size: 0.9rem;
-    margin-bottom: 0.4rem;
-  }
-  
-  .card ul li::before {
-    content: "💬 ";
-    color: #007bff;
-  }
-  
-  .reactions-text {
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: underline;
-    margin-top: 10px;
-  }
-  .reactions-text:hover {
-    color: #0056b3;
-  }
-  .popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* dark transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-  
-  .popup {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    max-height: 400px;
-    overflow-y: auto;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  }
-  
-  .popup-title {
-    margin-top: 0;
-    font-size: 1.2rem;
-    color: #333;
-    text-align: center;
-  }
-  
-  .popup-reaction-list {
-    list-style: none;
-    padding: 0;
-    margin: 15px 0;
-  }
-  
-  .popup-reaction-item {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-    color: #444;
-  }
-  
-  .close-btn {
-    display: block;
-    margin: 0 auto;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .close-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .popup-reaction-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-    color: #444;
-  }
-  
-  .popup-delete-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .popup-delete-btn i {
-    font-size: 16px;
-  }
-  .popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* Ensure it's on top of other content */
-  }
-  
-  .popup {
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-  }
-  
-  .popup p {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  .popup button {
-    padding: 10px 20px;
-    font-size: 14px;
-    margin: 0 10px;
-    cursor: pointer;
-  }
-  
-  .popup button:first-child {
-    background-color: #ff5733; /* Red for delete */
-    color: white;
-  }
-  
-  .popup button:last-child {
-    background-color: #031a03; /* Green for cancel */
-    color: white;
-  }
-  .popup p {
-    color: #333 !important; /* Dark gray text for better visibility */
-  }
-  .user-name {
-    font-size: 1rem;
-    color: #333;
-    margin: 0.5rem 0;
-    padding: 0.4rem 0.8rem;
-    background-color: #f5f5f5;
-    border-left: 4px solid #007bff;
-    border-radius: 4px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  
-  
-  
+}

@@ -6,7 +6,10 @@ import { FeedbacksService } from 'src/app/services/FeedbackService/feedbacks.ser
 @Component({
   selector: 'app-feedback-listsignale-admin',
   templateUrl: './feedback-listsignale-admin.component.html',
-  styleUrls: ['./feedback-listsignale-admin.component.css']
+  styleUrls: ['./feedback-listsignale-admin.component.css', '../../../assets/bootstrap-template/css/style.css',
+    '../../../assets/bootstrap-template/vendors/mdi/css/materialdesignicons.min.css',
+    '../../../assets/bootstrap-template/vendors/font-awesome/css/font-awesome.min.css',
+    '../../../assets/bootstrap-template/vendors/css/vendor.bundle.base.css']
 })
 export class FeedbackListsignaleAdminComponent implements OnInit {
   reportedFeedbacks: Feedback[] = []; // Liste des feedbacks signalés

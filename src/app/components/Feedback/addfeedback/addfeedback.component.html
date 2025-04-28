@@ -1,3 +1,10 @@
+<app-header-user></app-header-user>
+	<!-- /HEADER -->
+	 
+	<!-- NAVIGATION -->
+<!-- NAVIGATION -->
+<app-sidebar-front></app-sidebar-front>
+
 <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
     <div>
       <label for="message">Feedback Message:</label>
@@ -10,3 +17,6 @@
     <button type="submit" [disabled]="feedbackForm.invalid">Submit Feedback</button>
   </form>
   
+  
+
+<app-footer></app-footer>	
