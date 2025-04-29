@@ -1,0 +1,81 @@
+<div class="container-scroller">
+  <app-sidebar-back></app-sidebar-back>
+
+  <div class="container-fluid page-body-wrapper">
+    <app-navbar></app-navbar>
+
+    <div class="main-panel" style="height: 100vh; overflow-y: auto; padding-top: 0;">
+      <div class="content-wrapper">
+        <div class="page-header">
+          <h3 class="page-title">Tableau des Catégories</h3>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Catégories</li>
+            </ol>
+          </nav>
+        </div>
+
+        <!-- Utilisation du router-outlet pour afficher le tableau des catégories -->
+
+        <div class="container mt-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Liste des Catégories</h2>
+            <!-- <input
+              type="text"
+              class="form-control w-25"
+              placeholder="Rechercher..."
+              [(ngModel)]="searchTerm"
+            /> -->
+          </div>
+        
+          <table class="table table-hover table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <!-- <th>Category Type</th> -->
+                <!-- <th>Image</th> -->
+                <th style="width: 150px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let category of categories">
+                <td>{{ category.name }}</td>
+                <td>{{ category.description }}</td>
+                <!-- <td>{{ category.categoryType }}</td> -->
+                <!-- <td>{{ category.image }}</td> -->
+                <td>
+                  <button class="btn btn-sm btn-primary me-2" [routerLink]="['/editCategorie', category.id]">
+                      Modifier
+                    </button>
+                  <button class="btn btn-sm btn-danger" (click)="deleteCategory(category.id)">
+                    Supprimer
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        
+          <!-- <div class="d-flex justify-content-end">
+            <button class="btn btn-secondary me-2" [disabled]="page === 1" (click)="page--">Précédent</button>
+            <button class="btn btn-secondary" [disabled]="page >= maxPage()" (click)="page++">Suivant</button>
+          </div> -->
+        </div>
+        
+        <div style="padding-left: 5%;">
+      
+          <button style="width: 12%;" class="btn btn-sm btn-success" (click)="addCategory()">
+            Add Category
+           </button>
+         </div>
+                
+      </div>
+      <app-footer-back></app-footer-back>
+    </div>
+  </div>
+</div>
+
+
+
+

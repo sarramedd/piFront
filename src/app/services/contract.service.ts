@@ -8,7 +8,7 @@ import { User } from '../core/models/user.model';
 })
 export class ContractService {
 
-  private apiUrl = 'http://localhost:8088/borrowit/contracts'; 
+  private apiUrl = 'http://localhost:8088/borrowit/contracts';
 
   constructor(private http: HttpClient) {}
  
@@ -45,7 +45,7 @@ export class ContractService {
 
   }
 
-  
+
   updateContract(id: number, contract: Contract): Observable<Contract> {
     return this.http.put<Contract>(`${this.apiUrl}/${id}`, contract);
   }
@@ -55,7 +55,7 @@ export class ContractService {
   signContract(contractId: number, ownerSignature: string, borrowerSignature: string): Observable<Contract> {
     const url = `${this.apiUrl}/${contractId}/sign`; // Assurez-vous que votre backend a cette route
     const body = { ownerSignature, borrowerSignature };
-    
+
     return this.http.put<Contract>(url, body);
   }
   updateSignatures(contractId: number, contract: Contract): Observable<Contract> {

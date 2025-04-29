@@ -50,9 +50,9 @@
               }
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
-
-             
+              "@angular/material/prebuilt-themes/pink-bluegrey.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/styles.css"
             ],
             "scripts": [
               "src/assets/bootstrap-template/vendors/js/vendor.bundle.base.js",
@@ -135,6 +135,7 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/pink-bluegrey.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -155,5 +156,12 @@
         }
       }
     }
+  },
+  "cli": {
+<<<<<<< HEAD
+    "analytics": false
+=======
+    "analytics": "0933370c-3610-4b1b-84d3-76c10995ab5a"
+>>>>>>> origin/arijfinal
   }
 }

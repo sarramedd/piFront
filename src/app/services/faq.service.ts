@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import Fuse from 'fuse.js';
 import { Observable } from 'rxjs';
+import Fuse from 'fuse.js';
+
 import { map } from 'rxjs/operators';
 
 @Injectable({

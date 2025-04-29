@@ -1,0 +1,33 @@
+/* Styles de base pour le composant Profile 
+.card {
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border: none;
+  border-radius: 8px;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  padding: 1rem;
+}
+
+.card-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.row {
+  margin-bottom: 1rem;
+}
+
+strong {
+  color: #666;
+}
+
+.col-md-8 {
+  color: #333;
+} */

@@ -15,16 +15,28 @@ export class SidebarComponent {
                 private authService:AuthServiceService,
                 private router: Router
     ) {}
-  goToMyContracts() {
+    user:any
+    userId:any
+
+      ngOnInit() {
+        const token = this.authService.getToken();
+        if (token) {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          console.log('Payload JWT :', payload);
+          this.user = payload;
+          this.userId = payload.id; // 🔥 ici on met dans this.userId !
+        }
+      }
+      goToMyContracts() {
   
-    const id = this.authService.getUserId();
-    if (id !== null) {
-      this.router.navigate([`/my-contracts/${id}`]);
-    }}
+        const userId = this.user.id
+        if (userId !== null) {
+          this.router.navigate([`/my-contracts/${userId}`]);
+        }}
     goToMyCommandes() {
-      const userId = this.authService.getUserId();
+      const userId = this.user.id;
       if (userId) {
-        this.router.navigate([`/commandes/user/${userId}`]);
+        this.router.navigate([`commandes/user/${userId}`]);
       } else {
         console.error('Utilisateur non connecté');
       }

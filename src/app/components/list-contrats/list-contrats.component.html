@@ -1,0 +1,121 @@
+<div class="container-scroller">
+    <app-sidebar-back></app-sidebar-back>
+  
+    <div class="container-fluid page-body-wrapper">
+      <app-navbar></app-navbar>
+  
+      <div class="main-panel" style="height: 100vh; overflow-y: auto; padding-top: 0;">
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h3 class="page-title">Liste des Contrats</h3>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Contrats</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Liste des contrats</li>
+              </ol>
+            </nav>
+          </div>
+  
+          <!-- Messages d'erreur -->
+          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ errorMessage }}
+            <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+          </div>
+  
+          <!-- Indicateur de chargement -->
+          <div *ngIf="isLoading" class="text-center my-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p *ngIf="isLoading">Chargement des contrats...</p>
+          </div>
+  
+          <div class="row" *ngIf="!isLoading">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Contrats</h4>
+                  
+                  <!-- Barre de recherche et sélecteur d'éléments par page -->
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="form-group w-50 me-2">
+                      <input type="text" class="form-control" 
+                             [(ngModel)]="searchTerm" 
+                             (input)="applyFilter()"
+                             placeholder="Rechercher par nom, termes...">
+                    </div>
+                    
+                    <div class="d-flex">
+                      <div class="form-group me-2">
+                        <select class="form-select form-select-sm" [(ngModel)]="itemsPerPage" (change)="applyPagination()">
+                          <option value="5">5 par page</option>
+                          <option value="10">10 par page</option>
+                          <option value="20">20 par page</option>
+                          <option value="50">50 par page</option>
+                        </select>
+                      </div>
+                      <div>
+                       
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Nom du propriétaire</th>
+                          <th>Nom du locataire</th>
+                          <th>Termes du contrat</th>
+                          <th>Date de début</th>
+                          <th>Date de fin</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let contract of displayedContracts">
+                          <td>{{ contract.owner?.name }}</td>
+                          <td>{{ contract.borrower?.name }}</td>
+                          <td>{{ contract.terms }}</td>
+                          <td>{{ contract.startDate | date: 'shortDate' }}</td>
+                          <td>{{ contract.endDate | date: 'shortDate' }}</td>
+                          <td>
+                            <!-- Bouton Voir les détails -->
+                            <button class="btn btn-primary btn-sm" (click)="goToContractDetails(contract.id)">
+                              Voir les détails
+                            </button>
+                          </td>
+                          
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  <!-- Pagination -->
+                  <div class="d-flex justify-content-center mt-3" *ngIf="filteredContracts.length > itemsPerPage">
+                    <nav aria-label="Page navigation">
+                      <ul class="pagination">
+                        <li class="page-item" [class.disabled]="currentPage === 1">
+                          <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                          </a>
+                        </li>
+                        
+                        <li class="page-item" *ngFor="let page of getPages()" [class.active]="page === currentPage">
+                          <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+                        </li>
+                        
+                     
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <app-footer-back></app-footer-back>
+      </div>
+    </div>
+  </div>
+  

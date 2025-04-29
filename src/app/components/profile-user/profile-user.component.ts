@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthServiceService } from '../../services/auth-service.service';
 import { UserService } from '../../services/user.service';
+import { User } from '../../core/models/user.model';
 
 interface UserProfile {
   id: number;
@@ -12,7 +13,7 @@ interface UserProfile {
   genre: string;
   status: string;
   dateDeNaissance: string;
-  role: string;
+  role: 'ADMIN' | 'BORROWER' | 'OWNER';
   imageUrl?: string;
 }
 
@@ -120,14 +121,19 @@ export class ProfileUserComponent implements OnInit {
 
     this.isLoading = true;
 
-    const updatedUser = {
-      name: this.userProfile.nom,
-      email: this.userProfile.email,
-      phone: this.userProfile.telephone,
-      address: this.userProfile.adresse,
-      genre: this.userProfile.genre,
-      dateDeNaissance: this.userProfile.dateDeNaissance
-    };
+    const updatedUser: User = new User(
+      this.userProfile.id,
+      this.userProfile.cin,
+      this.userProfile.nom,
+      this.userProfile.email,
+      '',
+      this.userProfile.telephone,
+      this.userProfile.adresse,
+      this.userProfile.genre,
+      this.userProfile.status,
+      this.userProfile.dateDeNaissance,
+      this.userProfile.role as 'ADMIN' | 'BORROWER' | 'OWNER'
+    );
 
     this.userService.updateUser(this.userProfile.id, updatedUser, file).subscribe(
       () => {
@@ -149,14 +155,19 @@ export class ProfileUserComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    const updatedUser = {
-      name: this.userProfile.nom,
-      email: this.userProfile.email,
-      phone: this.userProfile.telephone,
-      address: this.userProfile.adresse,
-      genre: this.userProfile.genre,
-      dateDeNaissance: this.userProfile.dateDeNaissance
-    };
+    const updatedUser: User = new User(
+      this.userProfile.id,
+      this.userProfile.cin,
+      this.userProfile.nom,
+      this.userProfile.email,
+      '',
+      this.userProfile.telephone,
+      this.userProfile.adresse,
+      this.userProfile.genre,
+      this.userProfile.status,
+      this.userProfile.dateDeNaissance,
+      this.userProfile.role as 'ADMIN' | 'BORROWER' | 'OWNER'
+    );
 
     this.userService.updateUser(this.userProfile.id, updatedUser, null).subscribe(
       () => {

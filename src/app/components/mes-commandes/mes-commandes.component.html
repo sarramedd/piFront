@@ -1,0 +1,23 @@
+<app-header></app-header>	
+<div *ngIf="commandes.length > 0" class="commandes-container">
+    <div *ngFor="let commande of commandes" class="commande-card">
+      <h3>Commande #{{ commande.id }}</h3>
+      <p><strong>Statut :</strong> {{ commande.status }}</p>
+      <p><strong>Date :</strong> {{ commande.createdDate | date: 'short' }}</p>
+      <p><strong>Prix total :</strong> {{ commande.totalPrice }}€</p>
+  
+      <div *ngIf="commande.item">
+        <h4>Item : {{ commande.item.name }}</h4>
+        <p><strong>Description :</strong> {{ commande.item.description }}</p>
+        <p><strong>Propriétaire :</strong> {{ commande.item.owner.name }}</p>
+        <p><strong>Prix :</strong> {{ commande.item.price }}€</p>
+      </div>
+  
+      <button (click)="createNewContractFromCommande(commande)">Valider la commande</button>
+    </div>
+  </div>
+  
+  <div *ngIf="commandes.length === 0">
+    <p>Aucune commande à afficher.</p>
+  </div>
+  <app-footer></app-footer>	

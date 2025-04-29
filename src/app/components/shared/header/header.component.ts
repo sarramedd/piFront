@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/services/auth-service.service';
@@ -6,6 +7,7 @@ import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
+
   styleUrls: [
     '../../../../assets/css/style.css',
     '../../../../assets/css/bootstrap.min.css',
@@ -54,9 +56,9 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  goToMyContracts() {
+  /*goToMyContracts() {
     const id = this.authService.getUserId();
     if (id !== null) {
       this.router.navigate([`/my-contracts/${id}`]);
-    }}
+    }}*/
 }

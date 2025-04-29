@@ -1,0 +1,119 @@
+<div class="container mt-4">
+  <h2>{{ editingDiscount ? 'Modifier la réduction' : 'Créer une nouvelle réduction' }}</h2>
+
+  <!-- Formulaire de création/modification -->
+  <form (ngSubmit)="editingDiscount ? updateDiscount(editingDiscount) : createDiscount()" #discountForm="ngForm" class="mb-4">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="name" class="form-label">Nom de la réduction</label>
+        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newDiscount.name" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="code" class="form-label">Code promo</label>
+        <input type="text" class="form-control" id="code" name="code" [(ngModel)]="newDiscount.code" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="percentage" class="form-label">Pourcentage</label>
+        <input type="number" class="form-control" id="percentage" name="percentage" [(ngModel)]="newDiscount.percentage" min="0" max="100" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="startDate" class="form-label">Date de début</label>
+        <input type="date" class="form-control" id="startDate" name="startDate" [(ngModel)]="newDiscount.startDate" [min]="today" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="endDate" class="form-label">Date de fin</label>
+        <input type="date" class="form-control" id="endDate" name="endDate" [(ngModel)]="newDiscount.endDate" [min]="today" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8 mb-3">
+        <label for="item" class="form-label">Item concerné</label>
+        <select class="form-select" id="item" name="item" [(ngModel)]="selectedItemId" required>
+          <option value="">Sélectionnez un item</option>
+          <option *ngFor="let item of items" [value]="item.id">{{ item.name }}</option>
+        </select>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="form-check mt-4">
+          <input class="form-check-input" type="checkbox" id="active" name="active" [(ngModel)]="newDiscount.active">
+          <label class="form-check-label" for="active">
+            Réduction active
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary" [disabled]="!discountForm.form.valid || loading">
+        {{ editingDiscount ? 'Modifier' : 'Créer' }}
+      </button>
+      <button *ngIf="editingDiscount" type="button" class="btn btn-secondary" (click)="cancelEdit()">Annuler</button>
+    </div>
+  </form>
+
+  <!-- Liste des réductions -->
+  <div class="mt-4">
+    <h3>Liste des réductions</h3>
+    
+    <!-- Barre de recherche -->
+    <div class="mb-3">
+      <input type="text" class="form-control" placeholder="Rechercher une réduction..." [(ngModel)]="searchTerm" (input)="onSearch()">
+    </div>
+
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+
+    <div *ngIf="!loading && !error">
+      <div *ngIf="filteredDiscounts.length === 0" class="alert alert-info">
+        Aucune réduction trouvée.
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Code</th>
+              <th>Pourcentage</th>
+              <th>Date de début</th>
+              <th>Date de fin</th>
+              <th>Item</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let discount of filteredDiscounts">
+              <td>{{ discount.name }}</td>
+              <td>{{ discount.code }}</td>
+              <td>{{ discount.percentage }}%</td>
+              <td>{{ discount.startDate | date:'dd/MM/yyyy' }}</td>
+              <td>{{ discount.endDate | date:'dd/MM/yyyy' }}</td>
+              <td>{{ getItemName(discount.item_id) }}</td>
+              <td>
+                <span class="badge" [ngClass]="discount.active ? 'bg-success' : 'bg-danger'">
+                  {{ discount.active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-primary me-2" (click)="editDiscount(discount)">Modifier</button>
+                <button class="btn btn-sm btn-danger" (click)="deleteDiscount(discount.id)">Supprimer</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div> 

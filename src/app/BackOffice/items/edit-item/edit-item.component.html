@@ -1,0 +1,95 @@
+<div class="container-scroller">
+  <app-sidebar-back></app-sidebar-back>
+
+  <div class="container-fluid page-body-wrapper">
+    <app-navbar></app-navbar>
+
+    <div class="main-panel" style="height: 100vh; overflow-y: auto; padding-top: 0;">
+      <div class="content-wrapper">
+        <div class="page-header">
+          <h3 class="page-title">Tableau des Catégories</h3>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Catégories</li>
+            </ol>
+          </nav>
+        </div>
+
+        <!-- Utilisation du router-outlet pour afficher le tableau des catégories -->
+
+
+        <div class="container mt-4">
+          <h2>Modifier un item</h2>
+        
+          <form [formGroup]="itemForm" (ngSubmit)="updateItem()">
+        
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Nom de l'item</mat-label>
+              <input matInput formControlName="name" />
+              <mat-error *ngIf="itemForm.get('name')?.hasError('required')">Nom requis</mat-error>
+              <mat-error *ngIf="itemForm.get('name')?.hasError('minlength')">Le nom doit contenir au moins 3 caractères</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>État de l'item</mat-label>
+              <input matInput formControlName="itemCondition" />
+              <mat-error *ngIf="itemForm.get('itemCondition')?.hasError('required')">Champ requis</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Disponibilité</mat-label>
+              <input matInput formControlName="availability" />
+              <mat-error *ngIf="itemForm.get('availability')?.hasError('required')">Champ requis</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Prix</mat-label>
+              <input matInput type="number" formControlName="price" />
+              <mat-error *ngIf="itemForm.get('price')?.hasError('required')">Le prix est requis</mat-error>
+              <mat-error *ngIf="itemForm.get('price')?.hasError('min')">Le prix doit être supérieur ou égal à 0</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Type de catégorie</mat-label>
+              <mat-select formControlName="categoryType" required>
+                <mat-option *ngFor="let category of categoryTypes" [value]="category.id">
+                  {{ category.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="itemForm.get('categoryType')?.hasError('required')">Catégorie requise</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Description</mat-label>
+              <input matInput formControlName="description" />
+              <mat-error *ngIf="itemForm.get('description')?.hasError('required')">Description requise</mat-error>
+              <mat-error *ngIf="itemForm.get('description')?.hasError('minlength')">La description doit contenir au moins 5 caractères</mat-error>
+            </mat-form-field>
+        
+            <div class="w-100">
+              <label for="imageUpload">Image (Fichier)</label>
+              <input type="file" id="imageUpload" (change)="onFileSelected($event)" />
+            </div>
+            <div class="input-group">
+              <img [src]="item.image" alt="Ancienne Image" style="width: 20%;height: 20%;" class="mr-2">
+              <input type="file" style="display: none;" #fileInput accept="image/*" (change)="onFileSelected($event)">
+            </div>     
+            <button mat-raised-button color="primary" type="submit" [disabled]="itemForm.invalid">
+              Mettre à jour
+            </button>
+          </form>
+        </div>
+                
+      </div>
+      <app-footer-back></app-footer-back>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+

@@ -23,7 +23,6 @@ interface DecodedToken {
 export class AdminProfileComponent implements OnInit {
   userProfile!: User;
   selectedImageFile: File | null = null;
-
   isLoading = false;
   errorMessage = '';
   successMessage = '';
@@ -65,6 +64,7 @@ export class AdminProfileComponent implements OnInit {
 
       this.userService.getUserByEmail(userEmail).subscribe({
         next: (user: User) => {
+          console.log('User data:', user);
           this.userProfile = user;
           this.isLoading = false;
         },
@@ -78,6 +78,7 @@ export class AdminProfileComponent implements OnInit {
     } catch (error: any) {
       this.errorMessage = 'Erreur de décodage du token : ' + error.message;
       this.isLoading = false;
+      console.error('Erreur token :', error);
     }
   }
 

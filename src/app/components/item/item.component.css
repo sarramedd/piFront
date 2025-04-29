@@ -1,0 +1,275 @@
+/*.container {
+  padding: 2rem 0;
+  background-color: #000;
+  min-height: 100vh;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 15px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e9ecef;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+}
+
+.card-img-top {
+  transition: transform 0.3s ease;
+  height: 280px;
+  object-fit: cover;
+  width: 100%;
+  border-bottom: 3px solid #4263eb;
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.08);
+}
+
+.card-body {
+  padding: 2rem;
+  background: linear-gradient(to bottom, #fff, #f8f9fa);
+}
+
+.card-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a237e;
+  margin-bottom: 1.2rem;
+  text-transform: capitalize;
+}
+
+.card-text {
+  color: #343a40;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+  line-height: 1.6;
+}
+
+.item-details {
+  margin: 1.2rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.item-details p {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  color: #343a40;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.item-details p:last-child {
+  border-bottom: none;
+}
+
+.item-details strong {
+  color: #1a237e;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.badge {
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+  border-radius: 25px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+  color: #fff;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+  color: #fff;
+}
+
+.rent-btn {
+  background-color: #4263eb;
+  border: none;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(66, 99, 235, 0.2);
+}
+
+.rent-btn:hover:not(:disabled) {
+  background-color: #2342dc;
+  box-shadow: 0 6px 8px rgba(66, 99, 235, 0.3);
+  transform: translateY(-2px);
+}
+
+.rent-btn:disabled {
+  background-color: #868e96;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.text-decoration-line-through {
+  color: #868e96;
+  font-size: 1rem;
+  text-decoration-thickness: 2px;
+}
+
+.text-success {
+  color: #28a745 !important;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.alert {
+  border-radius: 12px;
+  padding: 1.2rem 1.8rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid transparent;
+}
+
+.alert-danger {
+  background-color: #fff5f5;
+  border-color: #dc3545;
+  color: #dc3545;
+  border-left-color: #dc3545;
+}
+
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 2rem;
+  }
+  
+  .card-img-top {
+    height: 220px;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .rent-btn {
+    padding: 0.8rem 1.5rem;
+  }
+}*/
+
+/* Table Styles 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background-color: #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th {
+  background-color: #1a1a1a;
+  color: #fff;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+td {
+  padding: 1rem;
+  color: #fff;
+  border-bottom: 1px solid #333;
+}
+
+tr:hover {
+  background-color: #1a1a1a;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.status-pending {
+  color: #fff;
+  font-weight: 500;
+  background-color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.price-column {
+  font-weight: 600;
+  color: #fff;
+}
+
+.date-column {
+  color: #fff;
+  white-space: nowrap;
+}
+
+.action-button {
+  background-color: #4263eb;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+  background-color: #2342dc;
+}
+
+/* Responsive table 
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  th, td {
+    padding: 0.8rem;
+  }
+}
+
+/* Page title 
+h1, h2, h3 {
+  color: #fff;
+  margin-bottom: 2rem;
+  }
+  
+.search-bar {
+  background-color: #1a1a1a;
+    padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.search-input {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 0.8rem;
+  width: 100%;
+  border-radius: 4px;
+}
+  */

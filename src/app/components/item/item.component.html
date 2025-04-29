@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="container">
     <h2>Liste des produits à louer</h2>
     
@@ -7,6 +8,48 @@
         <p>Propriétaire : {{ item.owner.name }} </p>
         <p>Prix : {{ item.price }} €</p>
         <button >Valider</button>
+=======
+<!--<div class="container mt-4">
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  
+  <div class="row">
+    <div *ngFor="let item of items" class="col-md-4 mb-4">
+      <div class="card h-100">
+        <img [src]="item.image" class="card-img-top" alt="Item image" style="height: 200px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ item.name }}</h5>
+          <p class="card-text">{{ item.description }}</p>
+          <div class="item-details">
+            <p><strong>Category:</strong> {{ item.category }}</p>
+            <p><strong>Owner:</strong>  ({{ item.owner.email }})</p> 
+            <p>
+              <strong>Price:</strong>
+              <span [class.text-decoration-line-through]="activeDiscounts[item.id]">
+                {{ item.price | currency:'EUR' }}
+            </span>
+              <span *ngIf="activeDiscounts[item.id]" class="ms-2 text-success">
+                {{ getDiscountedPrice(item) | currency:'EUR' }}
+              </span>
+            </p>
+            <p>
+              <span class="badge" [ngClass]="{
+                'bg-warning': item.status === 'EN_ATTENTE',
+                'bg-success': item.status === 'CONFIRMER',
+                'bg-danger': item.status === 'REJETER'
+              }">
+                {{ item.status }}
+            </span>
+          </p>
+          </div>
+          <button 
+            class="btn btn-primary mt-auto rent-btn" 
+            (click)="createOrder(item)"
+            [disabled]="item.status === 'REJETER'">
+            Rent Now
+          </button>
+        </div>
+      </div>
+>>>>>>> 460f5159633f0629c161388bc89bacd794105898
     </div>
-    </div>
-</div>
+  </div>
+</div>-->

@@ -1,0 +1,30 @@
+
+<div class="container-scroller">
+    <app-sidebar-back></app-sidebar-back>
+  
+    <div class="container-fluid page-body-wrapper">
+      <app-navbar></app-navbar>
+  
+      <div class="main-panel" style="height: 100vh; overflow-y: auto; padding-top: 0;">
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h3 class="page-title">Tableau des Catégories</h3>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Catégories</li>
+              </ol>
+            </nav>
+          </div>
+  
+          <div class="flex flex-col items-center justify-center " style="width: 950px; padding-left: 350px;">
+
+            <p-chart type="pie" [data]="data" [options]="options" class="w-full md:w-[2rem]"></p-chart>
+        </div>
+   
+          
+        </div>
+        <app-footer-back></app-footer-back>
+      </div>
+    </div>
+  </div>

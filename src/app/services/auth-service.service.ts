@@ -72,19 +72,4 @@ export class AuthServiceService {
       return null;
     }
   }
-  getUserFromToken(): any {
-    const token = this.getToken();
-    if (!token) return null;
-    
-    try {
-      const payload = token.split('.')[1];
-      return JSON.parse(atob(payload));
-    } catch (e) {
-      return null;
-    }
-  }
-  getUserId(): number | null {
-    const user = this.getUserFromToken();
-    return user?.id ?? null;
-  }
 }

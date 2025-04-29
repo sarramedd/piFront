@@ -1,25 +1,22 @@
+import { Item } from "./item";
 import { User } from "./user.model";
 
 export interface Commande {
     id: number;
-    createdDate: Date;
-    description: string | null;
-    status: string;
-    totalPrice: number;
-    user: {
+    itemId: number;
+    item: Item;
+    borrowerId: number;
+    user:{
       id: number;
       name: string;
       email: string;
       phone: string;
-      address: string;
-      // autres attributs utilisateur
-    };
-    item: {  // C'est ici que tu inclues l'item associé à la commande
-      id: number;
-      name: string;
-      description: string;
-      price: number;
-      owner:User;
-    };
-  }
+      address: string;};
+
+    description: string;
+    totalPrice: number;
+    status: 'EN_ATTENTE' | 'CONFIRMER' | 'REJETER';
+    createdDate: string;
+    updatedDate?: string;
+}
   
