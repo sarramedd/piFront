@@ -202,3 +202,4 @@ export class CommandeComponent implements OnInit {
     return this.authService.getRoleFromToken() === 'ADMIN';
   }
 }
+// da
