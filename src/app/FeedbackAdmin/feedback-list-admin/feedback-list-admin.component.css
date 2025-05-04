@@ -1,0 +1,79 @@
+/* Conteneur principal des graphiques */
+.chart-container {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+/* Wrapper de chaque graphique */
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  margin: 0 auto;
+}
+
+/* Contrôles des graphiques */
+.chart-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.chart-controls .btn {
+  min-width: 120px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* Options spécifiques pour les différents types de graphiques */
+.pie-chart-container,
+.doughnut-chart-container,
+.polar-area-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.bar-chart-container,
+.line-chart-container,
+.radar-chart-container {
+  height: 450px;
+}
+
+/* Adaptation responsive */
+@media (max-width: 768px) {
+  .chart-wrapper {
+    min-height: 250px;
+  }
+  
+  .chart-controls .btn {
+    min-width: 100px;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .bar-chart-container,
+  .line-chart-container,
+  .radar-chart-container {
+    height: 350px;
+  }
+}
+
+@media (max-width: 576px) {
+  .chart-wrapper {
+    min-height: 200px;
+  }
+  
+  .chart-controls {
+    gap: 5px;
+  }
+  
+  .chart-controls .btn {
+    min-width: 80px;
+    font-size: 0.75rem;
+  }
+}

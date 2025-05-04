@@ -1,0 +1,79 @@
+<div class="container-scroller">
+  <app-sidebar-back></app-sidebar-back>
+  
+  <div class="container-fluid page-body-wrapper">
+    <app-navbar></app-navbar>
+    
+    <div class="main-panel" style="height: 100vh; overflow-y: auto; padding-top: 0;">
+      <div class="content-wrapper">
+        <div class="page-header">
+          <h3 class="page-title">Feedback Charts</h3> <!-- Changed title -->
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Feedback Analytics</li>
+            </ol>
+          </nav>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <button class="btn btn-outline-danger mb-3" (click)="goToReportedFeedbacks()">Reported Feedbacks</button>
+          </div>
+        </div>
+        
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="chart-controls">
+              <button class="btn btn-primary m-1" (click)="changeChartType('pie')">Pie Chart</button>
+              <button class="btn btn-primary m-1" (click)="changeChartType('bar')">Bar Chart</button>
+              <button class="btn btn-primary m-1" (click)="changeChartType('line')">Line Chart</button>
+              <button class="btn btn-primary m-1" (click)="changeChartType('doughnut')">Doughnut</button>
+              <button class="btn btn-primary m-1" (click)="changeChartType('polarArea')">Polar Area</button>
+              <button class="btn btn-primary m-1" (click)="changeChartType('radar')">Radar Chart</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Single chart container (removed the duplicate) -->
+        <div class="row">
+          <div class="col-12">
+            <div class="chart-container">
+              <!-- Pie Chart -->
+              <div *ngIf="selectedChartType === 'pie'" class="chart-wrapper">
+                <p-chart type="pie" [data]="pieChartData" [options]="chartOptions"></p-chart>
+              </div>
+
+              <!-- Bar Chart -->
+              <div *ngIf="selectedChartType === 'bar'" class="chart-wrapper">
+                <p-chart type="bar" [data]="barChartData" [options]="chartOptions"></p-chart>
+              </div>
+
+              <!-- Line Chart -->
+              <div *ngIf="selectedChartType === 'line'" class="chart-wrapper">
+                <p-chart type="line" [data]="lineChartData" [options]="chartOptions"></p-chart>
+              </div>
+
+              <!-- Doughnut Chart -->
+              <div *ngIf="selectedChartType === 'doughnut'" class="chart-wrapper">
+                <p-chart type="doughnut" [data]="doughnutChartData" [options]="chartOptions"></p-chart>
+              </div>
+
+              <!-- Polar Area Chart -->
+              <div *ngIf="selectedChartType === 'polarArea'" class="chart-wrapper">
+                <p-chart type="polarArea" [data]="polarAreaChartData" [options]="chartOptions"></p-chart>
+              </div>
+
+              <!-- Radar Chart -->
+              <div *ngIf="selectedChartType === 'radar'" class="chart-wrapper">
+                <p-chart type="radar" [data]="radarChartData" [options]="chartOptions"></p-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <app-footer-back></app-footer-back>
+      </div>
+    </div>
+  </div>
+</div>

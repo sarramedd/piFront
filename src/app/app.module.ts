@@ -56,6 +56,14 @@ import { ToastrModule } from 'ngx-toastr';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { MesCommandesComponent } from './components/mes-commandes/mes-commandes.component';
 import { ListContratsComponent } from './components/list-contrats/list-contrats.component';
+import { FeedbackListComponent } from './components/Feedback/feedback-list/feedback-list.component';
+import { AddfeedbackComponent } from './components/Feedback/addfeedback/addfeedback.component';
+import { AddFeedbackAdminComponent } from './FeedbackAdmin/add-feedback-admin/add-feedback-admin.component';
+import { FeedbackListAdminComponent } from './FeedbackAdmin/feedback-list-admin/feedback-list-admin.component';
+import { FeedbackListsignaleAdminComponent } from './FeedbackAdmin/feedback-listsignale-admin/feedback-listsignale-admin.component';
+import { FeedbacksChartComponent } from './FeedbackAdmin/feedbacks-chart/feedbacks-chart.component';
+import { UserSpecificFeedbacksComponent } from './components/Feedback/user-specific-feedbacks/user-specific-feedbacks.component';
+import { AnalyseChartComponent } from './FeedbackAdmin/analyse-chart/analyse-chart.component';
 
 
 
@@ -128,6 +136,14 @@ import { ListContratsComponent } from './components/list-contrats/list-contrats.
     DashboardComponent,
     MesCommandesComponent,
     ListContratsComponent,
+    FeedbackListComponent,
+    AddfeedbackComponent,
+    AddFeedbackAdminComponent,
+    FeedbackListAdminComponent,
+    FeedbackListsignaleAdminComponent,
+    FeedbacksChartComponent,
+    UserSpecificFeedbacksComponent,
+    AnalyseChartComponent,
 
   ],
   imports: [

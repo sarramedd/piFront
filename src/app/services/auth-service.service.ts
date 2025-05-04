@@ -16,7 +16,22 @@ export class AuthServiceService {
 
   saveToken(token: string): void {
     localStorage.setItem('token', token);
-  }
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.id) {
+            localStorage.setItem('userId', payload.id.toString());
+        }
+        // Stocker toutes les données utilisateur
+        localStorage.setItem('userData', JSON.stringify({
+            id: payload.id,
+            name: payload.name,
+            email: payload.sub,
+            role: payload.role
+        }));
+    } catch (e) {
+        console.error('Failed to decode token:', e);
+    }
+}
 
   getToken(): string | null {
     return localStorage.getItem('token');

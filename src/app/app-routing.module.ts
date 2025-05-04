@@ -49,6 +49,13 @@ import { ProfileUserComponent } from './components/profile-user/profile-user.com
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { InvoiceDetailsComponent } from './components/facture/facture.Component';
 import { MesCommandesComponent } from './components/mes-commandes/mes-commandes.component';
+import { FeedbackListComponent } from './components/Feedback/feedback-list/feedback-list.component';
+import { AddfeedbackComponent } from './components/Feedback/addfeedback/addfeedback.component';
+import { UserSpecificFeedbacksComponent } from './components/Feedback/user-specific-feedbacks/user-specific-feedbacks.component';
+import { FeedbackListAdminComponent } from './FeedbackAdmin/feedback-list-admin/feedback-list-admin.component';
+import { FeedbacksChartComponent } from './FeedbackAdmin/feedbacks-chart/feedbacks-chart.component';
+import { FeedbackListsignaleAdminComponent } from './FeedbackAdmin/feedback-listsignale-admin/feedback-listsignale-admin.component';
+import { AnalyseChartComponent } from './FeedbackAdmin/analyse-chart/analyse-chart.component';
 
 const routes: Routes = [
   // E-commerce
@@ -64,7 +71,9 @@ const routes: Routes = [
  { path: 'commandes/user/:userId', component: CommandeComponent },
  { path: 'contract-sign/:id', component: ContractSignComponent },
  { path: 'facture/:id', component:  InvoiceDetailsComponent},
-
+ { path: 'listFeedback', component: FeedbackListComponent },
+ { path: 'addFeedback', component: AddfeedbackComponent},
+ { path: 'specificFeedback', component: UserSpecificFeedbacksComponent},
 
   // Auth & Admin
   { path: 'login', component: LoginComponent },
@@ -84,6 +93,10 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { expectedRole: 'ADMIN' } },
   { path: 'profile', component: AdminProfileComponent, canActivate: [AuthGuard], data: { expectedRole: 'ADMIN' } },
   { path: 'ListUser', component: UserListComponent, canActivate: [AuthGuard], data: { expectedRole: 'ADMIN' } },
+  { path: 'list-Feedback', component: FeedbackListAdminComponent, canActivate: [AuthGuard], data: { expectedRole: 'ADMIN' } },
+  { path: 'feedbackschart', component: FeedbacksChartComponent, canActivate: [AuthGuard], data: { expectedRole: 'ADMIN' } },
+  { path: 'reported-Feedbacks', component: FeedbackListsignaleAdminComponent, canActivate: [AuthGuard], data: { expectedRole: 'ADMIN' } },
+  { path: 'analysechart', component: AnalyseChartComponent , canActivate: [AuthGuard], data: { expectedRole: 'ADMIN' } },
 
   // Page accès refusé
   { path: 'unauthorized', component: UnauthorizedComponent },

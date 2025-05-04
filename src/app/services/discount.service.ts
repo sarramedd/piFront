@@ -25,7 +25,7 @@ export class DiscountService {
   // Method to get the discount for a specific item
   getDiscount(itemId: number, token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get(`${this.apiUrl}/${itemId}/active`, { headers });
+    return this.http.get(`${this.apiUrl}/${itemId}/active`,{ headers });
   }
   
   // Obtenir un discount par ID
