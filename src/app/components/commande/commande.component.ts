@@ -119,7 +119,7 @@ export class CommandeComponent implements OnInit {
       this.error = 'Aucun item sélectionné';
       return;
     }
-
+//d
     this.loading = true;
     const commande: Partial<Commande> = {
       itemId: this.item.id,
